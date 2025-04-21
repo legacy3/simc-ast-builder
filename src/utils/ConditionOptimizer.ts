@@ -6,7 +6,7 @@ import {
   OrExprExpressionNode,
   UnaryExpressionNode,
 } from "../parser/visitors/ast/ContextHandlers/Basic";
-import { OptimizerOptions, DEFAULT_OPTIMIZER_OPTIONS } from "../types";
+import { DEFAULT_OPTIMIZER_OPTIONS, OptimizerOptions } from "../types";
 
 /**
  * A class that optimizes logical conditions in the AST before code generation.
@@ -20,9 +20,9 @@ export class ConditionOptimizer {
    */
   constructor(options: OptimizerOptions = DEFAULT_OPTIMIZER_OPTIONS) {
     // Merge with default options
-    this.options = { 
+    this.options = {
       ...DEFAULT_OPTIMIZER_OPTIONS,
-      ...options
+      ...options,
     };
   }
 

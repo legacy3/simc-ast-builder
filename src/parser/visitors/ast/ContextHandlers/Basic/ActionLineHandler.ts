@@ -18,7 +18,7 @@ interface SimCAction {
  */
 function handleActionLine(
   ctx: ActionLineContext,
-  visitor: SimCGenericVisitor
+  visitor: SimCGenericVisitor,
 ): ActionLineNode {
   // Get the parameter contexts
   const paramContexts = ctx.actionParam();
@@ -52,7 +52,7 @@ function handleActionLine(
 
     parameters[paramName] = paramCtx.expression().text;
     parameterNodes[paramName] = visitor.visit(
-      paramCtx.expression()
+      paramCtx.expression(),
     ) as ExpressionNode;
   });
 
