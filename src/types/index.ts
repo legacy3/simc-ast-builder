@@ -1,4 +1,11 @@
 /**
+ * This file defines optimizer and parser-related types
+ */
+
+// Import base AST type from common-types
+import { ASTNode } from "../parser/visitors/ast/common-types";
+
+/**
  * Detailed optimization options for the ConditionOptimizer
  */
 export interface OptimizerOptions {
@@ -57,44 +64,6 @@ export const DEFAULT_OPTIMIZER_OPTIONS: OptimizerOptions = {
   flattenNestedOperations: true,
 };
 
-export interface ActionLineNode extends ASTNode {
-  action: string;
-  kind: "actionLine";
-  params?: ParameterNode[];
-}
-
-/**
- * Re-export AST node types
- *
- * Note: These are just placeholders that will be properly
- * connected to the actual AST node types once we move them.
- */
-export interface ASTNode {
-  [key: string]: any;
-  kind: string;
-}
-
-export interface CommentLineNode extends ASTNode {
-  content: string;
-  kind: "commentLine";
-}
-
-export interface ConditionNode extends ExpressionNode {
-  nodeType: "condition";
-}
-
-export interface ExpressionNode extends ASTNode {
-  expressionType: string;
-  kind: "expression";
-  nodeType: string;
-}
-
-export interface ParameterNode extends ASTNode {
-  kind: "parameter";
-  name: string;
-  value: ExpressionNode;
-}
-
 /**
  * Error information from the parser
  */
@@ -142,3 +111,21 @@ export interface SyntaxTree {
    */
   root: ASTNode;
 }
+
+// Re-export AST node types
+export type {
+  ActionLineNode,
+  ASTNode,
+  BaseConditionableNode,
+  BaseLineNode,
+  BaseNode,
+  CommentLineNode,
+  ConditionNode,
+  ExpressionNode,
+  FieldInfo,
+  NodeKind,
+  ParameterNode,
+  ParameterType,
+  UseItemLineNode,
+  VariableLineNode,
+} from "../parser/visitors/ast/common-types";

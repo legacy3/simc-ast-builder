@@ -18,6 +18,7 @@ export type ASTNode =
   | ActionLineNode
   | CommentLineNode
   | ConditionNode
+  | ErrorNode
   | UseItemLineNode
   | VariableLineNode
   | ParameterNode;
@@ -62,6 +63,14 @@ export interface ConditionNode extends BaseNode {
 }
 
 /**
+ * Error node interface for representing parsing errors
+ */
+export interface ErrorNode extends BaseNode {
+  kind: "error";
+  message: string;
+}
+
+/**
  * Base interface for all expression nodes
  */
 export interface ExpressionNode extends BaseNode {
@@ -86,6 +95,7 @@ export type NodeKind =
   | "actionLine"
   | "commentLine"
   | "condition"
+  | "error"
   | "expression"
   | "parameter"
   | "useItemLine"

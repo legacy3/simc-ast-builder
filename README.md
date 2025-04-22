@@ -53,14 +53,14 @@ const ast = parse(code);
 
 // Apply only specific optimizations
 const customOptimizedAst = optimize(ast, { 
-  enabled: true,               // Overall enable flag
-  doubleNegation: true,        // Simplify !!A -> A
-  deMorgansLaw: true,          // Apply De Morgan's laws
-  complementaryTerms: false,   // Don't optimize A && !A -> false
-  constantsAndIdentities: false,
-  absorptionLaws: false,
-  flattenNestedOperations: false,
-  commonSubexpressions: false
+  enabled: true,               // Overall enable/disable flag for all optimizations
+  doubleNegation: true,        // Simplify double negation (!!A → A)
+  deMorgansLaw: true,          // Apply De Morgan's laws (!(A && B) → !A || !B)
+  complementaryTerms: false,   // Simplify complementary terms (A && !A → false, A || !A → true)
+  constantsAndIdentities: false, // Simplify constants and identity operations (true && A → A, false || A → A, etc.)
+  absorptionLaws: false,       // Apply absorption laws (A && (A || B) → A, A || (A && B) → A)
+  flattenNestedOperations: false, // Flatten nested operations (A && (B && C) → (A && B) && C)
+  commonSubexpressions: false  // Eliminate common subexpressions ((A && B) || (A && C) → A && (B || C))
 });
 ```
 

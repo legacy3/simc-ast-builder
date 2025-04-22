@@ -1,8 +1,10 @@
 {
   "include": ["./src/**/*.ts", "./src/parser/antlr4/*.d.ts"],
-  "compilerOptions": {
+    "compilerOptions": {
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "declaration": true,
+    "declarationMap": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "exactOptionalPropertyTypes": true,
