@@ -1,11 +1,5 @@
 import { ParserRuleContext } from "antlr4ts/ParserRuleContext";
 
-export interface AccessDefinition {
-  defaultField?: string;
-  fields: string[];
-  requiresName: boolean;
-}
-
 // Export types needed by other modules
 export type ExpressionType = "boolean" | "numeric" | "neutral";
 
