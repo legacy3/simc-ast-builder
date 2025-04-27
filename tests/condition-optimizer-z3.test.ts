@@ -1,4 +1,4 @@
-import { ConditionOptimizerZ3 } from "../src/utils/ConditionOptimizerZ3";
+import { ConditionOptimizer } from "../src/utils/ConditionOptimizer";
 import { ExpressionNode } from "../src/parser/visitors/ast/common-types";
 
 function makeLiteral(value: "0" | "1"): ExpressionNode {
@@ -51,8 +51,8 @@ function makeNot(argument: ExpressionNode): ExpressionNode {
   };
 }
 
-describe("ConditionOptimizerZ3", () => {
-  const optimizer = new ConditionOptimizerZ3();
+describe("ConditionOptimizer", () => {
+  const optimizer = new ConditionOptimizer();
 
   it("should simplify A && true to A", async () => {
     const A = makeIdentifier("A");

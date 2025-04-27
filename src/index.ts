@@ -1,11 +1,5 @@
 import { Parser } from "./parser";
-import {
-  ASTNode,
-  DEFAULT_OPTIMIZER_OPTIONS,
-  OptimizerOptions,
-  ParserOptions,
-  SyntaxTree,
-} from "./types";
+import { ASTNode, ParserOptions, SyntaxTree } from "./types";
 import { ConditionOptimizer } from "./utils/ConditionOptimizer";
 
 /**
@@ -33,14 +27,8 @@ export function generateAST(
     const ast = parse(input);
 
     // Apply optimizations based on options
-    const optimizationOptions = options.optimizations;
-
-    // Apply optimizations with provided options or default behavior
-    // If the enabled flag is explicitly set to false, skip optimization
-    const skipOptimization = optimizationOptions?.enabled === false;
-    const optimizedAst = skipOptimization
-      ? ast
-      : optimize(ast, optimizationOptions || DEFAULT_OPTIMIZER_OPTIONS);
+    // Always optimize, options are ignored in the new optimizer
+    const optimizedAst = optimize(ast);
 
     return {
       errors: [], // We'll collect any errors in the real implementation
@@ -88,12 +76,9 @@ export function generateAST(
  * });
  * ```
  */
-export function optimize(
-  node: ASTNode,
-  options: OptimizerOptions = DEFAULT_OPTIMIZER_OPTIONS,
-): ASTNode {
+export function optimize(node: ASTNode): ASTNode {
   try {
-    const optimizer = new ConditionOptimizer(options);
+    const optimizer = new ConditionOptimizer();
 
     // Only optimize expression nodes
     if (node.kind === "expression") {

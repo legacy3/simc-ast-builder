@@ -1,6 +1,6 @@
 import { CharStreams, CommonTokenStream } from "antlr4ts";
 
-import { ASTNode, DEFAULT_OPTIMIZER_OPTIONS, OptimizerOptions } from "../types";
+import { ASTNode } from "../types";
 import { ConditionOptimizer } from "../utils/ConditionOptimizer";
 import { SimCExprLexer } from "./antlr4/SimCExprLexer";
 import { SimCExprParser } from "./antlr4/SimCExprParser";
@@ -16,8 +16,8 @@ export class Parser {
    * Create a new Parser instance
    * @param optimizerOptions Options for the condition optimizer
    */
-  constructor(optimizerOptions: OptimizerOptions = DEFAULT_OPTIMIZER_OPTIONS) {
-    this.optimizer = new ConditionOptimizer(optimizerOptions);
+  constructor() {
+    this.optimizer = new ConditionOptimizer();
   }
 
   /**
