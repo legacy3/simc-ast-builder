@@ -209,7 +209,7 @@ const PARAM_MAP: Record<string, ParamDefinition> = Object.fromEntries([
 ]);
 
 // TODO Verify those fields
-function getDefaultField(accessType: string): string {
+function getDefaultField(accessType: string): string | null {
   const defaults: Record<string, string> = {
     action: "cast_time",
     buff: "up",
@@ -231,11 +231,7 @@ function getDefaultField(accessType: string): string {
     trinket: "cooldown",
   };
 
-  if (!defaults[accessType]) {
-    throw new Error(`No default field for access type: ${accessType}`);
-  }
-
-  return defaults[accessType];
+  return defaults[accessType] || null;
 }
 
 function getFieldDef(name: string): FieldDefinition {

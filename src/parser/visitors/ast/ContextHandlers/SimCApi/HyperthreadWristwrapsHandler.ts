@@ -41,7 +41,7 @@ const handleHyperthreadWristwraps: AccessHandlerFn<
     fieldDef = getFieldDef(parts[2]!);
     expressionType = fieldDef.type;
   } else if (parts.length === 2) {
-    const defaultField = getDefaultField("hyperthread_wristwraps");
+    const defaultField = getDefaultField("hyperthread_wristwraps") || "";
     fieldDef = getFieldDef(defaultField);
     expressionType = fieldDef.type;
   } else {
