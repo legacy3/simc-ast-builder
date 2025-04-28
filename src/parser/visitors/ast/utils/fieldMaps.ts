@@ -209,7 +209,7 @@ const PARAM_MAP: Record<string, ParamDefinition> = Object.fromEntries([
 ]);
 
 // TODO Verify those fields
-function getDefaultField(accessType: string): string | null {
+function getDefaultField(accessType: string): string {
   const defaults: Record<string, string> = {
     action: "cast_time",
     buff: "up",
@@ -218,6 +218,7 @@ function getDefaultField(accessType: string): string | null {
     dot: "ticking",
     gcd: "max",
     health: "percent",
+    hyperthread_wristwraps: "count",
     movement: "distance",
     pet: "active",
     resource: "pct",
@@ -230,7 +231,11 @@ function getDefaultField(accessType: string): string | null {
     trinket: "cooldown",
   };
 
-  return defaults[accessType] || null;
+  if (!defaults[accessType]) {
+    throw new Error(`No default field for access type: ${accessType}`);
+  }
+
+  return defaults[accessType];
 }
 
 function getFieldDef(name: string): FieldDefinition {
