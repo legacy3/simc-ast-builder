@@ -1,13 +1,13 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getFieldDef } from "../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for hyperthread_wristwraps access
  */
 interface HyperthreadWristwrapsExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "hyperthread_wristwraps";
 }
 
@@ -40,7 +40,7 @@ const handleHyperthreadWristwraps: AccessHandlerFn<
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "hyperthread_wristwraps",
   };

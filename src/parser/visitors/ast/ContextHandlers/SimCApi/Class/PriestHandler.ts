@@ -2,14 +2,14 @@ import { ExpressionContext } from "../../../../../antlr4/SimCExprParser";
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
 import { SimCGenericVisitor } from "../../../SimCGenericVisitor";
-import { getFieldDef } from "../../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for priest access
  */
 interface PriestExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "priest";
 }
 
@@ -30,7 +30,7 @@ const handlePriest: AccessHandlerFn<PriestExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "priest",
   };

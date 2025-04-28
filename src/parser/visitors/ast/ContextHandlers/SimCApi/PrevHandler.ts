@@ -1,13 +1,13 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getFieldDef } from "../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for prev access
  */
 interface PrevExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "prev";
 }
 
@@ -25,7 +25,7 @@ const handlePrev: AccessHandlerFn<PrevExpressionNode> = ({ ctx, parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "prev",
   };

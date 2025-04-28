@@ -2,6 +2,7 @@ import { ExpressionType } from "./fieldUtils";
 
 interface FieldDefinition {
   displayName: string;
+  name: string;
   type: ExpressionType;
 }
 
@@ -23,7 +24,7 @@ function field(
   type: FieldType,
   displayName?: string,
 ): FieldEntry {
-  return [name, { displayName: displayName || name, type }];
+  return [name, { displayName: displayName || name, name, type }];
 }
 
 /**
@@ -42,6 +43,11 @@ function fieldN(name: string, displayName?: string): FieldEntry {
 
 // Field map for all available fields
 const FIELD_MAP: Record<string, FieldDefinition> = Object.fromEntries([
+  // WIP
+  fieldB("2h", "is_2h"),
+  fieldB("two_hand", "is_2h"),
+
+  //
   fieldB("active"),
   fieldB("alive"),
   fieldN("ams_absorb_percent"),
@@ -230,7 +236,7 @@ function getDefaultField(accessType: string): string | null {
 function getFieldDef(name: string): FieldDefinition {
   const fieldDef = FIELD_MAP[name];
   if (!fieldDef) {
-    return { displayName: name, type: "neutral" };
+    return { displayName: name, name, type: "neutral" };
   }
 
   return fieldDef;

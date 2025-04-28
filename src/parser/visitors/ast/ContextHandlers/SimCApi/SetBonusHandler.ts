@@ -1,12 +1,16 @@
 import { ExpressionNode } from "../../common-types";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for set_bonus access
  */
 interface SetBonusExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "set_bonus";
 }
 
@@ -22,7 +26,7 @@ const handleSetBonus: AccessHandlerFn<SetBonusExpressionNode> = ({ parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "set_bonus",
   };

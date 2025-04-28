@@ -1,13 +1,17 @@
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for boar_charge access
  */
 interface BoarChargeExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "boar_charge";
 }
 
@@ -15,7 +19,7 @@ interface BoarChargeExpressionNode extends ExpressionNode {
  * Specialized node type for howl_summon access
  */
 interface HowlSummonExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "howl_summon";
 }
 
@@ -23,7 +27,7 @@ interface HowlSummonExpressionNode extends ExpressionNode {
  * Specialized node type for hunter access
  */
 interface HunterExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "hunter";
 }
 
@@ -44,7 +48,7 @@ const handleHunter: AccessHandlerFn<HunterExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "hunter",
   };
@@ -67,7 +71,7 @@ const handleHowlSummon: AccessHandlerFn<HowlSummonExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "howl_summon",
   };
@@ -90,7 +94,7 @@ const handleBoarCharge: AccessHandlerFn<BoarChargeExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "boar_charge",
   };

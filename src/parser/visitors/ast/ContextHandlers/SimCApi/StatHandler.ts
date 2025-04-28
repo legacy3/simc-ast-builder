@@ -1,13 +1,13 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getFieldDef } from "../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for stat access
  */
 interface StatExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "stat";
 }
 
@@ -24,7 +24,7 @@ const handleStat: AccessHandlerFn<StatExpressionNode> = ({ ctx, parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "stat",
   };

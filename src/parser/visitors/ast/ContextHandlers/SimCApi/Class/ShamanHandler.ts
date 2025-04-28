@@ -2,14 +2,14 @@ import { ExpressionContext } from "../../../../../antlr4/SimCExprParser";
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
 import { SimCGenericVisitor } from "../../../SimCGenericVisitor";
-import { getFieldDef } from "../../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for shaman access
  */
 interface ShamanExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "shaman";
 }
 
@@ -30,7 +30,7 @@ const handleShaman: AccessHandlerFn<ShamanExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "shaman",
   };
@@ -40,7 +40,7 @@ const handleShaman: AccessHandlerFn<ShamanExpressionNode> = ({
  * Specialized node type for totem access
  */
 interface TotemExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "totem";
   totemName: string;
 }
@@ -60,7 +60,7 @@ const handleTotem: AccessHandlerFn<TotemExpressionNode> = ({ ctx, parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "totem",
     totemName,
@@ -71,7 +71,7 @@ const handleTotem: AccessHandlerFn<TotemExpressionNode> = ({ ctx, parts }) => {
  * Specialized node type for feral_spirit access
  */
 interface FeralSpiritExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "feral_spirit";
 }
 
@@ -92,7 +92,7 @@ const handleFeralSpirit: AccessHandlerFn<FeralSpiritExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "feral_spirit",
   };
