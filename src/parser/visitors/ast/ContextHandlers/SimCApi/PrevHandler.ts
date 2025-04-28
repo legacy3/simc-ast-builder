@@ -43,14 +43,13 @@ const handlePrev: AccessHandlerFn<PrevExpressionNode> = ({ ctx, parts }) => {
         ctx,
       );
     }
+
     actionName = parts[2] || "";
   }
 
-  const fieldDef = getFieldDef(actionName);
-
   return {
     actionName,
-    expressionType: fieldDef.type,
+    expressionType: "boolean",
     index,
     kind: "expression",
     nodeType: "prev",
