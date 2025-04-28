@@ -7,41 +7,55 @@ import { AccessHandlerFn } from "../BaseHandler";
  * Specialized node type for prev_gcd access
  */
 interface PrevGcdExpressionNode extends ExpressionNode {
-  field: string | undefined;
+  actionName: string;
   index: number;
   nodeType: "prev_gcd";
 }
 
 /**
  * Handler for prev_gcd access contexts
- * This handles patterns like prev_gcd.1.spell_name
+ * This handles patterns like:
+ * - prev_gcd.spell_name (implicit index 1)
+ * - prev_gcd.1.spell_name (explicit index 1)
+ * - prev_gcd.2.spell_name (explicit index 2)
+ * - prev_gcd.3.spell_name (explicit index 3)
  */
 const handlePrevGcd: AccessHandlerFn<PrevGcdExpressionNode> = ({
   ctx,
   parts,
 }) => {
   if (parts.length < 2) {
-    throw new SimCVisitorError("prev_gcd access requires an index", ctx);
+    throw new SimCVisitorError(
+      "prev_gcd access requires an action name or index",
+      ctx,
+    );
   }
 
-  // The first part after prev_gcd can be a number (e.g., prev_gcd.1) or a spell name (e.g., prev_gcd.earthen_wall_totem)
-  const indexStr = parts[1] || "0";
-  let index = parseInt(indexStr, 10);
-  let field = "";
+  // Check if the first part is a number (index)
+  const firstPart = parts[1] || "";
+  let index = parseInt(firstPart, 10);
+  let actionName: string;
 
   if (isNaN(index)) {
-    // If it's not a number, treat it as a spell name
-    index = 1; // Default to 1 (previous GCD)
-    field = indexStr || "";
+    // If not a number, it's the action name with implicit index 1
+    index = 1;
+    actionName = firstPart;
   } else {
-    // If it's a number, the second part is the spell name (e.g., prev_gcd.1.death_sweep)
-    field = parts.length > 2 ? parts[2] || "" : "";
+    // If it's a number, the next part is the action name
+    if (parts.length < 3) {
+      throw new SimCVisitorError(
+        "prev_gcd access with index requires an action name",
+        ctx,
+      );
+    }
+    actionName = parts[2] || "";
   }
-  const fieldDef = getFieldDef("value");
+
+  const fieldDef = getFieldDef(actionName);
 
   return {
+    actionName,
     expressionType: fieldDef.type,
-    field: field,
     index,
     kind: "expression",
     nodeType: "prev_gcd",
