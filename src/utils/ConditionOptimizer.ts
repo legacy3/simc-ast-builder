@@ -6,6 +6,7 @@ import {
   OrExprExpressionNode,
   UnaryExpressionNode,
 } from "../parser/visitors/ast/ContextHandlers/Basic";
+import { getFieldDef } from "../parser/visitors/ast/utils/fieldMaps";
 import { DEFAULT_OPTIMIZER_OPTIONS, OptimizerOptions } from "../types";
 
 /**
@@ -259,6 +260,55 @@ export class ConditionOptimizer {
   }
 
   /**
+   * Replace field with negatedName in NOT expressions (e.g., !buff.up → buff.down)
+   * @param node The node to optimize
+   * @returns The optimized node
+   */
+  private applyNegatedFieldOptimization(node: ExpressionNode): ExpressionNode {
+    if (this.isNotNode(node)) {
+      const notNode = node as UnaryExpressionNode;
+      const processedArgument = this.applyNegatedFieldOptimization(
+        notNode.argument,
+      );
+
+      if (
+        processedArgument["field"] !== undefined &&
+        processedArgument["expressionType"] === "boolean"
+      ) {
+        const fieldDef = getFieldDef(processedArgument["field"].name);
+
+        if (fieldDef && fieldDef.negatedName !== fieldDef.name) {
+          const replaceFieldDef = getFieldDef(fieldDef.negatedName);
+
+          return {
+            ...processedArgument,
+            expressionType: "boolean", // Boolean by design
+            field: replaceFieldDef,
+          };
+        }
+      }
+
+      return {
+        ...notNode,
+        argument: processedArgument,
+      };
+    }
+
+    // Recursively process children for AND/OR nodes
+    if (node.nodeType === "and" || node.nodeType === "or") {
+      const binaryNode = node as AndExprExpressionNode | OrExprExpressionNode;
+
+      return {
+        ...binaryNode,
+        left: this.applyNegatedFieldOptimization(binaryNode.left),
+        right: this.applyNegatedFieldOptimization(binaryNode.right),
+      };
+    }
+
+    return node;
+  }
+
+  /**
    * Apply all available optimizations to the node, respecting option flags
    * @param node The node to optimize
    * @returns The optimized node
@@ -280,6 +330,11 @@ export class ConditionOptimizer {
     // Apply constants and identities simplification
     if (this.options.constantsAndIdentities) {
       optimizedNode = this.simplifyConstantsAndIdentities(optimizedNode);
+    }
+
+    // Apply negated field optimization
+    if (this.options.negatedFieldOptimization) {
+      optimizedNode = this.applyNegatedFieldOptimization(optimizedNode);
     }
 
     // Apply complementary terms simplification

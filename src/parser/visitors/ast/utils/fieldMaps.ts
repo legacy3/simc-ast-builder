@@ -20,7 +20,9 @@ type ParamType = "boolean" | "string" | "numeric" | "condition";
 /**
  * Helper function to create a field definition using a partial object
  */
-function field(def: { name: string; type: FieldType } & Partial<FieldDefinition>): FieldEntry {
+function field(
+  def: { name: string; type: FieldType } & Partial<FieldDefinition>,
+): FieldEntry {
   return [
     def.name,
     {
@@ -74,13 +76,13 @@ const FIELD_MAP: Record<string, FieldDefinition> = Object.fromEntries([
   fieldN({ name: "damage" }),
   fieldN({ name: "default_value" }),
   fieldN({ name: "deficit" }),
-  fieldB({ name: "disabled" }),
+  fieldB({ name: "disabled", negatedName: "enabled" }),
   fieldN({ name: "distance" }),
   fieldB({ name: "down", negatedName: "up" }),
   fieldN({ name: "duration" }),
   fieldN({ name: "duration_expected" }),
   fieldN({ name: "duration_guess" }),
-  fieldB({ name: "enabled" }),
+  fieldB({ name: "enabled", negatedName: "disabled" }),
   fieldN({ name: "energize_amount" }),
   fieldN({ name: "energy" }),
   fieldN({ name: "essence" }),
@@ -157,7 +159,9 @@ const FIELD_MAP: Record<string, FieldDefinition> = Object.fromEntries([
 /**
  * Helper function to create a parameter definition using a partial object
  */
-function param(def: { name: string; type: ParamType } & Partial<ParamDefinition>): ParamEntry {
+function param(
+  def: { name: string; type: ParamType } & Partial<ParamDefinition>,
+): ParamEntry {
   return [def.name, { type: def.type }];
 }
 

@@ -5,6 +5,16 @@ All notable changes to the "simc-ast-builder" package will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.7] - 2025-04-28
+
+### Added
+- Negated field optimization: `ConditionOptimizer` can now replace `!buff.up` with `buff.down` (or any field with a `negatedName`), controlled by a new `negatedFieldOptimization` option.
+- New tests for negated field support and full AST transformation.
+
+### Changed
+- Refactored field definition helpers to use partial object construction and always include `negatedName`.
+- Negated field logic is now isolated in its own optimizer function and is fully configurable.
+
 ## [0.2.6] - 2025-04-28
 
 ### Changed

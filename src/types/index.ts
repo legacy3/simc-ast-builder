@@ -54,6 +54,11 @@ export interface OptimizerOptions {
    * Flatten nested operations (A && (B && C) → (A && B) && C)
    */
   flattenNestedOperations?: boolean;
+
+  /**
+   * Replace field with negatedName in NOT expressions (e.g., !buff.up → buff.down)
+   */
+  negatedFieldOptimization?: boolean;
 }
 
 /**
@@ -69,6 +74,7 @@ export const DEFAULT_OPTIMIZER_OPTIONS: OptimizerOptions = {
   doubleNegation: true,
   enabled: true,
   flattenNestedOperations: true,
+  negatedFieldOptimization: true,
 };
 
 /**
