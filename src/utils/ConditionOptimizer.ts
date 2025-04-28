@@ -12,6 +12,25 @@ import { DEFAULT_OPTIMIZER_OPTIONS, OptimizerOptions } from "../types";
  * A class that optimizes logical conditions in the AST before code generation.
  */
 export class ConditionOptimizer {
+  /**
+   * Get the sort priority for a nodeType. Higher index = higher priority = earlier.
+   * If not found, returns -1 (lowest priority).
+   */
+  static CONDITION_SORT_ORDER: string[] = [
+    "variable",
+    "talent",
+    "equipped",
+    "set_bonus",
+    "stat",
+    "resource",
+    "cooldown",
+    "action",
+    "active_dot",
+    "buff",
+    "debuff",
+    "dot",
+  ];
+
   private options: OptimizerOptions;
 
   /**
@@ -276,6 +295,11 @@ export class ConditionOptimizer {
     // Flatten nested operations
     if (this.options.flattenNestedOperations) {
       optimizedNode = this.flattenNestedOperations(optimizedNode);
+    }
+
+    // Sort AND/OR conditions by priority (higher = earlier) if enabled
+    if (this.options.conditionSorting) {
+      optimizedNode = this.sortConditionsByPriority(optimizedNode);
     }
 
     // Eliminate common subexpressions
@@ -640,6 +664,18 @@ export class ConditionOptimizer {
     return node;
   }
 
+  private getNodeTypePriority(nodeType: string): number {
+    const sortOrder = ConditionOptimizer.CONDITION_SORT_ORDER;
+    const idx = sortOrder.indexOf(nodeType);
+
+    if (idx === -1) {
+      // If not found, return -1 (lowest priority)
+      return -1;
+    }
+
+    return sortOrder.length - idx;
+  }
+
   /**
    * Check if a node is an AND operator node
    * @param node The node to check
@@ -648,14 +684,6 @@ export class ConditionOptimizer {
   private isAndNode(node: ExpressionNode): boolean {
     return node.nodeType === "and";
   }
-
-  /**
-   * Simplify expressions with complementary terms
-   * - A && !A → false
-   * - A || !A → true
-   * @param node The node to simplify
-   * @returns The simplified node
-   */
 
   /**
    * Check if a node is a NOT operator node (unary with "not" operator)
@@ -985,5 +1013,76 @@ export class ConditionOptimizer {
       ...notNode,
       argument: this.simplifyDoubleNegation(argument),
     };
+  }
+
+  /**
+   * Recursively sorts AND/OR conditions by nodeType priority (higher = earlier).
+   * Only sorts if more than 2 operands, otherwise just recurses.
+   */
+  private sortConditionsByPriority(node: ExpressionNode): ExpressionNode {
+    if (node.nodeType !== "and" && node.nodeType !== "or") {
+      return node;
+    }
+
+    const type = node.nodeType as "and" | "or";
+
+    // Flatten all nodes of the same type
+    const nodes: ExpressionNode[] = [];
+    const flatten = (n: ExpressionNode) => {
+      if (n.nodeType === type) {
+        // @ts-ignore
+        flatten(n.left);
+        // @ts-ignore
+        flatten(n.right);
+      } else {
+        nodes.push(n);
+      }
+    };
+    flatten(node);
+
+    if (nodes.length <= 2) {
+      // No need to sort, just recursively process children
+      // @ts-ignore
+      return {
+        ...node,
+        left: this.sortConditionsByPriority(node["left"]),
+        right: this.sortConditionsByPriority(node["right"]),
+      };
+    }
+
+    // Sort by priority descending (higher index = earlier)
+    nodes.sort((a, b) => {
+      const prioA = this.getNodeTypePriority(a.nodeType);
+      const prioB = this.getNodeTypePriority(b.nodeType);
+
+      // Higher priority first
+      return prioB - prioA;
+    });
+
+    // Recursively sort children
+    const sorted = nodes.map((n) => this.sortConditionsByPriority(n));
+
+    // Rebuild left-deep binary tree
+    let tree = {
+      expressionType: "boolean",
+      kind: "expression",
+      left: sorted[0],
+      nodeType: type,
+      operator: type,
+      right: sorted[1],
+    } as ExpressionNode;
+
+    for (let i = 2; i < sorted.length; i++) {
+      tree = {
+        expressionType: "boolean",
+        kind: "expression",
+        left: tree,
+        nodeType: type,
+        operator: type,
+        right: sorted[i],
+      } as ExpressionNode;
+    }
+
+    return tree;
   }
 }

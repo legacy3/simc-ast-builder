@@ -25,6 +25,12 @@ export interface OptimizerOptions {
   complementaryTerms?: boolean;
 
   /**
+   * Sort non-logic-changing conditions by the library's built-in order.
+   * If true, conditions are sorted by internal priority. If false or omitted, no sorting is performed.
+   */
+  conditionSorting?: boolean;
+
+  /**
    * Simplify constants and identity operations (true && A → A, false || A → A, etc.)
    */
   constantsAndIdentities?: boolean;
@@ -57,6 +63,7 @@ export const DEFAULT_OPTIMIZER_OPTIONS: OptimizerOptions = {
   absorptionLaws: true,
   commonSubexpressions: true,
   complementaryTerms: true,
+  conditionSorting: true,
   constantsAndIdentities: true,
   deMorgansLaw: true,
   doubleNegation: true,
