@@ -16,7 +16,7 @@ export class ConditionOptimizer {
    * Get the sort priority for a nodeType. Higher index = higher priority = earlier.
    * If not found, returns -1 (lowest priority).
    */
-  static CONDITION_SORT_ORDER: string[] = [
+  CONDITION_SORT_ORDER: string[] = [
     "variable",
     "talent",
     "equipped",
@@ -665,7 +665,7 @@ export class ConditionOptimizer {
   }
 
   private getNodeTypePriority(nodeType: string): number {
-    const sortOrder = ConditionOptimizer.CONDITION_SORT_ORDER;
+    const sortOrder = this.CONDITION_SORT_ORDER;
     const idx = sortOrder.indexOf(nodeType);
 
     if (idx === -1) {

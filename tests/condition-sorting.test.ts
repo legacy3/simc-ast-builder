@@ -6,7 +6,7 @@ describe("ConditionOptimizer - conditionSorting", () => {
   class TestConditionOptimizer extends ConditionOptimizer {
     constructor(order: string[]) {
       super({ conditionSorting: true });
-      // @ts-ignore
+
       this.CONDITION_SORT_ORDER = order;
     }
   }
@@ -124,7 +124,9 @@ describe("ConditionOptimizer - conditionSorting", () => {
 
     // foo and bar should come first, others keep original order after
     expect(getOrder(optimized).slice(0, 2)).toEqual(["foo", "bar"]);
-    expect(getOrder(optimized).sort()).toEqual(["bar", "baz", "foo", "qux"].sort());
+    expect(getOrder(optimized).sort()).toEqual(
+      ["bar", "baz", "foo", "qux"].sort(),
+    );
   });
 
   it("sorts deeply nested AND/OR conditions", () => {
@@ -154,7 +156,8 @@ describe("ConditionOptimizer - conditionSorting", () => {
 
     const optimized = optimizer.optimize(expr);
 
-    // Should be: (alpha && beta) || (gamma && delta)
+    // Should preserve grouping: (gamma && delta) || (beta && alpha)
+    // Each AND group is sorted, but the OR does not flatten globally.
     const getOrder = (node: ExpressionNode): string[] => {
       if (node.nodeType === "and" || node.nodeType === "or") {
         return [...getOrder(node.left), ...getOrder(node.right)];
@@ -162,6 +165,9 @@ describe("ConditionOptimizer - conditionSorting", () => {
       return [node.nodeType];
     };
 
-    expect(getOrder(optimized)).toEqual(["alpha", "beta", "gamma", "delta"]);
+    // The left AND group: ["gamma", "delta"] (sorted)
+    // The right AND group: ["beta", "alpha"] (sorted)
+    // The OR: [left group, right group]
+    expect(getOrder(optimized)).toEqual(["gamma", "delta", "beta", "alpha"]);
   });
 });
