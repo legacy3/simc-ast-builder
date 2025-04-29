@@ -23,9 +23,15 @@ const handleStringExpr: ContextHandlerFn<
     throw new SimCVisitorError("Empty string text", ctx);
   }
 
-  // Only add warning if this token isn't handled by a registered handler
-  if (!contextHandlerRegistry.hasAccessHandler(ctx.text)) {
-    // addWarning("stringExpr", ctx.text);
+  // Check if this string is a registered access handler (like "boss")
+  if (contextHandlerRegistry.hasAccessHandler(ctx.text)) {
+    // If it is, use that handler instead
+    return contextHandlerRegistry.dispatchAccess(
+      ctx.text as any,
+      ctx,
+      visitor,
+      [ctx.text],
+    );
   }
 
   return {

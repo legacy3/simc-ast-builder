@@ -2,14 +2,14 @@ import { ExpressionContext } from "../../../../../antlr4/SimCExprParser";
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
 import { SimCGenericVisitor } from "../../../SimCGenericVisitor";
-import { getFieldDef } from "../../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for paladin access
  */
 interface PaladinExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "paladin";
 }
 
@@ -30,7 +30,7 @@ const handlePaladin: AccessHandlerFn<PaladinExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "paladin",
   };
@@ -40,7 +40,7 @@ const handlePaladin: AccessHandlerFn<PaladinExpressionNode> = ({
  * Specialized node type for consecration access
  */
 interface ConsecrationExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "consecration";
 }
 
@@ -61,7 +61,7 @@ const handleConsecration: AccessHandlerFn<ConsecrationExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "consecration",
   };

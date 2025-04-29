@@ -2,14 +2,14 @@ import { ExpressionContext } from "../../../../../antlr4/SimCExprParser";
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
 import { SimCGenericVisitor } from "../../../SimCGenericVisitor";
-import { getFieldDef } from "../../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for rogue access
  */
 interface RogueExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "rogue";
 }
 
@@ -27,7 +27,7 @@ const handleRogue: AccessHandlerFn<RogueExpressionNode> = ({ ctx, parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "rogue",
   };
@@ -37,7 +37,7 @@ const handleRogue: AccessHandlerFn<RogueExpressionNode> = ({ ctx, parts }) => {
  * Specialized node type for rtb_buffs (Roll the Bones) access
  */
 interface RtbBuffsExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "rtb_buffs";
 }
 
@@ -58,7 +58,7 @@ const handleRtbBuffs: AccessHandlerFn<RtbBuffsExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "rtb_buffs",
   };
@@ -68,7 +68,7 @@ const handleRtbBuffs: AccessHandlerFn<RtbBuffsExpressionNode> = ({
  * Specialized node type for stealthed access
  */
 interface StealthedExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "stealthed";
 }
 
@@ -89,7 +89,7 @@ const handleStealthed: AccessHandlerFn<StealthedExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "stealthed",
   };

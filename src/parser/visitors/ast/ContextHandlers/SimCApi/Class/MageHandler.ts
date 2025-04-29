@@ -1,13 +1,17 @@
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for firestarter access
  */
 interface FirestarterExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "firestarter";
 }
 
@@ -15,7 +19,7 @@ interface FirestarterExpressionNode extends ExpressionNode {
  * Specialized node type for improved_scorch access
  */
 interface ImprovedScorchExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "improved_scorch";
 }
 
@@ -23,7 +27,7 @@ interface ImprovedScorchExpressionNode extends ExpressionNode {
  * Specialized node type for mage access
  */
 interface MageExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "mage";
 }
 
@@ -31,7 +35,7 @@ interface MageExpressionNode extends ExpressionNode {
  * Specialized node type for scorch_execute access
  */
 interface ScorchExecuteExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "scorch_execute";
 }
 
@@ -49,7 +53,7 @@ const handleMage: AccessHandlerFn<MageExpressionNode> = ({ ctx, parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "mage",
   };
@@ -72,7 +76,7 @@ const handleScorchExecute: AccessHandlerFn<ScorchExecuteExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "scorch_execute",
   };
@@ -95,7 +99,7 @@ const handleImprovedScorch: AccessHandlerFn<ImprovedScorchExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "improved_scorch",
   };
@@ -118,7 +122,7 @@ const handleFirestarter: AccessHandlerFn<FirestarterExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "firestarter",
   };

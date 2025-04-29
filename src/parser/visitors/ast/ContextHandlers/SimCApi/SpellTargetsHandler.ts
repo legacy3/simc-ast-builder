@@ -1,14 +1,13 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getFieldDef } from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for spell_targets access
  */
 interface SpellTargetsExpressionNode extends ExpressionNode {
+  actionName: string;
   nodeType: "spell_targets";
-  spellName: string;
 }
 
 /**
@@ -25,17 +24,11 @@ const handleSpellTargets: AccessHandlerFn<SpellTargetsExpressionNode> = ({
     );
   }
 
-  const spellName = parts[1]!; // Non-null assertion since we check parts.length above
-
-  // spell_targets always returns a numeric value
-  const fieldDef = getFieldDef("value");
-
   return {
-    expressionType: "numeric", // Always numeric
-    field: "",
+    actionName: parts[1]!,
+    expressionType: "numeric",
     kind: "expression",
     nodeType: "spell_targets",
-    spellName,
   };
 };
 

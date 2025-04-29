@@ -1,13 +1,17 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for trinket access
  */
 interface TrinketExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "trinket";
   trinketSlot: string;
 }
@@ -40,7 +44,7 @@ const handleTrinket: AccessHandlerFn<TrinketExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "trinket",
     trinketSlot: slot,

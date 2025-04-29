@@ -1,12 +1,16 @@
 import { ExpressionNode } from "../../common-types";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for GCD access
  */
 interface GcdExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "gcd";
 }
 
@@ -22,7 +26,7 @@ const handleGcd: AccessHandlerFn<GcdExpressionNode> = ({ parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "gcd",
   };

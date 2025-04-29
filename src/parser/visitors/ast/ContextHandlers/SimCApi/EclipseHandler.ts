@@ -1,12 +1,16 @@
 import { ExpressionNode } from "../../common-types";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for eclipse access
  */
 interface EclipseExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "eclipse";
 }
 
@@ -22,7 +26,7 @@ const handleEclipse: AccessHandlerFn<EclipseExpressionNode> = ({ parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "eclipse",
   };

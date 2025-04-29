@@ -1,13 +1,17 @@
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for druid access
  */
 interface DruidExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "druid";
 }
 
@@ -15,7 +19,7 @@ interface DruidExpressionNode extends ExpressionNode {
  * Specialized node type for eclipse access
  */
 interface EclipseExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "eclipse";
 }
 
@@ -34,7 +38,7 @@ const handleEclipse: AccessHandlerFn<EclipseExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "eclipse",
   };
@@ -50,13 +54,15 @@ const handleDruid: AccessHandlerFn<DruidExpressionNode> = ({ ctx, parts }) => {
     throw new SimCVisitorError("Druid access requires a field", ctx);
   }
 
-  // For now, just return a generic expression
-  // This can be expanded to handle specific Druid fields
-  const fieldDef = getFieldDef("value");
+  const rawField = parts.length > 1 ? parts[1] : null;
+  const defaultField = getDefaultField("druid");
+  const field = rawField || defaultField || "";
+
+  const fieldDef = getFieldDef(field);
 
   return {
     expressionType: fieldDef.type,
-    field: parts[1] || "",
+    field: fieldDef,
     kind: "expression",
     nodeType: "druid",
   };

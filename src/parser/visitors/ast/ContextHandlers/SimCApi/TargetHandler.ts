@@ -1,12 +1,16 @@
 import { ExpressionNode } from "../../common-types";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for target access
  */
 interface TargetExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "target";
 }
 
@@ -22,7 +26,7 @@ const handleTarget: AccessHandlerFn<TargetExpressionNode> = ({ parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "target",
   };

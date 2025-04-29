@@ -1,6 +1,10 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
@@ -8,7 +12,7 @@ import { AccessHandlerFn } from "../BaseHandler";
  */
 interface ActionExpressionNode extends ExpressionNode {
   actionName: string;
-  field: string;
+  field: FieldDefinition;
   nodeType: "action";
 }
 
@@ -33,7 +37,7 @@ const handleAction: AccessHandlerFn<ActionExpressionNode> = ({
   return {
     actionName,
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "action",
   };

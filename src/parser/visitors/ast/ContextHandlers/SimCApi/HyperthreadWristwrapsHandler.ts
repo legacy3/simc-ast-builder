@@ -1,13 +1,19 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
+import { ExpressionType } from "../../utils/fieldUtils";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for hyperthread_wristwraps access
  */
 interface HyperthreadWristwrapsExpressionNode extends ExpressionNode {
-  field: string;
+  actionName: string;
+  field: FieldDefinition;
   nodeType: "hyperthread_wristwraps";
 }
 
@@ -30,17 +36,30 @@ const handleHyperthreadWristwraps: AccessHandlerFn<
     );
   }
 
-  // Handle special case for hyperthread_wristwraps.spellName.charges
-  let field = parts[1] || "";
-  if (parts.length > 2) {
-    field = `${field}.${parts[2]}`;
+  // Determine field and actionName based on parts
+  let actionName: string = parts[1]!;
+  let fieldDef: FieldDefinition;
+  let expressionType: ExpressionType;
+
+  if (parts.length === 3) {
+    fieldDef = getFieldDef(parts[2]!);
+    expressionType = fieldDef.type;
+  } else if (parts.length === 2) {
+    const defaultField = getDefaultField("hyperthread_wristwraps") || "";
+    fieldDef = getFieldDef(defaultField);
+    expressionType = fieldDef.type;
+  } else {
+    // This should never happen due to the earlier throw, but for type safety:
+    throw new SimCVisitorError(
+      "Invalid number of parts for hyperthread_wristwraps access",
+      ctx,
+    );
   }
 
-  const fieldDef = getFieldDef(field);
-
   return {
-    expressionType: fieldDef.type,
-    field,
+    actionName,
+    expressionType,
+    field: fieldDef,
     kind: "expression",
     nodeType: "hyperthread_wristwraps",
   };

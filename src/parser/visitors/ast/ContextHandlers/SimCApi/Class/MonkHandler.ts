@@ -2,14 +2,14 @@ import { ExpressionContext } from "../../../../../antlr4/SimCExprParser";
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
 import { SimCGenericVisitor } from "../../../SimCGenericVisitor";
-import { getFieldDef } from "../../../utils/fieldMaps";
+import { FieldDefinition, getFieldDef } from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for monk access
  */
 interface MonkExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "monk";
 }
 
@@ -27,7 +27,7 @@ const handleMonk: AccessHandlerFn<MonkExpressionNode> = ({ ctx, parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "monk",
   };
@@ -37,7 +37,7 @@ const handleMonk: AccessHandlerFn<MonkExpressionNode> = ({ ctx, parts }) => {
  * Specialized node type for stagger access
  */
 interface StaggerExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "stagger";
 }
 
@@ -58,7 +58,7 @@ const handleStagger: AccessHandlerFn<StaggerExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "stagger",
   };

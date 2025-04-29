@@ -1,13 +1,17 @@
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for empowering access
  */
 interface EmpoweringExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "empowering";
 }
 
@@ -15,7 +19,7 @@ interface EmpoweringExpressionNode extends ExpressionNode {
  * Specialized node type for evoker access
  */
 interface EvokerExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "evoker";
 }
 
@@ -23,7 +27,7 @@ interface EvokerExpressionNode extends ExpressionNode {
  * Specialized node type for release access
  */
 interface ReleaseExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "release";
 }
 
@@ -44,7 +48,7 @@ const handleEvoker: AccessHandlerFn<EvokerExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "evoker",
   };
@@ -67,7 +71,7 @@ const handleEmpowering: AccessHandlerFn<EmpoweringExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "empowering",
   };
@@ -90,7 +94,7 @@ const handleRelease: AccessHandlerFn<ReleaseExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "release",
   };

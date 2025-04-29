@@ -1,6 +1,10 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
@@ -8,7 +12,7 @@ import { AccessHandlerFn } from "../BaseHandler";
  */
 interface RaidEventExpressionNode extends ExpressionNode {
   eventName: string;
-  field: string;
+  field: FieldDefinition;
   nodeType: "raid_event";
 }
 
@@ -33,7 +37,7 @@ const handleRaidEvent: AccessHandlerFn<RaidEventExpressionNode> = ({
   return {
     eventName,
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "raid_event",
   };

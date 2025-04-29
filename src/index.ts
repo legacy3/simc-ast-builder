@@ -135,11 +135,10 @@ export function parse(input: string): ASTNode {
   }
 }
 
-// Export all basic types
+/**
+ * Streamlined exports for main API surface
+ */
+export { split } from "./parser";
 export * from "./types";
-
-// Export utilities that might be useful for consumers
 export { ConditionOptimizer } from "./utils/ConditionOptimizer";
-
-// Export the NodeTypes namespace that contains all expression node types
 export type { NodeTypes } from "./parser/visitors/ast/node-types";

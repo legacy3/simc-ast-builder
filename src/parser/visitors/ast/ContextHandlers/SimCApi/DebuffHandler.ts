@@ -1,6 +1,10 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
@@ -8,7 +12,7 @@ import { AccessHandlerFn } from "../BaseHandler";
  */
 interface DebuffExpressionNode extends ExpressionNode {
   debuffName: string;
-  field: string;
+  field: FieldDefinition;
   nodeType: "debuff";
 }
 
@@ -33,7 +37,7 @@ const handleDebuff: AccessHandlerFn<DebuffExpressionNode> = ({
   return {
     debuffName: name,
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "debuff",
   };

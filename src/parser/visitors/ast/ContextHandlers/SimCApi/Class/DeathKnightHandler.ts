@@ -1,13 +1,17 @@
 import { ExpressionNode } from "../../../common-types";
 import { SimCVisitorError } from "../../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../../utils/fieldMaps";
 import { AccessHandlerFn } from "../../BaseHandler";
 
 /**
  * Specialized node type for death_and_decay access
  */
 interface DeathAndDecayExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "death_and_decay";
 }
 
@@ -15,7 +19,7 @@ interface DeathAndDecayExpressionNode extends ExpressionNode {
  * Specialized node type for death_knight access
  */
 interface DeathKnightExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "death_knight";
 }
 
@@ -34,7 +38,7 @@ const handleDeathAndDecay: AccessHandlerFn<DeathAndDecayExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "death_and_decay",
   };
@@ -53,13 +57,15 @@ const handleDeathKnight: AccessHandlerFn<DeathKnightExpressionNode> = ({
     throw new SimCVisitorError("Death Knight access requires a field", ctx);
   }
 
-  // For now, just return a generic expression
-  // This can be expanded to handle specific Death Knight fields
-  const fieldDef = getFieldDef("value");
+  const rawField = parts.length > 1 ? parts[1] : null;
+  const defaultField = getDefaultField("death_knight");
+  const field = rawField || defaultField || "";
+
+  const fieldDef = getFieldDef(field);
 
   return {
     expressionType: fieldDef.type,
-    field: parts[1] || "",
+    field: fieldDef,
     kind: "expression",
     nodeType: "death_knight",
   };

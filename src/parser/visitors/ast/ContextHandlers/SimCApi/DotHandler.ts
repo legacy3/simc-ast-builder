@@ -1,6 +1,10 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
@@ -8,7 +12,7 @@ import { AccessHandlerFn } from "../BaseHandler";
  */
 interface DotExpressionNode extends ExpressionNode {
   dotName: string;
-  field: string;
+  field: FieldDefinition;
   nodeType: "dot";
 }
 
@@ -30,7 +34,7 @@ const handleDot: AccessHandlerFn<DotExpressionNode> = ({ ctx, parts }) => {
   return {
     dotName: name,
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "dot",
   };

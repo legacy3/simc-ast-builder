@@ -1,12 +1,16 @@
 import { ExpressionNode } from "../../common-types";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for health access
  */
 interface HealthExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "health";
 }
 
@@ -22,7 +26,7 @@ const handleHealth: AccessHandlerFn<HealthExpressionNode> = ({ parts }) => {
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "health",
   };

@@ -1,6 +1,10 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
@@ -8,7 +12,7 @@ import { AccessHandlerFn } from "../BaseHandler";
  */
 interface BuffExpressionNode extends ExpressionNode {
   buffName: string;
-  field: string;
+  field: FieldDefinition;
   nodeType: "buff";
 }
 
@@ -30,7 +34,7 @@ const handleBuff: AccessHandlerFn<BuffExpressionNode> = ({ ctx, parts }) => {
   return {
     buffName: name,
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "buff",
   };

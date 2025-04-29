@@ -1,13 +1,17 @@
 import { ExpressionNode } from "../../common-types";
 import { SimCVisitorError } from "../../errors/SimCVisitorError";
-import { getDefaultField, getFieldDef } from "../../utils/fieldMaps";
+import {
+  FieldDefinition,
+  getDefaultField,
+  getFieldDef,
+} from "../../utils/fieldMaps";
 import { AccessHandlerFn } from "../BaseHandler";
 
 /**
  * Specialized node type for talent access
  */
 interface TalentExpressionNode extends ExpressionNode {
-  field: string;
+  field: FieldDefinition;
   nodeType: "talent";
   talentName: string;
 }
@@ -32,7 +36,7 @@ const handleTalent: AccessHandlerFn<TalentExpressionNode> = ({
 
   return {
     expressionType: fieldDef.type,
-    field,
+    field: fieldDef,
     kind: "expression",
     nodeType: "talent",
     talentName: name,
