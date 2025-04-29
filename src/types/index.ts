@@ -74,7 +74,7 @@ export const DEFAULT_OPTIMIZER_OPTIONS: OptimizerOptions = {
   doubleNegation: true,
   enabled: true,
   flattenNestedOperations: true,
-  negatedFieldOptimization: true,
+  negatedFieldOptimization: false,
 };
 
 /**
