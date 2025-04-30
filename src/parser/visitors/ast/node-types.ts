@@ -39,6 +39,7 @@ export namespace NodeTypes {
     export type Dot = SimCApiHandlers.DotExpressionNode;
     export type Eclipse = SimCApiHandlers.EclipseExpressionNode;
     export type Equipped = SimCApiHandlers.EquippedExpressionNode;
+    export type FightRemains = SimCApiHandlers.FightRemainsExpressionNode;
     export type Gcd = SimCApiHandlers.GcdExpressionNode;
     export type Health = SimCApiHandlers.HealthExpressionNode;
     export type HeroTree = SimCApiHandlers.HeroTreeExpressionNode;

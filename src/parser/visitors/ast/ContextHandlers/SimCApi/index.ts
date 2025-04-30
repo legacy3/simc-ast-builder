@@ -7,6 +7,7 @@ export * from "./CooldownHandler";
 export * from "./DebuffHandler";
 export * from "./DotHandler";
 export * from "./EquippedHandler";
+export * from "./FightRemainsHandler";
 export * from "./GcdHandler";
 export * from "./HealthHandler";
 export * from "./HeroTreeHandler";

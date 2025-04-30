@@ -62,6 +62,7 @@ type AccessHandlerTypeMap = {
   debuff: (params: AccessHandlerParams) => ExpressionNode;
   dot: (params: AccessHandlerParams) => ExpressionNode;
   empowering: (params: AccessHandlerParams) => ExpressionNode;
+  fight_remains: (params: AccessHandlerParams) => ExpressionNode;
   firestarter: (params: AccessHandlerParams) => ExpressionNode;
   howl_summon: (params: AccessHandlerParams) => ExpressionNode;
   improved_scorch: (params: AccessHandlerParams) => ExpressionNode;
@@ -312,6 +313,7 @@ class ContextHandlerRegistry {
     RAH("prev_off_gcd", SimCApiHandlers.handlePrevOffGcd);
     RAH("set_bonus", SimCApiHandlers.handleSetBonus);
     RAH("stat", SimCApiHandlers.handleStat);
+    RAH("fight_remains", SimCApiHandlers.handleFightRemains);
 
     // Evoker-specific handlers
     RAH("evoker", SimCApiHandlers.handleEvoker);
