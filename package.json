@@ -30,7 +30,7 @@
   "scripts": {
     "build": "tsc",
     "example": "ts-node examples/basic-usage.ts",
-    "format": "prettier --write \"src/**/*\" \"tests/**/*\" --config .prettierrc.js",
+    "format": "prettier --write \"examples/**/*\" \"src/**/*\" \"tests/**/*\" --config .prettierrc.js",
     "generate": "node -e \"process.platform === 'darwin' ? require('child_process').execSync('npm run generate:osx', {stdio: 'inherit'}) : require('child_process').execSync('npm run generate:win', {stdio: 'inherit'})\"",
     "generate:osx": "antlr4ts -visitor ./src/parser/antlr4/SimCExpr.g4",
     "generate:win": "antlr4ts -visitor -o ./src/parser/antlr4 ./src/parser/antlr4/SimCExpr.g4",

@@ -5,7 +5,9 @@ A web-based formatter for SimulationCraft code that visualizes the Abstract Synt
 ## Features
 
 - Parse SimC code and generate an AST
-- Visualize the AST as an interactive tree
+- Visualize the AST in two different ways:
+  - Text-based tree view for detailed inspection
+  - Visual tree diagram using Konva.js for a graphical representation
 - Option to optimize the AST
 - Clean, responsive UI built with Svelte and Bootstrap
 
@@ -37,6 +39,7 @@ npm run dev
 ```
 
 This will:
+
 - Build the JavaScript bundle with Rollup
 - Start a local server with live reloading
 
@@ -55,6 +58,7 @@ The built files will be in the `public` directory.
 1. Enter SimC code in the text area
 2. Click "Parse Code" to generate and visualize the AST
 3. Toggle "Optimize AST" to apply optimizations to the generated AST
+4. Switch between "Text View" and "Visual Tree" tabs to see different visualizations
 
 ## Example SimC Code
 
@@ -77,4 +81,5 @@ actions=frost_strike,if=!(!runic_power>=80&!buff.killing_machine.up)
 - [simc-ast-builder](https://github.com/legacy3/simc-ast-builder) - For parsing SimC code and generating ASTs
 - [Svelte](https://svelte.dev/) - For building the UI
 - [Bootstrap](https://getbootstrap.com/) - For styling
+- [Konva.js](https://konvajs.org/) - For rendering the visual tree diagram
 - [Rollup](https://rollupjs.org/) - For bundling JavaScript

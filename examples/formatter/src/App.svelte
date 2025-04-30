@@ -2,12 +2,14 @@
 	import { onMount } from 'svelte';
 	import { parse, optimize } from 'simc-ast-builder';
 	import TreeNode from './TreeNode.svelte';
+	import VisualTreeView from './VisualTreeView.svelte';
 
 	// State variables
 	let simcCode = 'actions=frost_strike,if=runic_power>=80&!buff.killing_machine.up';
 	let ast = null;
 	let error = null;
 	let shouldOptimize = false;
+	let activeTab = 'text'; // 'text' or 'visual'
 
 	// Parse the SimC code and generate the AST
 	function parseCode() {
@@ -31,6 +33,11 @@
 	onMount(() => {
 		parseCode();
 	});
+
+	// Switch between tabs
+	function setActiveTab(tab) {
+		activeTab = tab;
+	}
 </script>
 
 <main class="container py-4">
@@ -81,12 +88,31 @@
 	{#if ast}
 		<div class="card">
 			<div class="card-header">
-				<h2 class="h5 mb-0">AST Visualization</h2>
+				<ul class="nav nav-tabs card-header-tabs">
+					<li class="nav-item">
+						<button 
+							class="nav-link {activeTab === 'text' ? 'active' : ''}" 
+							on:click={() => setActiveTab('text')}>
+							Text View
+						</button>
+					</li>
+					<li class="nav-item">
+						<button 
+							class="nav-link {activeTab === 'visual' ? 'active' : ''}" 
+							on:click={() => setActiveTab('visual')}>
+							Visual Tree
+						</button>
+					</li>
+				</ul>
 			</div>
 			<div class="card-body">
-				<div class="ast-tree">
-					<TreeNode node={ast} />
-				</div>
+				{#if activeTab === 'text'}
+					<div class="ast-tree">
+						<TreeNode node={ast} />
+					</div>
+				{:else}
+					<VisualTreeView {ast} />
+				{/if}
 			</div>
 		</div>
 	{/if}
@@ -101,5 +127,9 @@
 	.ast-tree {
 		max-height: 600px;
 		overflow: auto;
+	}
+
+	.nav-link {
+		cursor: pointer;
 	}
 </style>
