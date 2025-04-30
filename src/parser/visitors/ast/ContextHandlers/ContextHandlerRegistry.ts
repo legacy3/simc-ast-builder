@@ -58,6 +58,7 @@ type AccessHandlerTypeMap = {
   buff: (params: AccessHandlerParams) => ExpressionNode;
   consecration: (params: AccessHandlerParams) => ExpressionNode;
   cooldown: (params: AccessHandlerParams) => ExpressionNode;
+  cycle_enemies: (params: AccessHandlerParams) => ExpressionNode;
   death_and_decay: (params: AccessHandlerParams) => ExpressionNode;
   debuff: (params: AccessHandlerParams) => ExpressionNode;
   dot: (params: AccessHandlerParams) => ExpressionNode;
@@ -319,6 +320,7 @@ class ContextHandlerRegistry {
     RAH("stat", SimCApiHandlers.handleStat);
     RAH("fight_remains", SimCApiHandlers.handleFightRemains);
     RAH("time", SimCApiHandlers.handleTime);
+    RAH("cycle_enemies", SimCApiHandlers.handleCycleEnemies);
 
     // Evoker-specific handlers
     RAH("evoker", SimCApiHandlers.handleEvoker);

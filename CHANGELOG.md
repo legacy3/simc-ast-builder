@@ -5,6 +5,12 @@ All notable changes to the "simc-ast-builder" package will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-04-30
+
+### Added
+
+- Added support for `cycle_enemies` expression handler for targeting multiple enemies in rotation
+
 ## [0.2.9] - 2025-04-30
 
 ### Added

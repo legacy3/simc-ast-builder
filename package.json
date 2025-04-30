@@ -1,6 +1,6 @@
 {
   "name": "simc-ast-builder",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "description": "Parser and AST generator for SimulationCraft files",
   "license": "GPL-3.0",
   "author": "legacy3",

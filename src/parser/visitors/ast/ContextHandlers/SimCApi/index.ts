@@ -4,6 +4,7 @@ export * from "./ActiveDotHandler";
 export * from "./BuffHandler";
 export * from "./Class";
 export * from "./CooldownHandler";
+export * from "./CycleEnemiesHandler";
 export * from "./DebuffHandler";
 export * from "./DotHandler";
 export * from "./EquippedHandler";
