@@ -3,6 +3,7 @@
 	import { parse, optimize } from 'simc-ast-builder';
 	import TreeNode from './TreeNode.svelte';
 	import VisualTreeView from './VisualTreeView.svelte';
+	import SimCEditor from './SimCEditor.svelte';
 
 	// State variables
 	let simcCode = 'actions=frost_strike,if=runic_power>=80&!buff.killing_machine.up';
@@ -50,12 +51,13 @@
 		<div class="card-body">
 			<div class="mb-3">
 				<label for="simc-input" class="form-label">SimC Code</label>
-				<textarea 
-					id="simc-input" 
-					class="form-control" 
-					rows="5"
+				<SimCEditor
+					id="simc-input"
 					bind:value={simcCode}
-					placeholder="Enter SimC code here..."></textarea>
+					rows={5}
+					placeholder="Enter SimC code here..."
+					on:input={() => parseCode()}
+				/>
 			</div>
 
 			<div class="d-flex align-items-center mb-3">
