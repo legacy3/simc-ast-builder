@@ -7,6 +7,13 @@ import type { ExpressionNode } from "./visitors/ast/common-types";
 
 import { ConditionSplitter } from "../utils/ConditionSplitter";
 
+export {
+  FIELD_MAP,
+  getDefaultField,
+  getFieldDef,
+  PARAM_MAP,
+} from "./visitors/ast/utils/fieldMaps";
+
 /**
  * Splits a logical condition AST into its top-level AND parts.
  * @param node The root ExpressionNode.

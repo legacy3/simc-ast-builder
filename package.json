@@ -1,6 +1,6 @@
 {
   "name": "simc-ast-builder",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "description": "Parser and AST generator for SimulationCraft files",
   "license": "GPL-3.0",
   "author": "legacy3",
@@ -30,7 +30,7 @@
   "scripts": {
     "build": "tsc",
     "example": "ts-node examples/basic-usage.ts",
-    "format": "prettier --write \"src/**/*\" \"tests/**/*\" --config .prettierrc.js",
+    "format": "prettier --write \"examples/**/*\" \"src/**/*\" \"tests/**/*\" --config .prettierrc.js",
     "generate": "node -e \"process.platform === 'darwin' ? require('child_process').execSync('npm run generate:osx', {stdio: 'inherit'}) : require('child_process').execSync('npm run generate:win', {stdio: 'inherit'})\"",
     "generate:osx": "antlr4ts -visitor ./src/parser/antlr4/SimCExpr.g4",
     "generate:win": "antlr4ts -visitor -o ./src/parser/antlr4 ./src/parser/antlr4/SimCExpr.g4",
