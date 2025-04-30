@@ -98,11 +98,34 @@ const handleFeralSpirit: AccessHandlerFn<FeralSpiritExpressionNode> = ({
   };
 };
 
+/**
+ * Specialized node type for lightning_rod access
+ */
+interface LightningRodExpressionNode extends ExpressionNode {
+  nodeType: "lightning_rod";
+}
+
+/**
+ * Handler for lightning_rod access contexts
+ * This handles access to the lightning_rod property for Shaman
+ */
+const handleLightningRod: AccessHandlerFn<LightningRodExpressionNode> = ({
+  parts,
+}) => {
+  return {
+    expressionType: "numeric",
+    kind: "expression",
+    nodeType: "lightning_rod",
+  };
+};
+
 export {
   handleFeralSpirit,
+  handleLightningRod,
   handleShaman,
   handleTotem,
   type FeralSpiritExpressionNode,
+  type LightningRodExpressionNode,
   type ShamanExpressionNode,
   type TotemExpressionNode,
 };

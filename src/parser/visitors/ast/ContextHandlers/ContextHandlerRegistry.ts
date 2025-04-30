@@ -67,12 +67,14 @@ type AccessHandlerTypeMap = {
   howl_summon: (params: AccessHandlerParams) => ExpressionNode;
   improved_scorch: (params: AccessHandlerParams) => ExpressionNode;
   hyperthread_wristwraps: (params: AccessHandlerParams) => ExpressionNode;
+  lightning_rod: (params: AccessHandlerParams) => ExpressionNode;
   main_hand: (params: AccessHandlerParams) => ExpressionNode;
   movement: (params: AccessHandlerParams) => ExpressionNode;
   prev: (params: AccessHandlerParams) => ExpressionNode;
   prev_gcd: (params: AccessHandlerParams) => ExpressionNode;
   prev_off_gcd: (params: AccessHandlerParams) => ExpressionNode;
   release: (params: AccessHandlerParams) => ExpressionNode;
+  remaining_winters_chill: (params: AccessHandlerParams) => ExpressionNode;
   scorch_execute: (params: AccessHandlerParams) => ExpressionNode;
   set_bonus: (params: AccessHandlerParams) => ExpressionNode;
   stat: (params: AccessHandlerParams) => ExpressionNode;
@@ -110,9 +112,11 @@ type AccessHandlerTypeMap = {
   variable: (params: AccessHandlerParams) => ExpressionNode;
   gcd: (params: AccessHandlerParams) => ExpressionNode;
   pet: (params: AccessHandlerParams) => ExpressionNode;
+  time: (params: AccessHandlerParams) => ExpressionNode;
 
   // Hekili specific handlers
   boss: (params: AccessHandlerParams) => ExpressionNode;
+  group_members: (params: AccessHandlerParams) => ExpressionNode;
   settings: (params: AccessHandlerParams) => ExpressionNode;
 
   // Class-specific handlers
@@ -314,6 +318,7 @@ class ContextHandlerRegistry {
     RAH("set_bonus", SimCApiHandlers.handleSetBonus);
     RAH("stat", SimCApiHandlers.handleStat);
     RAH("fight_remains", SimCApiHandlers.handleFightRemains);
+    RAH("time", SimCApiHandlers.handleTime);
 
     // Evoker-specific handlers
     RAH("evoker", SimCApiHandlers.handleEvoker);
@@ -330,6 +335,7 @@ class ContextHandlerRegistry {
     RAH("scorch_execute", SimCApiHandlers.handleScorchExecute);
     RAH("improved_scorch", SimCApiHandlers.handleImprovedScorch);
     RAH("firestarter", SimCApiHandlers.handleFirestarter);
+    RAH("remaining_winters_chill", SimCApiHandlers.handleRemainingWintersChill);
 
     // Special item handlers
     RAH("hyperthread_wristwraps", SimCApiHandlers.handleHyperthreadWristwraps);
@@ -344,6 +350,7 @@ class ContextHandlerRegistry {
     RAH("rogue", SimCApiHandlers.handleRogue);
     RAH("rtb_buffs", SimCApiHandlers.handleRtbBuffs);
     RAH("shaman", SimCApiHandlers.handleShaman);
+    RAH("lightning_rod", SimCApiHandlers.handleLightningRod);
     RAH("stagger", SimCApiHandlers.handleStagger);
     RAH("stealthed", SimCApiHandlers.handleStealthed);
     RAH("totem", SimCApiHandlers.handleTotem);
@@ -352,6 +359,7 @@ class ContextHandlerRegistry {
 
     // Hekili API handlers
     RAH("boss", HekiliApiHandlers.handleBoss);
+    RAH("group_members", HekiliApiHandlers.handleGroupMembers);
     RAH("settings", HekiliApiHandlers.handleSettings);
 
     // Resource handlers

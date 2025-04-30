@@ -26,6 +26,7 @@ export namespace NodeTypes {
 
   export namespace Hekili {
     export type Boss = HekiliApiHandlers.BossExpressionNode;
+    export type GroupMembers = HekiliApiHandlers.GroupMembersExpressionNode;
     export type Settings = HekiliApiHandlers.SettingsExpressionNode;
   }
 
@@ -58,6 +59,7 @@ export namespace NodeTypes {
     export type SublistName = SimCApiHandlers.SublistNameExpressionNode;
     export type Talent = SimCApiHandlers.TalentExpressionNode;
     export type Target = SimCApiHandlers.TargetExpressionNode;
+    export type Time = SimCApiHandlers.TimeExpressionNode;
     export type Toggle = SimCApiHandlers.ToggleExpressionNode;
     export type Trinket = SimCApiHandlers.TrinketExpressionNode;
     export type Variable = SimCApiHandlers.VariableExpressionNode;
@@ -89,6 +91,7 @@ export namespace NodeTypes {
         export type Base = ClassHandlers.MageExpressionNode;
         export type Firestarter = ClassHandlers.FirestarterExpressionNode;
         export type ImprovedScorch = ClassHandlers.ImprovedScorchExpressionNode;
+        export type RemainingWintersChill = ClassHandlers.RemainingWintersChillExpressionNode;
         export type ScorchExecute = ClassHandlers.ScorchExecuteExpressionNode;
       }
 
@@ -115,6 +118,7 @@ export namespace NodeTypes {
       export namespace Shaman {
         export type Base = ClassHandlers.ShamanExpressionNode;
         export type FeralSpirit = ClassHandlers.FeralSpiritExpressionNode;
+        export type LightningRod = ClassHandlers.LightningRodExpressionNode;
         export type Totem = ClassHandlers.TotemExpressionNode;
       }
     }

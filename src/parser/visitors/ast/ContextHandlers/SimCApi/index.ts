@@ -26,6 +26,7 @@ export * from "./StatHandler";
 export * from "./SublistNameHandler";
 export * from "./TalentHandler";
 export * from "./TargetHandler";
+export * from "./TimeHandler";
 export * from "./ToggleHandler";
 export * from "./TrinketHandler";
 export * from "./VariableHandler";

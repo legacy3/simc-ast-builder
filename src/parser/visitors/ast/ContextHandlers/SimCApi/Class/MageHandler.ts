@@ -128,13 +128,36 @@ const handleFirestarter: AccessHandlerFn<FirestarterExpressionNode> = ({
   };
 };
 
+/**
+ * Specialized node type for remaining_winters_chill access
+ */
+interface RemainingWintersChillExpressionNode extends ExpressionNode {
+  nodeType: "remaining_winters_chill";
+}
+
+/**
+ * Handler for remaining_winters_chill access contexts
+ * This handles access to the remaining_winters_chill property for Mage
+ */
+const handleRemainingWintersChill: AccessHandlerFn<
+  RemainingWintersChillExpressionNode
+> = ({ parts }) => {
+  return {
+    expressionType: "numeric",
+    kind: "expression",
+    nodeType: "remaining_winters_chill",
+  };
+};
+
 export {
   handleFirestarter,
   handleImprovedScorch,
   handleMage,
+  handleRemainingWintersChill,
   handleScorchExecute,
   type FirestarterExpressionNode,
   type ImprovedScorchExpressionNode,
   type MageExpressionNode,
+  type RemainingWintersChillExpressionNode,
   type ScorchExecuteExpressionNode,
 };
