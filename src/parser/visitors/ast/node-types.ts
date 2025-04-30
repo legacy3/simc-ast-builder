@@ -36,6 +36,7 @@ export namespace NodeTypes {
     export type ActiveDot = SimCApiHandlers.ActiveDotExpressionNode;
     export type Buff = SimCApiHandlers.BuffExpressionNode;
     export type Cooldown = SimCApiHandlers.CooldownExpressionNode;
+    export type CycleEnemies = SimCApiHandlers.CycleEnemiesExpressionNode;
     export type Debuff = SimCApiHandlers.DebuffExpressionNode;
     export type Dot = SimCApiHandlers.DotExpressionNode;
     export type Eclipse = SimCApiHandlers.EclipseExpressionNode;
