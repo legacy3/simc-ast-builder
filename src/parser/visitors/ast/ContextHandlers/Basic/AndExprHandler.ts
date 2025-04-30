@@ -3,7 +3,7 @@ import { ExpressionNode } from "../../common-types";
 import { ContextHandlerFn } from "../BaseHandler";
 
 /**
- * Specialized node type for add or subtract expressions
+ * Specialized node type for logical AND expressions
  */
 interface AndExprExpressionNode extends ExpressionNode {
   left: ExpressionNode;
@@ -13,7 +13,7 @@ interface AndExprExpressionNode extends ExpressionNode {
 }
 
 /**
- * Handler for add or subtract expressions
+ * Handler for logical AND expressions
  */
 const handleAndExpr: ContextHandlerFn<AndExprExpressionNode, AndExprContext> = (
   ctx,
@@ -23,7 +23,7 @@ const handleAndExpr: ContextHandlerFn<AndExprExpressionNode, AndExprContext> = (
   const right = visitor.visit(ctx.expression(1)) as ExpressionNode;
 
   return {
-    expressionType: "numeric",
+    expressionType: "boolean",
     kind: "expression",
     left,
     nodeType: "and",

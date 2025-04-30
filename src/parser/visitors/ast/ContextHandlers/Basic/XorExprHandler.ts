@@ -23,7 +23,7 @@ const handleXorExpr: ContextHandlerFn<XorExprExpressionNode, XorExprContext> = (
   const right = visitor.visit(ctx.expression(1)) as ExpressionNode;
 
   return {
-    expressionType: "numeric",
+    expressionType: "boolean",
     kind: "expression",
     left,
     nodeType: "xor",
