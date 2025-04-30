@@ -138,7 +138,7 @@ export function parse(input: string): ASTNode {
 /**
  * Streamlined exports for main API surface
  */
-export { split } from "./parser";
+export * from "./parser";
 export * from "./types";
 export { ConditionOptimizer } from "./utils/ConditionOptimizer";
 export type { NodeTypes } from "./parser/visitors/ast/node-types";
