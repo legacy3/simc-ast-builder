@@ -14,14 +14,12 @@
 		"lint": "prettier --check . && eslint ."
 	},
 	"devDependencies": {
-		"@cloudparker/easy-monaco-editor-svelte": "^2.0.0",
-		"@eslint/compat": "^1.2.8",
+		"@eslint/compat": "^1.2.9",
 		"@eslint/js": "^9.25.1",
-		"@fontsource/fira-mono": "^5.2.5",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"@sveltejs/kit": "^2.20.8",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
-		"@types/codemirror": "^5.60.15",
+		"@types/humanize-duration": "^3.27.4",
 		"canvas": "^3.1.0",
 		"eslint": "^9.25.1",
 		"eslint-config-prettier": "^10.1.2",
@@ -37,11 +35,14 @@
 		"vite": "^6.3.4"
 	},
 	"dependencies": {
+		"@codemirror/state": "^6.5.2",
+		"@codemirror/view": "^6.36.6",
 		"bulma": "^1.0.4",
-		"codemirror": "^5.65.19",
+		"clipboard-copy": "^4.0.1",
+		"codemirror": "^6.0.1",
+		"humanize-duration": "^3.32.1",
 		"konva": "^9.3.20",
 		"lodash-es": "^4.17.21",
-		"monaco-editor": "^0.52.2",
 		"simc-ast-builder": "^0.3.3",
 		"util": "^0.12.5"
 	}

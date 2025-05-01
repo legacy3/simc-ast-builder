@@ -1,81 +1,38 @@
-// Theme variables for the SimC AST Formatter
+// ==========================================================================
+// SimC AST Formatter Theme Variables
+// ==========================================================================
 
-// ==============================
 // Color System
-// ==============================
+// --------------------------------------------------------------------------
+// Base colors
+$primary: #7a97b9;
+$info: #829ca8;
+$success: #8aad9b;
+$warning: #d0c6a6;
+$danger: #c28b8b;
 
-// Brand colors - more muted for zen-like experience
-$primary: #6b8aaf;
-$info: #7a92a9;
-$success: #7ca889;
-$warning: #d6c178;
-$danger: #c27676;
-
-// Neutral colors - softer palette
+// Neutral colors
 $white: #ffffff;
-$gray-100: #f9fafb;
-$gray-200: #f0f2f5;
-$gray-300: #e4e7eb;
-$gray-400: #d2d6dc;
-$gray-500: #9fa6b2;
-$gray-600: #6b7280;
-$gray-700: #4b5563;
-$gray-800: #374151;
-$gray-900: #1f2937;
-$black: #111827;
+$gray-100: #f8f9fa;
+$gray-200: #eef1f4;
+$gray-300: #e6e9ed;
+$gray-400: #d5d9e0;
+$gray-500: #a9b0bc;
+$gray-600: #7a8394;
+$gray-700: #5a6272;
+$gray-800: #3e4351;
+$gray-900: #2a2d38;
+$black: #1a1c23;
 
-// ==============================
-// Light Theme
-// ==============================
+// Typography
+// --------------------------------------------------------------------------
+$font-size-base: 1rem;
+$font-size-sm: 0.875rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
 
-// Base
-$light-bg-color: $gray-100;
-$light-text-color: rgba($black, 0.78);
-
-// Components
-$light-card-bg: $white;
-$light-border-color: $gray-200;
-$light-hover-bg: rgba($black, 0.03);
-$light-active-bg: rgba($black, 0.05);
-$light-disabled-color: rgba($black, 0.3);
-
-// AST Tree
-$light-node-fill: rgba($primary, 0.08);
-$light-node-stroke: $primary;
-$light-line-color: $gray-500;
-
-// ==============================
-// Dark Theme
-// ==============================
-
-// Base
-$dark-bg-color: #1a1a1a;
-$dark-text-color: rgba($white, 0.78);
-
-// Components
-$dark-card-bg: #242424;
-$dark-border-color: #383838;
-$dark-hover-bg: rgba($white, 0.05);
-$dark-active-bg: rgba($white, 0.08);
-$dark-disabled-color: rgba($white, 0.3);
-
-// AST Tree
-$dark-node-fill: #2a2a2a;
-$dark-node-stroke: $primary;
-$dark-line-color: $gray-600;
-
-// ==============================
-// Editor Themes
-// ==============================
-
-// Monaco editor
-$monaco-light-bg: $white;
-$monaco-dark-bg: #1e1e1e;
-
-// ==============================
 // Spacing System
-// ==============================
-
+// --------------------------------------------------------------------------
 $spacing-base: 0.25rem;
 $spacing-scale: (
 	1: $spacing-base,
@@ -86,10 +43,17 @@ $spacing-scale: (
 	6: $spacing-base * 12
 );
 
-// ==============================
-// Breakpoints
-// ==============================
+$spacing-mobile: (
+	1: $spacing-base * 0.75,
+	2: $spacing-base * 1.5,
+	3: $spacing-base * 3,
+	4: $spacing-base * 5,
+	5: $spacing-base * 7,
+	6: $spacing-base * 10
+);
 
+// Breakpoints
+// --------------------------------------------------------------------------
 $breakpoints: (
 	xs: 0,
 	sm: 576px,
@@ -98,3 +62,57 @@ $breakpoints: (
 	xl: 1200px,
 	xxl: 1400px
 );
+
+// Z-index
+// --------------------------------------------------------------------------
+$z-index-dropdown: 10;
+$z-index-sticky: 20;
+$z-index-fixed: 30;
+$z-index-modal: 40;
+$z-index-popover: 50;
+$z-index-tooltip: 60;
+
+// Transitions
+// --------------------------------------------------------------------------
+$transition-speed: 0.3s;
+$transition-easing: ease;
+$transition-fast: 0.2s;
+$transition-slow: 0.5s;
+
+// Accessibility
+// --------------------------------------------------------------------------
+$touch-target-size: 44px;
+$touch-target-spacing: 8px;
+
+// Light Theme
+// --------------------------------------------------------------------------
+$light-bg-color: linear-gradient(160deg, $gray-100, $gray-200);
+$light-text-color: rgba($black, 0.82);
+$light-card-bg: $white;
+$light-border-color: $gray-300;
+$light-shadow-color: rgba($black, 0.04);
+$light-hover-bg: rgba($primary, 0.04);
+$light-active-bg: rgba($primary, 0.08);
+$light-disabled-color: rgba($black, 0.35);
+$light-node-fill: rgba($primary, 0.06);
+$light-node-stroke: rgba($primary, 0.7);
+$light-line-color: rgba($gray-500, 0.7);
+
+// Dark Theme
+// --------------------------------------------------------------------------
+$dark-bg-color: linear-gradient(160deg, $gray-900, $black);
+$dark-text-color: rgba($white, 0.85);
+$dark-card-bg: $gray-800;
+$dark-border-color: rgba($gray-700, 0.6);
+$dark-shadow-color: rgba($black, 0.2);
+$dark-hover-bg: rgba($primary, 0.15);
+$dark-active-bg: rgba($primary, 0.25);
+$dark-disabled-color: rgba($white, 0.35);
+$dark-node-fill: rgba($gray-700, 0.5);
+$dark-node-stroke: rgba($primary, 0.7);
+$dark-line-color: rgba($gray-600, 0.7);
+
+// Editor Themes
+// --------------------------------------------------------------------------
+$monaco-light-bg: $white;
+$monaco-dark-bg: $gray-900;

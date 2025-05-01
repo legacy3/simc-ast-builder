@@ -1,20 +1,16 @@
 <script lang="ts">
-	import Header from './Header.svelte';
 	import '../app.scss';
 	import { onMount } from 'svelte';
 	import { theme, initializeTheme } from '$lib/stores/theme';
 
 	let { children } = $props();
 
-	// Initialize theme on mount
 	onMount(() => {
 		initializeTheme();
 	});
 </script>
 
 <div class="app">
-	<Header />
-
 	<main class="container">
 		{@render children()}
 	</main>
@@ -26,10 +22,11 @@
 			<a href="https://codemirror.net" target="_blank" rel="noopener noreferrer">CodeMirror</a>,
 			<a href="https://konvajs.org" target="_blank" rel="noopener noreferrer">Konva</a> &
 			<a
-				href="https://github.com/your-organization/simc-ast-builder"
+				href="https://github.com/legacy3/simc-ast-builder"
 				target="_blank"
 				rel="noopener noreferrer">SimC AST</a
 			>
+			❤️
 		</span>
 	</footer>
 </div>

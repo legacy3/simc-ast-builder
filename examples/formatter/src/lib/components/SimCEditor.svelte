@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { EditorView, lineNumbers } from '@codemirror/view';
+	import { EditorState, Compartment } from '@codemirror/state';
+	import { basicSetup } from 'codemirror';
 
-	// Props
 	const {
 		value = '',
 		placeholder = '',
@@ -15,216 +17,137 @@
 		onChange?: (value: string) => void;
 	}>();
 
-	// References
-	let textarea: HTMLTextAreaElement;
-	let editor: any;
+	let editorContainer: HTMLDivElement;
+	let editor: EditorView;
 
-	// State
 	let internalValue = $state(value);
 
-	// Handle input changes for the fallback textarea
-	function handleInput(event: Event) {
-		const target = event.target as HTMLTextAreaElement;
-		internalValue = target.value;
-		onChange(internalValue);
+	const themeCompartment = new Compartment();
+
+	function initializeCodeMirror() {
+		if (!browser || !editorContainer) return;
+
+		const isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
+
+		const state = EditorState.create({
+			doc: internalValue,
+			extensions: [
+				basicSetup,
+				lineNumbers({
+					formatNumber: (lineNo) => lineNo.toString()
+				}),
+				EditorView.updateListener.of((update) => {
+					if (update.docChanged) {
+						const newValue = update.state.doc.toString();
+						if (internalValue !== newValue) {
+							internalValue = newValue;
+							onChange(newValue);
+						}
+					}
+				}),
+				EditorView.theme({
+					'&': {
+						height: '100%',
+						fontFamily: 'var(--font-mono, monospace)',
+						fontSize: '12px',
+						lineHeight: 'var(--line-height)',
+						letterSpacing: 'var(--letter-spacing)'
+					},
+					'.cm-content': {
+						padding: 'var(--space-3) 0'
+					},
+					'.cm-line': {
+						padding: '0 var(--space-4)'
+					},
+					'.cm-gutters': {
+						backgroundColor: 'transparent',
+						borderRight: '1px solid var(--border-color)',
+						width: '50px',
+						minWidth: '50px'
+					},
+					'.cm-lineNumbers': {
+						minWidth: '40px'
+					},
+					'.cm-lineNumbers .cm-gutterElement': {
+						color: 'var(--text-color)',
+						opacity: '0.4',
+						padding: '0 var(--space-2)',
+						textAlign: 'right',
+						minWidth: '30px'
+					},
+					'.cm-cursor': {
+						borderLeft: '2px solid var(--primary)',
+						marginLeft: '0'
+					},
+					'.cm-scroller': {
+						overflow: 'auto',
+						height: '100%'
+					},
+					'&.cm-focused': {
+						outline: 'none'
+					}
+				})
+			]
+		});
+
+		editor = new EditorView({
+			state,
+			parent: editorContainer
+		});
+
+		if (isDarkTheme) {
+			editorContainer.classList.add('cm-dark-theme');
+		}
+
+		window.addEventListener('themeChanged', () => {
+			const isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
+			if (isDarkTheme) {
+				editorContainer.classList.add('cm-dark-theme');
+			} else {
+				editorContainer.classList.remove('cm-dark-theme');
+			}
+		});
 	}
 
 	onMount(() => {
-		// Only initialize CodeMirror in the browser environment
 		if (browser) {
-			// Dynamically import CodeMirror
-			import('codemirror').then((CodeMirror) => {
-				// Import required CSS
-				import('codemirror/lib/codemirror.css');
-
-				// Import clike mode (ignore TypeScript error)
-				// @ts-ignore
-				import('codemirror/mode/clike/clike.js');
-
-				// Define custom SimC mode for syntax highlighting
-				CodeMirror.default.defineMode('simc', function () {
-					return {
-						token: function (stream: any, state: any) {
-							// Handle comments
-							if (stream.match('#')) {
-								stream.skipToEnd();
-								return 'comment';
-							}
-
-							// Handle keywords
-							if (stream.match(/^actions(?=\.|=|\+=)/)) {
-								return 'keyword';
-							}
-
-							// Handle math functions
-							if (stream.match(/^(ceil|floor)(?=\()/)) {
-								return 'keyword';
-							}
-
-							// Handle operators
-							if (stream.match(/[&|^!+\-*%@><]=?|%%|!=|==|<\?|>\?/)) {
-								return 'operator';
-							}
-
-							// Handle parentheses
-							if (stream.match(/[()]/)) {
-								return 'bracket';
-							}
-
-							// Handle numbers
-							if (stream.match(/\d+(\.\d+)?/)) {
-								return 'number';
-							}
-
-							// Handle identifiers (starting with a letter)
-							if (stream.match(/[a-zA-Z][a-zA-Z0-9_/]*/)) {
-								// Check for specific SimC functions and variables
-								const word = stream.current();
-
-								// SimC API functions and variables
-								const simcApiFunctions = [
-									'buff',
-									'debuff',
-									'cooldown',
-									'dot',
-									'talent',
-									'equipped',
-									'active',
-									'pet',
-									'target',
-									'health',
-									'time',
-									'gcd',
-									'spell_targets',
-									'variable',
-									'prev_gcd',
-									'prev_off_gcd'
-								];
-
-								if (simcApiFunctions.includes(word)) {
-									return 'builtin';
-								}
-
-								// Resources
-								const resources = [
-									'runic_power',
-									'rune',
-									'mana',
-									'rage',
-									'energy',
-									'combo_points',
-									'holy_power',
-									'soul_shard',
-									'astral_power',
-									'maelstrom',
-									'insanity',
-									'fury',
-									'pain',
-									'focus'
-								];
-
-								if (resources.includes(word)) {
-									return 'variable-2';
-								}
-
-								return 'variable';
-							}
-
-							// Handle mixed identifiers (starting with a number)
-							if (stream.match(/\d+[a-zA-Z][a-zA-Z0-9_/]*/)) {
-								return 'string-2';
-							}
-
-							// Skip unrecognized characters
-							stream.next();
-							return null;
-						}
-					};
-				});
-
-				// Initialize CodeMirror with type assertion to handle placeholder
-				editor = CodeMirror.default.fromTextArea(textarea, {
-					mode: 'simc',
-					lineNumbers: true,
-					theme: 'default',
-					lineWrapping: true,
-					tabSize: 4,
-					indentWithTabs: false,
-					autofocus: false,
-					viewportMargin: Infinity,
-					indentUnit: 4,
-					scrollbarStyle: 'native',
-					fixedGutter: true,
-					gutters: ['CodeMirror-linenumbers']
-				} as any); // Type assertion to bypass TypeScript error
-
-				// Set initial value
-				editor.setValue(internalValue);
-
-				// Handle changes
-				editor.on('change', () => {
-					const newValue = editor.getValue();
-					if (internalValue !== newValue) {
-						internalValue = newValue;
-						onChange(newValue);
-					}
-				});
-
-				// Handle editor height based on rows
-				const lineHeight = editor.defaultTextHeight();
-				const editorHeight = lineHeight * rows + 14; // Add some padding
-				editor.getWrapperElement().style.height = `${editorHeight}px`;
-
-				// Determine if dark theme is active and apply appropriate theme
-				if (typeof document !== 'undefined') {
-					const isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
-					if (isDarkTheme) {
-						editor.getWrapperElement().classList.add('cm-dark-theme');
-					}
-
-					// Listen for theme changes
-					window.addEventListener('themeChanged', () => {
-						const isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
-						if (isDarkTheme) {
-							editor.getWrapperElement().classList.add('cm-dark-theme');
-						} else {
-							editor.getWrapperElement().classList.remove('cm-dark-theme');
-						}
-					});
-				}
-			});
+			initializeCodeMirror();
 		}
 
 		return () => {
-			// Clean up on component destruction
 			if (editor) {
-				editor.toTextArea();
+				editor.destroy();
 			}
 		};
 	});
 
-	// Update editor when value changes externally
 	$effect(() => {
-		if (browser && editor && editor.getValue() !== value) {
-			editor.setValue(value);
+		if (browser && editor && editor.state.doc.toString() !== value) {
+			editor.dispatch({
+				changes: { from: 0, to: editor.state.doc.length, insert: value }
+			});
 		}
 	});
 
-	// Update internal value when value changes externally
 	$effect(() => {
 		internalValue = value;
 	});
 </script>
 
-<div class="simc-editor">
-	<textarea
-		bind:this={textarea}
-		{placeholder}
-		value={internalValue}
-		oninput={handleInput}
-		{rows}
-		class="textarea"
-	></textarea>
+<div class="simc-editor" bind:this={editorContainer}>
+	{#if !browser}
+		<textarea
+			{placeholder}
+			value={internalValue}
+			oninput={(e) => {
+				const target = e.target as HTMLTextAreaElement;
+				internalValue = target.value;
+				onChange(internalValue);
+			}}
+			{rows}
+			class="textarea"
+		></textarea>
+	{/if}
 </div>
 
 <style>
@@ -232,162 +155,86 @@
 		position: relative;
 		width: 100%;
 		height: 100%;
+		border: var(--border-width) solid var(--border-color);
+		border-radius: var(--border-radius-md);
+		box-shadow: var(--shadow-sm);
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		transition:
+			border-color var(--transition-normal),
+			box-shadow var(--transition-normal);
 	}
 
 	.textarea {
 		width: 100%;
 		height: 100%;
-		font-family: var(--font-mono, monospace);
+		font-family: var(--font-mono);
 		resize: none;
 		padding: var(--space-4);
-	}
-
-	.simc-editor :global(.CodeMirror) {
-		height: 100%;
-		border: 1px solid var(--border-color, #ced4da);
-		border-radius: var(--border-radius-md);
-		font-family: var(--font-mono, monospace);
-		font-size: 12px;
-		line-height: 1.6;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-		letter-spacing: 0.01em;
-	}
-
-	.simc-editor :global(.CodeMirror-lines) {
-		padding: var(--space-3) 0;
-	}
-
-	.simc-editor :global(.CodeMirror-line) {
-		padding: 0 var(--space-4);
-		text-indent: 0;
-	}
-
-	.simc-editor :global(.CodeMirror-sizer) {
-		margin-left: 50px !important;
-	}
-
-	.simc-editor :global(.CodeMirror-focused) {
-		border-color: var(--border-color);
-		outline: 0;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	}
-
-	/* Dark theme styles */
-	.simc-editor :global(.cm-dark-theme) {
-		background-color: #1a1a1a;
-		color: #d4d4d4;
-	}
-
-	.simc-editor :global(.CodeMirror-gutters) {
-		background-color: transparent;
-		border-right: 1px solid var(--border-color);
-		padding: 0;
-		width: 50px !important;
-		left: 0 !important;
-	}
-
-	.simc-editor :global(.CodeMirror-linenumber) {
+		border: none;
+		outline: none;
+		background-color: var(--card-bg);
 		color: var(--text-color);
-		opacity: 0.4;
-		padding: 0 var(--space-2);
-		text-align: right;
-		width: 30px !important;
+		transition:
+			background-color var(--transition-normal),
+			color var(--transition-normal);
 	}
 
-	.simc-editor :global(.cm-dark-theme .CodeMirror-gutters) {
-		background-color: transparent;
-		border-right: 1px solid #333;
+	:global(.cm-dark-theme) {
+		background-color: var(--card-bg);
+		color: var(--text-color);
 	}
 
-	.simc-editor :global(.cm-dark-theme .CodeMirror-linenumber) {
-		color: #858585;
-		opacity: 0.4;
+	:global(.cm-dark-theme .cm-gutters) {
+		border-right: 1px solid var(--border-color) !important;
 	}
 
-	.simc-editor :global(.CodeMirror-cursor) {
-		border-left: 2px solid var(--primary);
-		margin-left: 0;
+	:global(.cm-dark-theme .cm-lineNumbers .cm-gutterElement) {
+		color: var(--text-color) !important;
+		opacity: 0.5;
 	}
 
-	.simc-editor :global(.CodeMirror pre.CodeMirror-line) {
-		padding-left: 0;
+	@media (max-width: 768px) {
+		:global(.cm-content) {
+			font-size: var(--responsive-font-md);
+		}
+
+		.textarea {
+			padding: var(--space-3);
+			font-size: var(--responsive-font-md);
+		}
 	}
 
-	/* Syntax highlighting colors */
-	.simc-editor :global(.cm-keyword) {
-		color: #0000ff;
-		font-weight: bold;
+	@media (max-width: 480px) {
+		:global(.cm-content) {
+			font-size: var(--responsive-font-sm);
+		}
+
+		.textarea {
+			padding: var(--space-2);
+			font-size: var(--responsive-font-sm);
+		}
 	}
 
-	.simc-editor :global(.cm-operator) {
-		color: #a52a2a;
-	}
+	@media (pointer: coarse) {
+		:global(.cm-content) {
+			padding: var(--space-4) 0;
+		}
 
-	.simc-editor :global(.cm-number) {
-		color: #008000;
-	}
+		:global(.cm-line) {
+			padding: 0 var(--space-4);
+		}
 
-	.simc-editor :global(.cm-variable) {
-		color: #000000;
-	}
+		:global(.cm-lineNumbers .cm-gutterElement) {
+			padding: 0 var(--space-3);
+			min-width: 40px;
+		}
 
-	.simc-editor :global(.cm-variable-2) {
-		color: #6f42c1; /* Resources */
-	}
-
-	.simc-editor :global(.cm-builtin) {
-		color: #0086b3; /* SimC API functions */
-	}
-
-	.simc-editor :global(.cm-string-2) {
-		color: #d63384; /* Mixed identifiers */
-	}
-
-	.simc-editor :global(.cm-comment) {
-		color: #6c757d;
-		font-style: italic;
-	}
-
-	.simc-editor :global(.cm-bracket) {
-		color: #a52a2a;
-	}
-
-	/* Dark theme syntax highlighting */
-	.simc-editor :global(.cm-dark-theme .cm-keyword) {
-		color: #569cd6;
-		font-weight: bold;
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-operator) {
-		color: #d4d4d4;
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-number) {
-		color: #b5cea8;
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-variable) {
-		color: #9cdcfe;
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-variable-2) {
-		color: #c586c0; /* Resources */
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-builtin) {
-		color: #4ec9b0; /* SimC API functions */
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-string-2) {
-		color: #ce9178; /* Mixed identifiers */
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-comment) {
-		color: #6a9955;
-		font-style: italic;
-	}
-
-	.simc-editor :global(.cm-dark-theme .cm-bracket) {
-		color: #d4d4d4;
+		:global(.cm-gutters) {
+			width: 60px !important;
+			min-width: 60px !important;
+		}
 	}
 </style>

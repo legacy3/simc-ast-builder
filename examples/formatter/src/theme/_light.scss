@@ -1,35 +1,54 @@
-// Light theme styles for the SimC AST Formatter
+// ==========================================================================
+// Light Theme Styles
+// ==========================================================================
 @use './_variables.scss' as vars;
 @use 'sass:color';
 
 :root:not(.is-dark-theme) {
 	// Base styles
-	background-color: vars.$light-bg-color;
+	// --------------------------------------------------------------------------
+	background: vars.$light-bg-color;
 	color: vars.$light-text-color;
+	transition: all vars.$transition-speed vars.$transition-easing;
 
 	// Bulma overrides
+	// --------------------------------------------------------------------------
 	.navbar {
 		background-color: vars.$light-card-bg;
 		color: vars.$light-text-color;
+		box-shadow: 0 1px 3px vars.$light-shadow-color;
+		border-bottom: 1px solid vars.$light-border-color;
 	}
 
 	.card {
 		background-color: vars.$light-card-bg;
 		color: vars.$light-text-color;
 		border-color: vars.$light-border-color;
+		box-shadow: 0 2px 8px vars.$light-shadow-color;
+		transition:
+			box-shadow vars.$transition-speed vars.$transition-easing,
+			transform vars.$transition-speed vars.$transition-easing;
+
+		&:hover {
+			box-shadow: 0 4px 12px vars.$light-shadow-color;
+			transform: translateY(-1px);
+		}
 	}
 
 	.card-header {
-		background-color: rgba(0, 0, 0, 0.03);
+		background-color: rgba(vars.$primary, 0.03);
 		border-bottom-color: vars.$light-border-color;
 	}
 
 	.tabs a {
-		color: rgba(0, 0, 0, 0.7);
+		color: rgba(vars.$black, 0.65);
+		transition:
+			color vars.$transition-speed vars.$transition-easing,
+			border-color vars.$transition-speed vars.$transition-easing;
 
 		&:hover {
-			color: vars.$light-text-color;
-			border-bottom-color: vars.$primary;
+			color: vars.$primary;
+			border-bottom-color: rgba(vars.$primary, 0.5);
 		}
 
 		&.is-active {
@@ -38,47 +57,83 @@
 		}
 	}
 
+	// Buttons
+	// --------------------------------------------------------------------------
 	.button {
+		transition:
+			all vars.$transition-speed vars.$transition-easing,
+			transform vars.$transition-fast vars.$transition-easing;
+
+		&:active {
+			transform: translateY(1px);
+		}
+
 		&.is-light {
 			background-color: vars.$light-card-bg;
 			color: vars.$light-text-color;
 			border-color: vars.$light-border-color;
+			box-shadow: 0 1px 2px vars.$light-shadow-color;
 
 			&:hover {
-				background-color: color.scale(vars.$light-card-bg, $lightness: -5%);
+				background-color: color.scale(vars.$light-card-bg, $lightness: -3%);
+				border-color: color.scale(vars.$light-border-color, $lightness: -5%);
+			}
+		}
+
+		&.is-primary {
+			background-color: vars.$primary;
+
+			&:hover {
+				background-color: color.scale(vars.$primary, $lightness: -5%);
 			}
 		}
 	}
 
+	// Form elements
+	// --------------------------------------------------------------------------
 	.input,
 	.textarea,
 	.select select {
 		background-color: vars.$light-card-bg;
 		color: vars.$light-text-color;
 		border-color: vars.$light-border-color;
+		transition:
+			border-color vars.$transition-speed vars.$transition-easing,
+			box-shadow vars.$transition-speed vars.$transition-easing;
 
 		&:focus {
 			border-color: vars.$primary;
-			box-shadow: 0 0 0 0.125em rgba(vars.$primary, 0.25);
+			box-shadow: 0 0 0 0.125em rgba(vars.$primary, 0.2);
 		}
 
 		&::placeholder {
-			color: rgba(0, 0, 0, 0.4);
+			color: rgba(vars.$black, 0.35);
 		}
 	}
 
 	// Custom component styles
+	// --------------------------------------------------------------------------
 	.tree-node {
 		background-color: vars.$light-card-bg;
 		border-color: vars.$light-border-color;
+		box-shadow: 0 1px 3px vars.$light-shadow-color;
+		transition:
+			box-shadow vars.$transition-speed vars.$transition-easing,
+			border-color vars.$transition-speed vars.$transition-easing;
+
+		&:hover {
+			box-shadow: 0 2px 6px vars.$light-shadow-color;
+			border-color: rgba(vars.$primary, 0.3);
+		}
 	}
 
 	.node-type {
 		color: vars.$primary;
+		font-weight: 500;
 	}
 
 	.property-key {
-		color: rgba(0, 0, 0, 0.6);
+		color: rgba(vars.$black, 0.65);
 	}
 
 	.property-value {
@@ -86,8 +141,38 @@
 	}
 
 	// Visual tree view styles
+	// --------------------------------------------------------------------------
 	.visual-tree-container {
 		background-color: vars.$light-card-bg;
 		border-color: vars.$light-border-color;
+		box-shadow: inset 0 1px 3px vars.$light-shadow-color;
+	}
+
+	// Editor styles
+	// --------------------------------------------------------------------------
+	.monaco-editor-container {
+		border: 1px solid vars.$light-border-color;
+		border-radius: 6px;
+		overflow: hidden;
+		box-shadow: 0 1px 3px vars.$light-shadow-color;
+	}
+
+	// Header styles
+	// --------------------------------------------------------------------------
+	.app-header {
+		border-bottom: 1px solid vars.$light-border-color;
+		background-color: vars.$light-card-bg;
+		box-shadow: 0 1px 3px vars.$light-shadow-color;
+	}
+
+	// Scrollbar customization
+	// --------------------------------------------------------------------------
+	::-webkit-scrollbar-thumb {
+		background-color: rgba(vars.$black, 0.1);
+		border-radius: 4px;
+
+		&:hover {
+			background-color: rgba(vars.$primary, 0.2);
+		}
 	}
 }

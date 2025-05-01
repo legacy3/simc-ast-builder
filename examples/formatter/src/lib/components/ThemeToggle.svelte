@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { theme, toggleTheme } from '$lib/stores/theme';
 
-	// Derive isDarkTheme from the theme store
 	$effect(() => {
 		isDarkTheme = $theme === 'dark';
 	});
@@ -11,7 +10,7 @@
 
 <button
 	class="theme-toggle button is-small is-rounded"
-	on:click={toggleTheme}
+	onclick={toggleTheme}
 	aria-label="Toggle theme"
 	title={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
 >
@@ -62,28 +61,121 @@
 
 <style>
 	.theme-toggle {
-		margin: 0 0.5rem;
+		margin: 0;
 		background: transparent;
 		border: none;
-		color: inherit;
-		transition: all 0.2s ease;
-		padding: 0.5rem;
+		color: var(--text-color);
+		opacity: 0.7;
+		transition:
+			all var(--transition-normal),
+			transform var(--transition-fast);
+		padding: var(--space-2);
 		height: auto;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.theme-toggle::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: var(--hover-bg);
+		border-radius: 50%;
+		transform: scale(0);
+		transition: transform var(--transition-normal);
 	}
 
 	.theme-toggle:hover {
-		background-color: rgba(128, 128, 128, 0.1);
-		transform: scale(1.05);
+		opacity: 1;
+		color: var(--primary);
+		transform: translateY(-1px);
+	}
+
+	.theme-toggle:hover::before {
+		transform: scale(1);
+	}
+
+	.theme-toggle:active {
+		transform: translateY(1px);
 	}
 
 	.theme-toggle:focus {
-		outline: 2px solid var(--primary, #0d6efd);
-		outline-offset: 2px;
+		outline: none;
+		box-shadow: 0 0 0 2px rgba(var(--primary), 0.25);
 	}
 
 	.icon {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		position: relative;
+		z-index: 1;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes fade-in {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	.icon svg {
+		animation:
+			fade-in var(--transition-normal) ease forwards,
+			spin 0.5s ease;
+	}
+
+	@media (max-width: 768px) {
+		.theme-toggle {
+			width: 3rem;
+			height: 3rem;
+		}
+
+		.icon svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.theme-toggle {
+			width: 2.75rem;
+			height: 2.75rem;
+		}
+	}
+
+	@media (pointer: coarse) {
+		.theme-toggle {
+			min-width: var(--touch-target-size);
+			min-height: var(--touch-target-size);
+		}
+
+		.theme-toggle:hover::before {
+			transform: scale(0);
+		}
+
+		.theme-toggle:active::before {
+			transform: scale(1);
+		}
 	}
 </style>

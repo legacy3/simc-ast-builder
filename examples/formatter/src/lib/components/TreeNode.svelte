@@ -2,28 +2,22 @@
 	import type { TreeNodeData } from '$lib/types';
 	import TreeNode from './TreeNode.svelte';
 
-	// Props
-	const { node } = $props<{ node: TreeNodeData }>();
+	// Use type assertion to ensure TypeScript recognizes the node properties
+	const { node } = $props<{ node: any }>();
 
-	// State
 	let expanded = $state(true);
 
-	// Toggle expanded state
 	function toggleExpanded() {
 		expanded = !expanded;
 	}
 
-	// Get node properties excluding certain keys
 	const properties = $derived(getNodeProperties(node));
 
-	// Get node type display
 	const nodeType = $derived(getNodeTypeDisplay(node));
 
-	// Get children to display
 	const children = $derived(getChildren(node));
 
-	// Helper function to get node properties
-	function getNodeProperties(node: TreeNodeData) {
+	function getNodeProperties(node: any) {
 		const props: Record<string, any> = {};
 		for (const [key, value] of Object.entries(node)) {
 			if (['kind', 'nodeType', 'children'].includes(key)) continue;
@@ -33,28 +27,24 @@
 		return props;
 	}
 
-	// Helper function to get node type display
-	function getNodeTypeDisplay(node: TreeNodeData) {
+	function getNodeTypeDisplay(node: any) {
 		if (node.kind === 'expression') {
 			return `${node.kind}: ${node.nodeType}`;
 		}
 		return node.kind;
 	}
 
-	// Helper function to get children
-	function getChildren(node: TreeNodeData) {
-		const result: TreeNodeData[] = [];
+	function getChildren(node: any) {
+		const result: any[] = [];
 
-		// Handle explicit children array
 		if (node.children && Array.isArray(node.children)) {
 			node.children.forEach((child: any) => {
 				if (child && typeof child === 'object') {
-					result.push(child as TreeNodeData);
+					result.push(child);
 				}
 			});
 		}
 
-		// Handle nested objects as children
 		for (const [key, value] of Object.entries(node)) {
 			if (key === 'children') continue;
 
@@ -64,25 +54,25 @@
 						result.push({
 							kind: `${key} (${value.length})`,
 							children: value
-								.map((item, index) => {
+								.map((item: any, index: number) => {
 									if (item && typeof item === 'object') {
-										return item as TreeNodeData;
+										return item;
 									} else if (item !== undefined) {
 										return {
 											kind: String(index),
 											value: item
-										} as TreeNodeData;
+										};
 									}
 									return null;
 								})
-								.filter(Boolean) as TreeNodeData[]
-						} as TreeNodeData);
+								.filter(Boolean)
+						});
 					}
 				} else if (Object.keys(value).length > 0) {
 					result.push({
 						kind: key,
 						...value
-					} as TreeNodeData);
+					});
 				}
 			}
 		}
@@ -90,7 +80,6 @@
 		return result;
 	}
 
-	// Format value for display
 	function formatValue(value: any): string {
 		if (value === null) return 'null';
 		if (value === undefined) return 'undefined';
@@ -107,15 +96,15 @@
 					{expanded ? '▼' : '►'}
 				</button>
 			{/if}
-			<span class="node-type has-text-primary has-text-weight-bold">{nodeType}</span>
+			<span class="node-type">{nodeType}</span>
 		</div>
 
 		{#if Object.keys(properties).length > 0}
-			<div class="node-properties mt-2">
+			<div class="node-properties">
 				{#each Object.entries(properties) as [key, value]}
 					<div class="node-property">
-						<span class="property-key has-text-grey">{key}:</span>
-						<span class="property-value has-text-success">{formatValue(value)}</span>
+						<span class="property-key">{key}:</span>
+						<span class="property-value">{formatValue(value)}</span>
 					</div>
 				{/each}
 			</div>
@@ -133,13 +122,19 @@
 
 <style>
 	.tree-node {
-		margin-bottom: 0.5rem;
+		margin-bottom: var(--space-2);
 	}
 
 	.tree-node-content {
-		padding: 0.75rem;
-		border-radius: 4px;
-		transition: background-color 0.2s ease;
+		padding: var(--space-3);
+		border-radius: var(--border-radius-sm);
+		background-color: var(--card-bg);
+		border: var(--border-width) solid var(--border-color);
+		box-shadow: var(--shadow-sm);
+		transition:
+			background-color var(--transition-normal),
+			border-color var(--transition-normal),
+			box-shadow var(--transition-normal);
 	}
 
 	.node-header {
@@ -151,31 +146,70 @@
 		background: none;
 		border: none;
 		cursor: pointer;
-		padding: 0 0.25rem 0 0;
+		padding: 0 var(--space-1) 0 0;
 		font-size: 0.75rem;
-		margin-right: 0.5rem;
+		margin-right: var(--space-2);
 		height: auto;
 		min-width: 1.5rem;
+		color: var(--text-color);
+		opacity: 0.7;
+		transition: opacity var(--transition-fast);
+	}
+
+	.toggle-btn:hover {
+		opacity: 1;
 	}
 
 	.tree-node-children {
-		margin-left: 1.5rem;
-		padding-left: 1rem;
+		margin-left: var(--space-4);
+		padding-left: var(--space-3);
 		border-left: 2px solid var(--border-color);
+		transition: border-color var(--transition-normal);
 	}
 
 	.node-properties {
-		margin-top: 0.5rem;
-		margin-left: 1rem;
+		margin-top: var(--space-2);
+		margin-left: var(--space-3);
 	}
 
 	.node-property {
-		margin-bottom: 0.25rem;
+		margin-bottom: var(--space-1);
+		font-size: 0.9rem;
+	}
+
+	.node-type {
+		color: var(--primary);
+		font-weight: var(--font-weight-medium);
+	}
+
+	.property-key {
+		color: var(--text-color);
+		opacity: 0.7;
+	}
+
+	.property-value {
+		color: var(--success);
+		margin-left: var(--space-1);
 	}
 
 	.box {
-		margin-bottom: 0.5rem;
-		padding: 0.75rem;
-		box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1);
+		margin-bottom: var(--space-2);
+		padding: var(--space-3);
+		box-shadow: var(--shadow-sm);
+	}
+
+	@media (max-width: 768px) {
+		.tree-node-content {
+			padding: var(--space-2);
+		}
+
+		.node-properties {
+			margin-left: var(--space-2);
+		}
+
+		.tree-node-children {
+			margin-left: var(--space-3);
+			padding-left: var(--space-2);
+		}
 	}
 </style>

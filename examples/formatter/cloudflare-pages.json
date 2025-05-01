@@ -1,0 +1,16 @@
+{
+	"build": {
+		"command": "npm run build",
+		"output_directory": "build",
+		"root_directory": "examples/formatter",
+		"environment": {
+			"NODE_VERSION": "20"
+		}
+	},
+	"routes": [
+		{
+			"pattern": "/*",
+			"script": "index.html"
+		}
+	]
+}

@@ -31,8 +31,8 @@ A web-based tool for parsing and visualizing SimulationCraft (SimC) code by gene
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/simc-ast-builder.git
-   cd simc-ast-builder/examples/formatter-new
+   git clone https://github.com/legacy3/simc-ast-builder.git
+   cd simc-ast-builder/examples/formatter
    ```
 
 2. Install dependencies:

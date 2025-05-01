@@ -1,5 +1,3 @@
-import { browser } from '$app/environment';
-
 export function load() {
 	return {
 		title: 'SimC AST Formatter',
