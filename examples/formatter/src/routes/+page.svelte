@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { TreeNodeData } from '$lib/types';
+	import { onMount, onDestroy } from 'svelte';
 	import SimCEditor from '$lib/components/SimCEditor.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
-	import { theme } from '$lib/stores/theme';
+	import humanizeDuration from 'humanize-duration';
+	import copy from 'clipboard-copy';
+
+	// Check if we're in the browser environment
+	const isBrowser = typeof window !== 'undefined';
 
 	// Define the type for the data from page.ts
 	interface PageData {
@@ -19,9 +22,16 @@
 	let simcCode = $state(data.defaultCode);
 	let activeTab = $state<'text' | 'visual'>('text'); // 'text' or 'visual'
 	let saveStatus = $state<'saved' | 'saving'>('saved');
+	let lastSaveTime = $state<number | null>(null);
 	let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 	let sidebarVisible = $state(true);
 	let isMenuOpen = $state(false);
+	let isShareModalOpen = $state(false);
+	let timeDisplay = $state('Not saved yet');
+	let updateInterval: ReturnType<typeof setInterval> | null = null;
+	let shareLink = $state(
+		`https://simc-ast-builder.example.com/share/${Math.random().toString(36).substring(2, 10)}`
+	);
 
 	// Handle editor changes
 	function handleEditorChange(newValue: string) {
@@ -38,7 +48,49 @@
 		// Simulate auto-save after 1 second
 		saveTimeout = setTimeout(() => {
 			saveStatus = 'saved';
+			lastSaveTime = Date.now();
+			updateTimeDisplay();
+			// Update share link with new content hash
+			shareLink = `https://simc-ast-builder.example.com/share/${Math.random().toString(36).substring(2, 10)}`;
 		}, 1000);
+	}
+
+	// Format the last save time
+	function updateTimeDisplay(): void {
+		if (!lastSaveTime) {
+			timeDisplay = 'Not saved yet';
+			return;
+		}
+
+		const elapsed = Date.now() - lastSaveTime;
+		timeDisplay =
+			humanizeDuration(elapsed, {
+				largest: 1,
+				round: true,
+				units: ['d', 'h', 'm', 's'],
+				language: 'en'
+			}) + ' ago';
+	}
+
+	// Copy share link to clipboard
+	function copyShareLink() {
+		copy(shareLink)
+			.then(() => {
+				// Show a temporary "Copied!" message
+				if (isBrowser) {
+					const copyButton = document.getElementById('copy-link-button');
+					if (copyButton) {
+						const originalText = copyButton.textContent;
+						copyButton.textContent = 'Copied!';
+						setTimeout(() => {
+							copyButton.textContent = originalText;
+						}, 2000);
+					}
+				}
+			})
+			.catch((err) => {
+				console.error('Failed to copy text: ', err);
+			});
 	}
 
 	// Toggle sidebar visibility
@@ -61,9 +113,24 @@
 		activeTab = tab;
 	}
 
-	// Parse code functionality (placeholder)
-	function parseCode() {
-		console.log('Parsing code:', simcCode);
+	// Optimize code functionality (placeholder)
+	function optimizeCode() {
+		console.log('Optimizing code:', simcCode);
+	}
+
+	// Toggle share modal
+	function toggleShareModal() {
+		isShareModalOpen = !isShareModalOpen;
+	}
+
+	// Close share modal
+	function closeShareModal() {
+		isShareModalOpen = false;
+	}
+
+	// Sim code functionality (placeholder)
+	function simCode() {
+		console.log('Sending code to Raidbots:', simcCode);
 	}
 
 	// Handle keyboard shortcuts
@@ -83,12 +150,27 @@
 	}
 
 	onMount(() => {
-		// Add keyboard shortcut handling
-		window.addEventListener('keydown', handleKeyboardShortcuts);
+		if (isBrowser) {
+			// Add keyboard shortcut handling
+			window.addEventListener('keydown', handleKeyboardShortcuts);
 
-		return () => {
+			// Set up interval to update the time display every second
+			updateInterval = setInterval(() => {
+				if (lastSaveTime) {
+					updateTimeDisplay();
+				}
+			}, 1000);
+		}
+	});
+
+	onDestroy(() => {
+		if (isBrowser) {
+			// Clean up event listeners and intervals
 			window.removeEventListener('keydown', handleKeyboardShortcuts);
-		};
+			if (updateInterval) {
+				clearInterval(updateInterval);
+			}
+		}
 	});
 </script>
 
@@ -107,7 +189,7 @@
 		</div>
 
 		<div class="header-center">
-			<button class="toolbar-button" onclick={parseCode}>
+			<button class="toolbar-button" onclick={optimizeCode}>
 				<span class="icon">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -120,24 +202,71 @@
 						stroke-linecap="round"
 						stroke-linejoin="round"
 					>
-						<polyline points="16 18 22 12 16 6"></polyline>
-						<polyline points="8 6 2 12 8 18"></polyline>
+						<path d="M18.5 2h-13L7 10H2l8 14L18 10h-5l1.5-8z"></path>
 					</svg>
 				</span>
-				<span class="button-text">Parse</span>
+				<span class="button-text">Optimize</span>
 			</button>
 
-			<label class="toolbar-checkbox">
-				<input type="checkbox" />
-				<span>Optimize AST</span>
-			</label>
+			<button class="toolbar-button raidbots-button" onclick={simCode}>
+				<span class="icon">
+					<svg style="width: 28px; height: 28px;" viewBox="0 0 47 42">
+						<defs>
+							<style>
+								.rb-yellow {
+									fill: currentColor;
+									opacity: 0.6;
+								}
+							</style>
+						</defs>
+						<title>Raidbots</title>
+						<!-- Just using the robot head part of the logo -->
+						<path
+							class="rb-yellow"
+							d="M34.41077,10.64148H25.16163l-.29836-2.68523A4.09583,4.09583,0,0,0,27.648,4.07758,4.03305,4.03305,0,0,0,23.57038,0a3.95064,3.95064,0,0,0-3.97812,4.07758A4.12667,4.12667,0,0,0,22.178,7.85679l-.29836,2.78469H12.63055A6.2395,6.2395,0,0,0,6.365,16.907V29.73648A6.23949,6.23949,0,0,0,12.63055,36.002h3.282V40.0796a1.7022,1.7022,0,0,0,1.19344,1.59125,1.5856,1.5856,0,0,0,1.8896-1.4918v-.99453a.3643.3643,0,0,1,.39782-.39781.455.455,0,0,1,.49726.39781V40.179a1.70221,1.70221,0,0,0,1.19344,1.59125,1.5856,1.5856,0,0,0,1.88961-1.4918V39.284a.36429.36429,0,0,1,.39781-.39781.455.455,0,0,1,.49727.39781v.99453a1.70219,1.70219,0,0,0,1.19343,1.59125,1.5856,1.5856,0,0,0,1.88961-1.4918v-.99453a.3643.3643,0,0,1,.39781-.39781.455.455,0,0,1,.49727.39781l-.0608.844a1.7022,1.7022,0,0,0,1.19343,1.59125,1.5856,1.5856,0,0,0,1.88961-1.4918l.06081-3.92709h3.28195a6.23949,6.23949,0,0,0,6.26554-6.26554V16.907A5.89877,5.89877,0,0,0,34.41077,10.64148ZM15.41523,31.52663a4.8732,4.8732,0,1,1,4.8732-4.8732A4.81833,4.81833,0,0,1,15.41523,31.52663Zm9.94531,2.68524H21.87968c-.39781,0-.59672-.39782-.39781-.79563L23.272,30.33319a.55943.55943,0,0,1,.89507,0l1.79016,3.08305C25.95726,33.81405,25.75835,34.21187,25.36054,34.21187Zm6.365-2.68524a4.8732,4.8732,0,1,1,4.8732-4.8732A4.81833,4.81833,0,0,1,31.72554,31.52663Z"
+						></path>
+						<path
+							class="rb-yellow"
+							d="M4.97265,28.24468a.7686.7686,0,0,1-.79562.69617A5.30368,5.30368,0,0,1,0,23.57038a5.30368,5.30368,0,0,1,4.177-5.37046.70473.70473,0,0,1,.79562.69617Z"
+						></path>
+						<path
+							class="rb-yellow"
+							d="M42.16812,28.24468c0,.39781.39781.79562.69617.69617a5.30368,5.30368,0,0,0,4.177-5.37047,5.30368,5.30368,0,0,0-4.177-5.37046c-.39782-.09946-.69617.29836-.69617.69617Z"
+						></path>
+					</svg>
+				</span>
+				<span class="button-text">Sim</span>
+			</button>
+
+			<button class="toolbar-button" onclick={toggleShareModal}>
+				<span class="icon">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="14"
+						height="14"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<circle cx="18" cy="5" r="3"></circle>
+						<circle cx="6" cy="12" r="3"></circle>
+						<circle cx="18" cy="19" r="3"></circle>
+						<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+						<line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+					</svg>
+				</span>
+				<span class="button-text">Share</span>
+			</button>
 
 			<div
 				class="save-status"
 				class:saved={saveStatus === 'saved'}
 				class:saving={saveStatus === 'saving'}
 			>
-				{saveStatus === 'saved' ? 'Changes saved' : 'Saving...'}
+				{saveStatus === 'saved' ? timeDisplay : 'Saving...'}
 			</div>
 		</div>
 
@@ -348,6 +477,75 @@
 	</div>
 </div>
 
+<!-- Share Modal -->
+{#if isShareModalOpen}
+	<div
+		class="modal-overlay"
+		onclick={closeShareModal}
+		onkeydown={(e) => e.key === 'Escape' && closeShareModal()}
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="share-modal-title"
+		tabindex="-1"
+	>
+		<div class="modal-container" onclick={(e) => e.stopPropagation()} role="document">
+			<div class="modal-header">
+				<h2 id="share-modal-title">Share Your Code</h2>
+				<button class="modal-close-button" onclick={closeShareModal} aria-label="Close modal">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-content">
+				<div class="share-link-container">
+					<input
+						type="text"
+						value={shareLink}
+						readonly
+						class="share-link-input"
+						onclick={(e) => {
+							if (e.target instanceof HTMLInputElement) {
+								e.target.select();
+							}
+						}}
+					/>
+					<button id="copy-link-button" class="share-button" onclick={copyShareLink}>
+						<span class="icon">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+								<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+							</svg>
+						</span>
+						<span>Copy</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
 <style>
 	/* Main Container */
 	.app-container {
@@ -512,7 +710,6 @@
 
 	.toolbar-button:hover {
 		border-color: var(--primary);
-		transform: translateY(-1px);
 		box-shadow: 0 2px 4px var(--shadow-color);
 	}
 
@@ -521,7 +718,6 @@
 	}
 
 	.toolbar-button:active {
-		transform: translateY(1px);
 		box-shadow: 0 0 1px var(--shadow-color);
 	}
 
@@ -531,24 +727,7 @@
 		z-index: 1;
 	}
 
-	.toolbar-checkbox {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		font-size: 0.85rem;
-		cursor: pointer;
-		padding: 0.35rem 0.5rem;
-		border-radius: var(--border-radius-sm);
-		transition: background-color var(--transition-normal);
-	}
-
-	.toolbar-checkbox:hover {
-		background-color: var(--hover-bg);
-	}
-
-	.toolbar-checkbox input {
-		accent-color: var(--primary);
-	}
+	/* Save status styling */
 
 	.save-status {
 		font-size: 0.8rem;
@@ -667,11 +846,9 @@
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 		background-color: var(--hover-bg);
 		border-color: var(--primary);
-		transform: translateY(-50%) scale(1.05);
 	}
 
 	.sidebar-toggle:active {
-		transform: translateY(-50%) scale(0.95);
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	}
 
@@ -856,11 +1033,10 @@
 
 	.sidebar-toggle-mobile:hover {
 		background-color: var(--hover-bg);
-		transform: scale(1.05);
 	}
 
 	.sidebar-toggle-mobile:active {
-		transform: scale(0.95);
+		background-color: var(--active-bg);
 	}
 
 	/* Utility class for desktop-only elements */
@@ -991,9 +1167,7 @@
 			font-size: 0.8rem;
 		}
 
-		.toolbar-checkbox span {
-			font-size: 0.75rem;
-		}
+		/* Mobile styling adjustments */
 
 		.save-status {
 			font-size: 0.7rem;
@@ -1038,5 +1212,126 @@
 		.sidebar-toggle-mobile {
 			top: 3rem;
 		}
+	}
+
+	/* Modal Styles */
+	.modal-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
+		backdrop-filter: blur(2px);
+	}
+
+	.modal-container {
+		background-color: var(--card-bg);
+		border-radius: var(--border-radius-lg);
+		box-shadow: 0 4px 20px var(--shadow-color);
+		width: 90%;
+		max-width: 500px;
+		max-height: 90vh;
+		overflow-y: auto;
+		border: 1px solid var(--border-color);
+		animation: modal-appear 0.2s ease-out;
+	}
+
+	@keyframes modal-appear {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.modal-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1rem;
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.modal-header h2 {
+		margin: 0;
+		font-size: 1.25rem;
+		color: var(--text-color);
+	}
+
+	.modal-close-button {
+		background: transparent;
+		border: none;
+		color: var(--text-color);
+		cursor: pointer;
+		padding: 0.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		transition: background-color var(--transition-normal);
+	}
+
+	.modal-close-button:hover {
+		background-color: var(--hover-bg);
+	}
+
+	.modal-content {
+		padding: 1rem;
+	}
+
+	.share-link-container {
+		display: flex;
+		gap: 0.5rem;
+		margin-top: 1rem;
+		width: 100%;
+	}
+
+	.share-link-input {
+		flex: 1;
+		padding: 0.5rem 0.75rem;
+		background-color: var(--hover-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--border-radius-md);
+		color: var(--text-color);
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: all var(--transition-normal);
+	}
+
+	.share-link-input:hover,
+	.share-link-input:focus {
+		border-color: var(--primary);
+		outline: none;
+	}
+
+	.share-button {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		background-color: var(--hover-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--border-radius-md);
+		color: var(--text-color);
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: all var(--transition-normal);
+	}
+
+	.share-button:hover {
+		background-color: var(--active-bg);
+		border-color: var(--primary);
+	}
+
+	.share-button:active {
+		background-color: var(--hover-bg);
 	}
 </style>
