@@ -1,0 +1,93 @@
+// Light theme styles for the SimC AST Formatter
+@use './_variables.scss' as vars;
+@use 'sass:color';
+
+:root:not(.is-dark-theme) {
+	// Base styles
+	background-color: vars.$light-bg-color;
+	color: vars.$light-text-color;
+
+	// Bulma overrides
+	.navbar {
+		background-color: vars.$light-card-bg;
+		color: vars.$light-text-color;
+	}
+
+	.card {
+		background-color: vars.$light-card-bg;
+		color: vars.$light-text-color;
+		border-color: vars.$light-border-color;
+	}
+
+	.card-header {
+		background-color: rgba(0, 0, 0, 0.03);
+		border-bottom-color: vars.$light-border-color;
+	}
+
+	.tabs a {
+		color: rgba(0, 0, 0, 0.7);
+
+		&:hover {
+			color: vars.$light-text-color;
+			border-bottom-color: vars.$primary;
+		}
+
+		&.is-active {
+			color: vars.$primary;
+			border-bottom-color: vars.$primary;
+		}
+	}
+
+	.button {
+		&.is-light {
+			background-color: vars.$light-card-bg;
+			color: vars.$light-text-color;
+			border-color: vars.$light-border-color;
+
+			&:hover {
+				background-color: color.scale(vars.$light-card-bg, $lightness: -5%);
+			}
+		}
+	}
+
+	.input,
+	.textarea,
+	.select select {
+		background-color: vars.$light-card-bg;
+		color: vars.$light-text-color;
+		border-color: vars.$light-border-color;
+
+		&:focus {
+			border-color: vars.$primary;
+			box-shadow: 0 0 0 0.125em rgba(vars.$primary, 0.25);
+		}
+
+		&::placeholder {
+			color: rgba(0, 0, 0, 0.4);
+		}
+	}
+
+	// Custom component styles
+	.tree-node {
+		background-color: vars.$light-card-bg;
+		border-color: vars.$light-border-color;
+	}
+
+	.node-type {
+		color: vars.$primary;
+	}
+
+	.property-key {
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	.property-value {
+		color: vars.$success;
+	}
+
+	// Visual tree view styles
+	.visual-tree-container {
+		background-color: vars.$light-card-bg;
+		border-color: vars.$light-border-color;
+	}
+}

@@ -1,0 +1,93 @@
+// Dark theme styles for the SimC AST Formatter
+@use './_variables.scss' as vars;
+@use 'sass:color';
+
+.is-dark-theme {
+	// Base styles
+	background-color: vars.$dark-bg-color;
+	color: vars.$dark-text-color;
+
+	// Bulma overrides
+	.navbar {
+		background-color: vars.$dark-card-bg;
+		color: vars.$dark-text-color;
+	}
+
+	.card {
+		background-color: vars.$dark-card-bg;
+		color: vars.$dark-text-color;
+		border-color: vars.$dark-border-color;
+	}
+
+	.card-header {
+		background-color: rgba(0, 0, 0, 0.2);
+		border-bottom-color: vars.$dark-border-color;
+	}
+
+	.tabs a {
+		color: rgba(255, 255, 255, 0.7);
+
+		&:hover {
+			color: vars.$dark-text-color;
+			border-bottom-color: vars.$primary;
+		}
+
+		&.is-active {
+			color: vars.$primary;
+			border-bottom-color: vars.$primary;
+		}
+	}
+
+	.button {
+		&.is-light {
+			background-color: vars.$dark-card-bg;
+			color: vars.$dark-text-color;
+			border-color: vars.$dark-border-color;
+
+			&:hover {
+				background-color: color.scale(vars.$dark-card-bg, $lightness: 5%);
+			}
+		}
+	}
+
+	.input,
+	.textarea,
+	.select select {
+		background-color: vars.$dark-card-bg;
+		color: vars.$dark-text-color;
+		border-color: vars.$dark-border-color;
+
+		&:focus {
+			border-color: vars.$primary;
+			box-shadow: 0 0 0 0.125em rgba(vars.$primary, 0.25);
+		}
+
+		&::placeholder {
+			color: rgba(255, 255, 255, 0.5);
+		}
+	}
+
+	// Custom component styles
+	.tree-node {
+		background-color: vars.$dark-card-bg;
+		border-color: vars.$dark-border-color;
+	}
+
+	.node-type {
+		color: vars.$primary;
+	}
+
+	.property-key {
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.property-value {
+		color: vars.$success;
+	}
+
+	// Visual tree view styles
+	.visual-tree-container {
+		background-color: vars.$dark-card-bg;
+		border-color: vars.$dark-border-color;
+	}
+}

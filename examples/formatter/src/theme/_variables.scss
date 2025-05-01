@@ -1,0 +1,30 @@
+// Theme variables for the SimC AST Formatter
+
+// Base colors
+$primary: #0d6efd;
+$info: #4075a6;
+$success: #198754;
+$warning: #ffc107;
+$danger: #dc3545;
+
+// Light theme variables
+$light-bg-color: #f8f9fa;
+$light-text-color: rgba(0, 0, 0, 0.87);
+$light-card-bg: #ffffff;
+$light-border-color: #dee2e6;
+$light-node-fill: #f0f8ff;
+$light-node-stroke: #0d6efd;
+$light-line-color: #999;
+
+// Dark theme variables
+$dark-bg-color: #121212;
+$dark-text-color: rgba(255, 255, 255, 0.87);
+$dark-card-bg: #1e1e1e;
+$dark-border-color: #333;
+$dark-node-fill: #2c2c2c;
+$dark-node-stroke: #0d6efd;
+$dark-line-color: #666;
+
+// Monaco editor themes
+$monaco-light-bg: #ffffff;
+$monaco-dark-bg: #1e1e1e;

@@ -1,0 +1,121 @@
+/* Import theme files using @use */
+@use './theme/_variables.scss' as vars;
+@use './theme/_light.scss';
+@use './theme/_dark.scss';
+
+/* Import Bulma */
+@import 'bulma/css/bulma.min.css';
+
+/* Import fonts */
+@import '@fontsource/fira-mono';
+
+/* Base styles */
+:root {
+	--font-body:
+		Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+		'Open Sans', 'Helvetica Neue', sans-serif;
+	--font-mono: 'Fira Mono', monospace;
+	font-family: var(--font-body);
+
+	/* Default to dark theme */
+	&.is-dark-theme {
+		background-color: #121212;
+		color: rgba(255, 255, 255, 0.87);
+	}
+}
+
+body {
+	min-height: 100vh;
+	margin: 0;
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease;
+}
+
+/* Typography */
+h1,
+h2,
+p {
+	font-weight: 400;
+}
+
+p {
+	line-height: 1.5;
+}
+
+h1 {
+	font-size: 2rem;
+	text-align: center;
+}
+
+h2 {
+	font-size: 1.5rem;
+}
+
+pre {
+	font-size: 16px;
+	font-family: var(--font-mono);
+	border-radius: 3px;
+	padding: 0.5em;
+	overflow-x: auto;
+}
+
+/* Utility classes */
+.text-column {
+	display: flex;
+	max-width: 48rem;
+	flex: 0.6;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 auto;
+}
+
+.visually-hidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: auto;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	white-space: nowrap;
+}
+
+/* Custom component styles */
+.ast-tree {
+	max-height: 600px;
+	overflow: auto;
+}
+
+/* Monaco editor styles */
+.monaco-editor-container {
+	width: 100%;
+	height: 300px;
+	border: 1px solid var(--border-color);
+	border-radius: 4px;
+}
+
+/* Responsive styles */
+@media (min-width: 720px) {
+	h1 {
+		font-size: 2.4rem;
+	}
+}
+
+/* Theme toggle button */
+.theme-toggle {
+	cursor: pointer;
+	padding: 0.5rem;
+	border-radius: 50%;
+	transition: background-color 0.3s ease;
+
+	&:hover {
+		background-color: rgba(128, 128, 128, 0.1);
+	}
+
+	.icon {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+}
