@@ -1,5 +1,7 @@
 # SimC AST Formatter
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/673619bf-749f-4416-9a6e-49a768e990d1/deploy-status)](https://app.netlify.com/sites/simc-editor/deploys)
+
 A web-based tool for parsing and visualizing SimulationCraft (SimC) code by generating an Abstract Syntax Tree (AST).
 
 ## Features
