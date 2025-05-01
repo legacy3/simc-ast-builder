@@ -26,7 +26,7 @@
 	let timeDisplay = $state('Not saved yet');
 	let updateInterval: ReturnType<typeof setInterval> | null = null;
 	let shareLink = $state(
-		`https://simc-ast-builder.example.com/share/${Math.random().toString(36).substring(2, 10)}`
+		`https://simc-editor.com/share/${Math.random().toString(36).substring(2, 10)}`
 	);
 
 	function handleEditorChange(newValue: string) {
@@ -46,7 +46,7 @@
 			lastSaveTime = Date.now();
 			updateTimeDisplay();
 			// Update share link with new content hash
-			shareLink = `https://simc-ast-builder.example.com/share/${Math.random().toString(36).substring(2, 10)}`;
+			shareLink = `https://simc-editor.com/share/${Math.random().toString(36).substring(2, 10)}`;
 		}, 1000);
 	}
 
@@ -69,15 +69,14 @@
 	function copyShareLink() {
 		copy(shareLink)
 			.then(() => {
-				// Show a temporary "Copied!" message
+				// Show a temporary visual feedback on the input field
 				if (isBrowser) {
-					const copyButton = document.getElementById('copy-link-button');
-					if (copyButton) {
-						const originalText = copyButton.textContent;
-						copyButton.textContent = 'Copied!';
+					const inputField = document.querySelector('.share-link-input');
+					if (inputField) {
+						inputField.classList.add('copied');
 						setTimeout(() => {
-							copyButton.textContent = originalText;
-						}, 2000);
+							inputField.classList.remove('copied');
+						}, 1000);
 					}
 				}
 			})
@@ -200,26 +199,14 @@
 	<div class="unified-header">
 		<div class="header-left">
 			<a href="/" class="logo-link">
-				<h1 class="app-title">SimC AST Formatter</h1>
+				<h1 class="app-title">SimC Editor</h1>
 			</a>
 		</div>
 
 		<div class="header-center">
 			<button class="toolbar-button" onclick={optimizeCode}>
 				<span class="icon">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="14"
-						height="14"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path d="M18.5 2h-13L7 10H2l8 14L18 10h-5l1.5-8z"></path>
-					</svg>
+					<i class="fas fa-bolt"></i>
 				</span>
 				<span class="button-text">Optimize</span>
 			</button>
@@ -256,23 +243,7 @@
 
 			<button class="toolbar-button" onclick={toggleShareModal}>
 				<span class="icon">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="14"
-						height="14"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<circle cx="18" cy="5" r="3"></circle>
-						<circle cx="6" cy="12" r="3"></circle>
-						<circle cx="18" cy="19" r="3"></circle>
-						<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-						<line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-					</svg>
+					<i class="fas fa-share-alt"></i>
 				</span>
 				<span class="button-text">Share</span>
 			</button>
@@ -297,22 +268,7 @@
 				aria-label="View on GitHub"
 			>
 				<span class="icon">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="14"
-						height="14"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						aria-hidden="true"
-					>
-						<path
-							d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-						></path>
-					</svg>
+					<i class="fab fa-github"></i>
 				</span>
 			</a>
 
@@ -326,37 +282,10 @@
 				<span class="icon">
 					{#if isMenuOpen}
 						<!-- X icon for close -->
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<line x1="18" y1="6" x2="6" y2="18"></line>
-							<line x1="6" y1="6" x2="18" y2="18"></line>
-						</svg>
+						<i class="fas fa-times"></i>
 					{:else}
 						<!-- Hamburger icon for open -->
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<line x1="3" y1="12" x2="21" y2="12"></line>
-							<line x1="3" y1="6" x2="21" y2="6"></line>
-							<line x1="3" y1="18" x2="21" y2="18"></line>
-						</svg>
+						<i class="fas fa-bars"></i>
 					{/if}
 				</span>
 			</button>
@@ -366,21 +295,7 @@
 	<!-- Sidebar Toggle Button (only visible on small screens) -->
 	<button class="sidebar-toggle-mobile" onclick={toggleSidebar} aria-label="Toggle sidebar">
 		<span class="icon">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="20"
-				height="20"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-			>
-				<line x1="3" y1="12" x2="21" y2="12"></line>
-				<line x1="3" y1="6" x2="21" y2="6"></line>
-				<line x1="3" y1="18" x2="21" y2="18"></line>
-			</svg>
+			<i class="fas fa-bars"></i>
 		</span>
 	</button>
 
@@ -402,23 +317,11 @@
 			onclick={toggleSidebar}
 			title="Toggle Sidebar (Alt+S)"
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="16"
-				height="16"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-			>
-				{#if sidebarVisible}
-					<polyline points="13 17 18 12 13 7"></polyline>
-				{:else}
-					<polyline points="11 17 6 12 11 7"></polyline>
-				{/if}
-			</svg>
+			{#if sidebarVisible}
+				<i class="fas fa-chevron-right"></i>
+			{:else}
+				<i class="fas fa-chevron-left"></i>
+			{/if}
 		</button>
 
 		<!-- Sidebar -->
@@ -431,21 +334,7 @@
 					onclick={() => setActiveTab('text')}
 				>
 					<span class="icon">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="14"
-							height="14"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<line x1="21" y1="6" x2="3" y2="6"></line>
-							<line x1="15" y1="12" x2="3" y2="12"></line>
-							<line x1="17" y1="18" x2="3" y2="18"></line>
-						</svg>
+						<i class="fas fa-align-left"></i>
 					</span>
 					<span>Text</span>
 					<span class="shortcut">Alt+1</span>
@@ -456,21 +345,7 @@
 					onclick={() => setActiveTab('visual')}
 				>
 					<span class="icon">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="14"
-							height="14"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<polyline points="7 8 3 12 7 16"></polyline>
-							<polyline points="17 8 21 12 17 16"></polyline>
-							<line x1="14" y1="4" x2="10" y2="20"></line>
-						</svg>
+						<i class="fas fa-code"></i>
 					</span>
 					<span>Tree</span>
 					<span class="shortcut">Alt+2</span>
@@ -501,29 +376,12 @@
 		onkeydown={(e) => e.key === 'Escape' && closeShareModal()}
 		role="dialog"
 		aria-modal="true"
-		aria-labelledby="share-modal-title"
 		tabindex="-1"
 	>
 		<div class="modal-container" onclick={(e) => e.stopPropagation()} role="document">
-			<div class="modal-header">
-				<h2 id="share-modal-title">Share Your Code</h2>
-				<button class="modal-close-button" onclick={closeShareModal} aria-label="Close modal">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<line x1="18" y1="6" x2="6" y2="18"></line>
-						<line x1="6" y1="6" x2="18" y2="18"></line>
-					</svg>
-				</button>
-			</div>
+			<button class="modal-close-button" onclick={closeShareModal} aria-label="Close modal">
+				<i class="fas fa-times"></i>
+			</button>
 			<div class="modal-content">
 				<div class="share-link-container">
 					<input
@@ -534,28 +392,10 @@
 						onclick={(e) => {
 							if (e.target instanceof HTMLInputElement) {
 								e.target.select();
+								copyShareLink();
 							}
 						}}
 					/>
-					<button id="copy-link-button" class="share-button" onclick={copyShareLink}>
-						<span class="icon">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-								<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-							</svg>
-						</span>
-						<span>Copy</span>
-					</button>
 				</div>
 			</div>
 		</div>
@@ -848,14 +688,6 @@
 		color: var(--text-color);
 		padding: 0;
 		overflow: hidden;
-	}
-
-	.sidebar-toggle svg {
-		width: 14px;
-		height: 14px;
-		display: block;
-		position: relative;
-		left: 1px; /* Slight adjustment to center the arrow visually */
 	}
 
 	.sidebar-toggle:hover {
@@ -1237,22 +1069,21 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.4);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		z-index: 1000;
-		backdrop-filter: blur(2px);
+		backdrop-filter: blur(3px);
 	}
 
 	.modal-container {
 		background-color: var(--card-bg);
 		border-radius: var(--border-radius-lg);
-		box-shadow: 0 4px 20px var(--shadow-color);
+		box-shadow: 0 2px 15px var(--shadow-color);
 		width: 90%;
-		max-width: 500px;
-		max-height: 90vh;
-		overflow-y: auto;
+		max-width: 450px;
+		position: relative;
 		border: 1px solid var(--border-color);
 		animation: modal-appear 0.2s ease-out;
 	}
@@ -1260,7 +1091,7 @@
 	@keyframes modal-appear {
 		from {
 			opacity: 0;
-			transform: translateY(20px);
+			transform: translateY(10px);
 		}
 		to {
 			opacity: 1;
@@ -1268,86 +1099,74 @@
 		}
 	}
 
-	.modal-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1rem;
-		border-bottom: 1px solid var(--border-color);
-	}
-
-	.modal-header h2 {
-		margin: 0;
-		font-size: 1.25rem;
-		color: var(--text-color);
-	}
-
 	.modal-close-button {
+		position: absolute;
+		top: 0.4rem;
+		right: 0.75rem;
 		background: transparent;
 		border: none;
 		color: var(--text-color);
+		opacity: 0.6;
 		cursor: pointer;
-		padding: 0.5rem;
+		padding: 0.4rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 50%;
-		transition: background-color var(--transition-normal);
+		transition: all var(--transition-normal);
+		z-index: 2;
 	}
 
 	.modal-close-button:hover {
+		opacity: 1;
 		background-color: var(--hover-bg);
 	}
 
 	.modal-content {
-		padding: 1rem;
+		padding: 2rem 1.5rem;
 	}
 
 	.share-link-container {
-		display: flex;
-		gap: 0.5rem;
-		margin-top: 1rem;
 		width: 100%;
 	}
 
 	.share-link-input {
-		flex: 1;
-		padding: 0.5rem 0.75rem;
+		width: 100%;
+		padding: 0.75rem 1rem;
 		background-color: var(--hover-bg);
 		border: 1px solid var(--border-color);
 		border-radius: var(--border-radius-md);
 		color: var(--text-color);
-		font-size: 0.9rem;
+		font-size: 0.95rem;
 		cursor: pointer;
 		transition: all var(--transition-normal);
+		text-align: center;
 	}
 
 	.share-link-input:hover,
 	.share-link-input:focus {
 		border-color: var(--primary);
 		outline: none;
+		box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
 	}
 
-	.share-button {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		background-color: var(--hover-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--border-radius-md);
-		color: var(--text-color);
-		font-size: 0.9rem;
-		cursor: pointer;
-		transition: all var(--transition-normal);
+	@keyframes copy-pulse {
+		0% {
+			background-color: var(--hover-bg);
+			color: var(--text-color);
+		}
+		50% {
+			background-color: var(--primary);
+			color: white;
+		}
+		100% {
+			background-color: var(--hover-bg);
+			color: var(--text-color);
+		}
 	}
 
-	.share-button:hover {
-		background-color: var(--active-bg);
+	.share-link-input.copied {
+		animation: copy-pulse 1s ease-out;
 		border-color: var(--primary);
-	}
-
-	.share-button:active {
-		background-color: var(--hover-bg);
 	}
 </style>
