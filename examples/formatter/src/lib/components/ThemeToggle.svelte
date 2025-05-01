@@ -72,8 +72,8 @@
 			transform var(--transition-fast);
 		padding: 0.5rem;
 		height: auto;
-		width: 2rem;
-		height: 2rem;
+		width: 2.5rem;
+		height: 2.5rem;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
@@ -100,11 +100,11 @@
 		color: var(--primary);
 		transform: translateY(-1px);
 	}
-	
+
 	.theme-toggle:hover::before {
 		transform: scale(1);
 	}
-	
+
 	.theme-toggle:active {
 		transform: translateY(1px);
 	}
@@ -121,19 +121,65 @@
 		position: relative;
 		z-index: 1;
 	}
-	
+
 	/* Animation for theme toggle */
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
-	
+
 	@keyframes fade-in {
-		0% { opacity: 0; }
-		100% { opacity: 1; }
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
-	
+
 	.icon svg {
-		animation: fade-in 0.3s ease forwards, spin 0.5s ease;
+		animation:
+			fade-in 0.3s ease forwards,
+			spin 0.5s ease;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+		.theme-toggle {
+			width: 3rem;
+			height: 3rem;
+		}
+
+		.icon svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.theme-toggle {
+			width: 2.75rem;
+			height: 2.75rem;
+		}
+	}
+
+	/* Handle touch interactions better */
+	@media (pointer: coarse) {
+		.theme-toggle {
+			min-width: 44px;
+			min-height: 44px;
+		}
+
+		.theme-toggle:hover::before {
+			transform: scale(0);
+		}
+
+		.theme-toggle:active::before {
+			transform: scale(1);
+		}
 	}
 </style>

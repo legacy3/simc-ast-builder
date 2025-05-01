@@ -104,3 +104,31 @@ $breakpoints: (
 	xl: 1200px,
 	xxl: 1400px
 );
+
+// Z-index layers
+$z-index-dropdown: 10;
+$z-index-sticky: 20;
+$z-index-fixed: 30;
+$z-index-modal: 40;
+$z-index-popover: 50;
+$z-index-tooltip: 60;
+
+// Touch target sizes
+$touch-target-size: 44px;
+$touch-target-spacing: 8px;
+
+// Responsive typography
+$font-size-base: 1rem;
+$font-size-sm: 0.875rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+
+// Responsive spacing for different screen sizes
+$spacing-mobile: (
+	1: $spacing-base * 0.75,
+	2: $spacing-base * 1.5,
+	3: $spacing-base * 3,
+	4: $spacing-base * 5,
+	5: $spacing-base * 7,
+	6: $spacing-base * 10
+);

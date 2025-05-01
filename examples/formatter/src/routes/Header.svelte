@@ -25,7 +25,52 @@
 			</a>
 		</div>
 
-		<div class="nav-actions">
+		<!-- Mobile menu button -->
+		<button
+			class="mobile-menu-button"
+			on:click={toggleMenu}
+			aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+			aria-expanded={isMenuOpen}
+		>
+			<span class="icon">
+				{#if isMenuOpen}
+					<!-- X icon for close -->
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				{:else}
+					<!-- Hamburger icon for open -->
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<line x1="3" y1="12" x2="21" y2="12"></line>
+						<line x1="3" y1="6" x2="21" y2="6"></line>
+						<line x1="3" y1="18" x2="21" y2="18"></line>
+					</svg>
+				{/if}
+			</span>
+		</button>
+
+		<div class="nav-actions" class:is-open={isMenuOpen}>
 			<ThemeToggle />
 
 			<a
@@ -94,20 +139,20 @@
 		position: relative;
 		padding: 0.25rem 0;
 		transition: transform var(--transition-fast);
-		
+
 		&:hover {
 			transform: translateY(-1px);
-			
+
 			.app-title {
 				opacity: 1;
 			}
-			
+
 			&::after {
 				transform: scaleX(1);
 				opacity: 0.5;
 			}
 		}
-		
+
 		&::after {
 			content: '';
 			position: absolute;
@@ -119,7 +164,9 @@
 			transform: scaleX(0);
 			opacity: 0;
 			transform-origin: center;
-			transition: transform 0.3s ease, opacity 0.3s ease;
+			transition:
+				transform 0.3s ease,
+				opacity 0.3s ease;
 		}
 	}
 
@@ -154,14 +201,14 @@
 		width: 2rem;
 		height: 2rem;
 		border-radius: 50%;
-		
+
 		&:hover {
 			opacity: 1;
 			transform: translateY(-1px);
 			color: var(--primary);
 			background-color: var(--hover-bg);
 		}
-		
+
 		&:active {
 			transform: translateY(1px);
 		}
@@ -173,13 +220,82 @@
 		justify-content: center;
 	}
 
+	/* Mobile menu button */
+	.mobile-menu-button {
+		display: none;
+		background: transparent;
+		border: none;
+		color: var(--text-color);
+		cursor: pointer;
+		padding: 0.5rem;
+		transition: all var(--transition-fast);
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.mobile-menu-button:hover {
+		background-color: var(--hover-bg);
+	}
+
+	.mobile-menu-button:active {
+		transform: scale(0.95);
+	}
+
+	/* Responsive styles */
 	@media (max-width: 768px) {
+		.header-container {
+			height: 3rem;
+			padding: 0 var(--space-2);
+			position: relative;
+		}
+
+		.app-title {
+			font-size: 0.85rem;
+		}
+
+		.mobile-menu-button {
+			display: flex;
+		}
+
+		.nav-actions {
+			position: absolute;
+			top: 100%;
+			right: 0;
+			background-color: var(--card-bg);
+			border-left: 1px solid var(--border-color);
+			border-bottom: 1px solid var(--border-color);
+			box-shadow: -2px 2px 5px var(--shadow-color);
+			padding: var(--space-3);
+			border-radius: 0 0 0 var(--border-radius-md);
+			flex-direction: column;
+			gap: var(--space-3);
+			transform: translateX(100%);
+			transition: transform var(--transition-normal);
+			z-index: 30;
+		}
+
+		.nav-actions.is-open {
+			transform: translateX(0);
+		}
+	}
+
+	@media (max-width: 480px) {
 		.header-container {
 			height: 2.75rem;
 		}
-		
+
 		.app-title {
-			font-size: 0.85rem;
+			font-size: 0.8rem;
+		}
+	}
+
+	/* Handle orientation changes */
+	@media (max-height: 500px) and (orientation: landscape) {
+		.header-container {
+			height: 2.5rem;
 		}
 	}
 </style>

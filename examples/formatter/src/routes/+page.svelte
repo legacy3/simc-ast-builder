@@ -85,27 +85,62 @@
 </svelte:head>
 
 <div class="app-container">
+	<!-- Mobile Menu Button (only visible on small screens) -->
+	<button class="mobile-menu-button" on:click={toggleSidebar} aria-label="Toggle sidebar">
+		<span class="icon">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="20"
+				height="20"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<line x1="3" y1="12" x2="21" y2="12"></line>
+				<line x1="3" y1="6" x2="21" y2="6"></line>
+				<line x1="3" y1="18" x2="21" y2="18"></line>
+			</svg>
+		</span>
+	</button>
+
 	<!-- Top Toolbar -->
 	<div class="toolbar">
 		<div class="toolbar-left">
 			<button class="toolbar-button" on:click={parseCode}>
 				<span class="icon">
-					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="14"
+						height="14"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
 						<polyline points="16 18 22 12 16 6"></polyline>
 						<polyline points="8 6 2 12 8 18"></polyline>
 					</svg>
 				</span>
-				<span>Parse</span>
+				<span class="button-text">Parse</span>
 			</button>
-			
+
 			<label class="toolbar-checkbox">
 				<input type="checkbox" />
 				<span>Optimize AST</span>
 			</label>
 		</div>
-		
+
 		<div class="toolbar-right">
-			<div class="save-status" class:saved={saveStatus === 'saved'} class:saving={saveStatus === 'saving'}>
+			<div
+				class="save-status"
+				class:saved={saveStatus === 'saved'}
+				class:saving={saveStatus === 'saving'}
+			>
 				{saveStatus === 'saved' ? 'Changes saved' : 'Saving...'}
 			</div>
 		</div>
@@ -124,9 +159,23 @@
 			></textarea>
 		</div>
 
-		<!-- Sidebar Toggle Button -->
-		<button class="sidebar-toggle" on:click={toggleSidebar} title="Toggle Sidebar (Alt+S)">
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+		<!-- Sidebar Toggle Button (hidden on mobile) -->
+		<button
+			class="sidebar-toggle desktop-only"
+			on:click={toggleSidebar}
+			title="Toggle Sidebar (Alt+S)"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="16"
+				height="16"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
 				{#if sidebarVisible}
 					<polyline points="13 17 18 12 13 7"></polyline>
 				{:else}
@@ -146,7 +195,17 @@
 					aria-selected={activeTab === 'text'}
 				>
 					<span class="icon">
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="14"
+							height="14"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
 							<line x1="21" y1="6" x2="3" y2="6"></line>
 							<line x1="15" y1="12" x2="3" y2="12"></line>
 							<line x1="17" y1="18" x2="3" y2="18"></line>
@@ -162,7 +221,17 @@
 					aria-selected={activeTab === 'visual'}
 				>
 					<span class="icon">
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="14"
+							height="14"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
 							<polyline points="7 8 3 12 7 16"></polyline>
 							<polyline points="17 8 21 12 17 16"></polyline>
 							<line x1="14" y1="4" x2="10" y2="20"></line>
@@ -215,7 +284,8 @@
 			box-shadow var(--transition-normal);
 	}
 
-	.toolbar-left, .toolbar-right {
+	.toolbar-left,
+	.toolbar-right {
 		display: flex;
 		align-items: center;
 		gap: var(--space-3);
@@ -257,16 +327,16 @@
 		transform: translateY(-1px);
 		box-shadow: 0 2px 4px var(--shadow-color);
 	}
-	
+
 	.toolbar-button:hover::before {
 		opacity: 1;
 	}
-	
+
 	.toolbar-button:active {
 		transform: translateY(1px);
 		box-shadow: 0 0 1px var(--shadow-color);
 	}
-	
+
 	.toolbar-button .icon,
 	.toolbar-button span:not(.icon) {
 		position: relative;
@@ -283,11 +353,11 @@
 		border-radius: var(--border-radius-sm);
 		transition: background-color var(--transition-normal);
 	}
-	
+
 	.toolbar-checkbox:hover {
 		background-color: var(--hover-bg);
 	}
-	
+
 	.toolbar-checkbox input {
 		accent-color: var(--primary);
 	}
@@ -311,11 +381,17 @@
 	.save-status.saved {
 		opacity: 0.6;
 	}
-	
+
 	@keyframes pulse {
-		0% { opacity: 0.6; }
-		50% { opacity: 0.9; }
-		100% { opacity: 0.6; }
+		0% {
+			opacity: 0.6;
+		}
+		50% {
+			opacity: 0.9;
+		}
+		100% {
+			opacity: 0.6;
+		}
 	}
 
 	/* Content Area */
@@ -340,8 +416,9 @@
 
 	.editor-area.full-width {
 		width: 100%;
+		transition: width var(--transition-normal) ease-in-out;
 	}
-	
+
 	.editor-area::after {
 		content: '';
 		position: absolute;
@@ -352,7 +429,9 @@
 		pointer-events: none;
 		box-shadow: inset 0 0 0 1px var(--border-color);
 		opacity: 0.5;
-		transition: opacity var(--transition-normal), box-shadow var(--transition-normal);
+		transition:
+			opacity var(--transition-normal),
+			box-shadow var(--transition-normal);
 	}
 
 	.editor-textarea {
@@ -373,9 +452,11 @@
 			background-color var(--transition-normal),
 			box-shadow var(--transition-normal);
 	}
-	
+
 	.editor-textarea:focus {
-		box-shadow: inset 0 1px 3px var(--shadow-color), 0 0 0 1px rgba(var(--primary), 0.2);
+		box-shadow:
+			inset 0 1px 3px var(--shadow-color),
+			0 0 0 1px rgba(var(--primary), 0.2);
 	}
 
 	/* Sidebar Toggle Button */
@@ -410,7 +491,7 @@
 		border-color: var(--primary);
 		transform: translateY(-50%) scale(1.05);
 	}
-	
+
 	.sidebar-toggle:active {
 		transform: translateY(-50%) scale(0.95);
 		box-shadow: 0 1px 2px var(--shadow-color);
@@ -418,6 +499,7 @@
 
 	.editor-area.full-width + .sidebar-toggle {
 		right: 10px;
+		transition: right var(--transition-normal) ease-in-out;
 	}
 
 	/* Sidebar */
@@ -430,6 +512,7 @@
 		flex-direction: column;
 		transition:
 			transform var(--transition-normal),
+			width var(--transition-normal),
 			background-color var(--transition-normal),
 			border-color var(--transition-normal);
 		transform: translateX(0);
@@ -438,6 +521,9 @@
 
 	.sidebar:not(.visible) {
 		transform: translateX(100%);
+		width: 0;
+		border-left: none;
+		margin-left: 0;
 	}
 
 	/* Sidebar Tabs */
@@ -470,7 +556,7 @@
 		position: relative;
 		overflow: hidden;
 	}
-	
+
 	.sidebar-tab::before {
 		content: '';
 		position: absolute;
@@ -488,7 +574,7 @@
 		opacity: 0.9;
 		background-color: var(--hover-bg);
 	}
-	
+
 	.sidebar-tab:hover::before {
 		transform: scaleX(0.5);
 	}
@@ -497,7 +583,7 @@
 		opacity: 1;
 		background-color: var(--active-bg);
 	}
-	
+
 	.sidebar-tab.active::before {
 		transform: scaleX(1);
 	}
@@ -547,26 +633,172 @@
 		justify-content: center;
 	}
 
+	/* Mobile Menu Button */
+	.mobile-menu-button {
+		display: none;
+		position: fixed;
+		top: 0.5rem;
+		right: 0.5rem;
+		z-index: 100;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: var(--card-bg);
+		border: 1px solid var(--border-color);
+		box-shadow: 0 2px 4px var(--shadow-color);
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: all var(--transition-normal);
+	}
+
+	.mobile-menu-button:hover {
+		background-color: var(--hover-bg);
+		transform: scale(1.05);
+	}
+
+	.mobile-menu-button:active {
+		transform: scale(0.95);
+	}
+
+	/* Utility class for desktop-only elements */
+	.desktop-only {
+		display: flex;
+	}
+
 	/* Responsive Adjustments */
-	@media (max-width: 768px) {
+	/* Large screens (>1200px) */
+	@media (min-width: 1201px) {
+		.editor-area {
+			width: 82%;
+		}
+
+		.sidebar {
+			width: 18%;
+		}
+
+		.sidebar-toggle {
+			right: 18%;
+		}
+	}
+
+	/* Medium screens (768px-1200px) */
+	@media (min-width: 769px) and (max-width: 1200px) {
 		.editor-area {
 			width: 75%;
 		}
-		
+
 		.sidebar {
 			width: 25%;
 		}
-		
+
 		.sidebar-toggle {
 			right: 25%;
 		}
-		
+
 		.toolbar {
 			padding: 0.5rem var(--space-2);
 		}
-		
-		.toolbar-left, .toolbar-right {
+
+		.toolbar-left,
+		.toolbar-right {
 			gap: var(--space-2);
+		}
+	}
+
+	/* Small screens (<768px) */
+	@media (max-width: 768px) {
+		.mobile-menu-button {
+			display: flex;
+		}
+
+		.desktop-only {
+			display: none;
+		}
+
+		.toolbar {
+			padding: 0.5rem var(--space-2);
+			flex-wrap: wrap;
+		}
+
+		.toolbar-left,
+		.toolbar-right {
+			gap: var(--space-2);
+		}
+
+		.toolbar-button {
+			padding: 0.35rem 0.6rem;
+		}
+
+		.button-text {
+			display: none;
+		}
+
+		.editor-area {
+			width: 100%;
+		}
+
+		.sidebar {
+			position: fixed;
+			top: 0;
+			right: 0;
+			width: 80%;
+			height: 100vh;
+			z-index: 50;
+			box-shadow: -2px 0 10px var(--shadow-color);
+		}
+
+		.sidebar-toggle {
+			display: none;
+		}
+
+		.sidebar-tab {
+			padding: 0.75rem 0.5rem;
+		}
+
+		.shortcut {
+			display: none;
+		}
+	}
+
+	/* Mobile devices (portrait phones) */
+	@media (max-width: 480px) {
+		.toolbar {
+			padding: 0.4rem var(--space-1);
+		}
+
+		.toolbar-checkbox span {
+			font-size: 0.75rem;
+		}
+
+		.save-status {
+			font-size: 0.7rem;
+			padding: 0.25rem 0.5rem;
+		}
+
+		.sidebar {
+			width: 90%;
+		}
+
+		.editor-textarea {
+			padding: var(--space-2);
+			font-size: 0.85rem;
+		}
+	}
+
+	/* Handle orientation changes */
+	@media (max-height: 500px) and (orientation: landscape) {
+		.toolbar {
+			padding: 0.3rem var(--space-2);
+			height: auto;
+		}
+
+		.sidebar-tabs {
+			height: 40px;
+		}
+
+		.sidebar-tab {
+			padding: 0.5rem;
 		}
 	}
 </style>

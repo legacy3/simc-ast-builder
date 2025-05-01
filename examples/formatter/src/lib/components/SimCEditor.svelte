@@ -242,6 +242,21 @@
 		padding: var(--space-4);
 	}
 
+	/* Responsive adjustments for textarea */
+	@media (max-width: 768px) {
+		.textarea {
+			padding: var(--space-3);
+			font-size: 14px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.textarea {
+			padding: var(--space-2);
+			font-size: 13px;
+		}
+	}
+
 	.simc-editor :global(.CodeMirror) {
 		height: 100%;
 		border: 1px solid var(--border-color, #ced4da);
@@ -251,6 +266,19 @@
 		line-height: 1.6;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 		letter-spacing: 0.01em;
+	}
+
+	/* Responsive adjustments for CodeMirror */
+	@media (max-width: 768px) {
+		.simc-editor :global(.CodeMirror) {
+			font-size: 14px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.simc-editor :global(.CodeMirror) {
+			font-size: 13px;
+		}
 	}
 
 	.simc-editor :global(.CodeMirror-lines) {
@@ -389,5 +417,29 @@
 
 	.simc-editor :global(.cm-dark-theme .cm-bracket) {
 		color: #d4d4d4;
+	}
+
+	/* Touch-friendly adjustments */
+	@media (pointer: coarse) {
+		.simc-editor :global(.CodeMirror-lines) {
+			padding: var(--space-4) 0;
+		}
+
+		.simc-editor :global(.CodeMirror-line) {
+			padding: 0 var(--space-4);
+		}
+
+		.simc-editor :global(.CodeMirror-linenumber) {
+			padding: 0 var(--space-3);
+			min-width: 40px;
+		}
+
+		.simc-editor :global(.CodeMirror-gutters) {
+			width: 60px !important;
+		}
+
+		.simc-editor :global(.CodeMirror-sizer) {
+			margin-left: 60px !important;
+		}
 	}
 </style>

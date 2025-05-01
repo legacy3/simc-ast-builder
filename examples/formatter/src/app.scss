@@ -100,7 +100,7 @@
 	--node-fill: #{vars.$dark-node-fill};
 	--node-stroke: #{vars.$dark-node-stroke};
 	--line-color: #{vars.$dark-line-color};
-	
+
 	/* Adjust shadows for dark mode */
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
 	--shadow-md: 0 2px 6px rgba(0, 0, 0, 0.25);
@@ -114,7 +114,9 @@ body {
 	margin: 0;
 	background: var(--bg-color);
 	color: var(--text-color);
-	transition: background var(--transition-normal), color var(--transition-normal);
+	transition:
+		background var(--transition-normal),
+		color var(--transition-normal);
 }
 
 /* Typography */
@@ -237,7 +239,7 @@ pre {
 	font-weight: normal;
 	position: relative;
 	overflow: hidden;
-	
+
 	&::after {
 		content: '';
 		position: absolute;
@@ -245,12 +247,14 @@ pre {
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+		background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
 		opacity: 0;
 		transform: scale(2);
-		transition: opacity 0.5s, transform 0.5s;
+		transition:
+			opacity 0.5s,
+			transform 0.5s;
 	}
-	
+
 	&:active::after {
 		opacity: 1;
 		transform: scale(0);
@@ -266,7 +270,7 @@ pre {
 			transform: translateY(-1px);
 			box-shadow: 0 2px 5px rgba(var(--primary), 0.4);
 		}
-		
+
 		&:active {
 			transform: translateY(1px);
 			box-shadow: 0 0px 1px rgba(var(--primary), 0.2);
@@ -299,7 +303,9 @@ pre {
 	box-shadow: 0 0 0 2px rgba(var(--primary), 0.15);
 	border-radius: var(--border-radius-md);
 	opacity: 0;
-	transition: opacity var(--transition-normal), box-shadow var(--transition-normal);
+	transition:
+		opacity var(--transition-normal),
+		box-shadow var(--transition-normal);
 }
 
 .editor-container:focus-within::after {
@@ -317,7 +323,9 @@ pre {
 ::-webkit-scrollbar {
 	width: 8px;
 	height: 8px;
-	transition: width var(--transition-normal), height var(--transition-normal);
+	transition:
+		width var(--transition-normal),
+		height var(--transition-normal);
 }
 
 ::-webkit-scrollbar-track {
@@ -341,37 +349,153 @@ pre {
 	background: linear-gradient(to right, transparent, var(--border-color), transparent);
 	margin: var(--space-4) 0;
 	opacity: 0.5;
-	transition: background var(--transition-normal), opacity var(--transition-normal);
+	transition:
+		background var(--transition-normal),
+		opacity var(--transition-normal);
 }
 
 /* Subtle animations for zen-like experience */
 @keyframes gentle-fade {
-	0% { opacity: 0.8; }
-	50% { opacity: 1; }
-	100% { opacity: 0.8; }
+	0% {
+		opacity: 0.8;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.8;
+	}
 }
 
 .zen-pulse {
 	animation: gentle-fade 4s infinite ease-in-out;
 }
 
-/* Responsive styles */
-@media (min-width: 720px) {
-	h1 {
-		font-size: 2.4rem;
-	}
+/* Responsive utilities */
+.hide-on-mobile {
+	display: initial;
+}
 
-	.container {
-		padding: 0 var(--space-4);
+.show-on-mobile {
+	display: none;
+}
+
+/* Responsive font sizes that scale with viewport width */
+:root {
+	--responsive-font-sm: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+	--responsive-font-md: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+	--responsive-font-lg: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+	--responsive-font-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+}
+
+/* Responsive spacing */
+.responsive-container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 var(--space-3);
+	transition: padding var(--transition-normal);
+}
+
+/* Responsive styles */
+@media (min-width: 1201px) {
+	.responsive-container {
+		padding: 0 var(--space-5);
 	}
 }
 
-@media (max-width: 719px) {
-	.container {
+@media (min-width: 769px) and (max-width: 1200px) {
+	.responsive-container {
+		padding: 0 var(--space-4);
+	}
+
+	h1 {
+		font-size: 2.2rem;
+	}
+
+	h2 {
+		font-size: 1.8rem;
+	}
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+	.responsive-container {
 		padding: 0 var(--space-3);
 	}
 
 	h1 {
 		font-size: 1.8rem;
+	}
+
+	h2 {
+		font-size: 1.5rem;
+	}
+
+	.hide-on-mobile {
+		display: none;
+	}
+
+	.show-on-mobile {
+		display: initial;
+	}
+}
+
+@media (max-width: 480px) {
+	.responsive-container {
+		padding: 0 var(--space-2);
+	}
+
+	h1 {
+		font-size: 1.6rem;
+	}
+
+	h2 {
+		font-size: 1.3rem;
+	}
+
+	p {
+		font-size: 0.95rem;
+	}
+
+	.hide-on-mobile {
+		display: none;
+	}
+
+	.show-on-mobile {
+		display: initial;
+	}
+}
+
+/* Touch-friendly adjustments */
+@media (pointer: coarse) {
+	/* Increase clickable area for interactive elements */
+	button,
+	.button,
+	a,
+	input[type='checkbox'],
+	input[type='radio'],
+	select {
+		min-height: 44px;
+		min-width: 44px;
+	}
+
+	/* Increase spacing between interactive elements */
+	.touch-friendly-spacing {
+		gap: var(--space-3);
+	}
+}
+
+/* Handle orientation changes */
+@media (max-height: 500px) and (orientation: landscape) {
+	.responsive-container {
+		padding: 0 var(--space-2);
+	}
+
+	h1 {
+		font-size: 1.5rem;
+	}
+
+	h2 {
+		font-size: 1.2rem;
 	}
 }
