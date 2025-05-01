@@ -55,7 +55,7 @@
 				}),
 				EditorView.theme({
 					'&': {
-						height: `${rows * 1.6}em`,
+						height: '100%' /* Changed from fixed em-based height to 100% */,
 						fontFamily: 'var(--font-mono, monospace)',
 						fontSize: '12px',
 						lineHeight: '1.6',
@@ -88,7 +88,8 @@
 						marginLeft: '0'
 					},
 					'.cm-scroller': {
-						overflow: 'auto'
+						overflow: 'auto',
+						height: '100%' /* Ensure scroller takes full height */
 					},
 					'&.cm-focused': {
 						outline: 'none'
@@ -173,6 +174,9 @@
 		border-radius: var(--border-radius-md);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
 	}
 
 	.textarea {

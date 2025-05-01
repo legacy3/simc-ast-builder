@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from './Header.svelte';
 	import '../app.scss';
 	import { onMount } from 'svelte';
 	import { theme, initializeTheme } from '$lib/stores/theme';
@@ -13,8 +12,6 @@
 </script>
 
 <div class="app">
-	<Header />
-
 	<main class="container">
 		{@render children()}
 	</main>
