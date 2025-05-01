@@ -5,7 +5,6 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
-			// Use default options for Cloudflare Pages
 			fallback: 'index.html',
 			strict: true
 		}),
@@ -13,11 +12,6 @@ const config = {
 		// Ensure SPA mode works correctly
 		prerender: {
 			entries: []
-		},
-
-		// Add paths configuration for Cloudflare Pages
-		paths: {
-			base: ''
 		}
 	}
 };
