@@ -148,10 +148,14 @@
 					lineNumbers: true,
 					theme: 'default',
 					lineWrapping: true,
-					tabSize: 2,
+					tabSize: 4,
 					indentWithTabs: false,
 					autofocus: false,
-					viewportMargin: Infinity
+					viewportMargin: Infinity,
+					indentUnit: 4,
+					scrollbarStyle: 'native',
+					fixedGutter: true,
+					gutters: ['CodeMirror-linenumbers']
 				} as any); // Type assertion to bypass TypeScript error
 
 				// Set initial value
@@ -227,42 +231,86 @@
 	.simc-editor {
 		position: relative;
 		width: 100%;
+		height: 100%;
 	}
 
 	.textarea {
 		width: 100%;
+		height: 100%;
 		font-family: var(--font-mono, monospace);
-		resize: vertical;
+		resize: none;
+		padding: var(--space-4);
 	}
 
 	.simc-editor :global(.CodeMirror) {
-		height: auto;
+		height: 100%;
 		border: 1px solid var(--border-color, #ced4da);
-		border-radius: 0.25rem;
+		border-radius: var(--border-radius-md);
 		font-family: var(--font-mono, monospace);
-		font-size: 14px;
-		line-height: 1.5;
+		font-size: 12px;
+		line-height: 1.6;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+		letter-spacing: 0.01em;
+	}
+
+	.simc-editor :global(.CodeMirror-lines) {
+		padding: var(--space-3) 0;
+	}
+
+	.simc-editor :global(.CodeMirror-line) {
+		padding: 0 var(--space-4);
+		text-indent: 0;
+	}
+
+	.simc-editor :global(.CodeMirror-sizer) {
+		margin-left: 50px !important;
 	}
 
 	.simc-editor :global(.CodeMirror-focused) {
-		border-color: var(--primary, #86b7fe);
+		border-color: var(--border-color);
 		outline: 0;
-		box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 	}
 
 	/* Dark theme styles */
 	.simc-editor :global(.cm-dark-theme) {
-		background-color: #1e1e1e;
+		background-color: #1a1a1a;
 		color: #d4d4d4;
 	}
 
+	.simc-editor :global(.CodeMirror-gutters) {
+		background-color: transparent;
+		border-right: 1px solid var(--border-color);
+		padding: 0;
+		width: 50px !important;
+		left: 0 !important;
+	}
+
+	.simc-editor :global(.CodeMirror-linenumber) {
+		color: var(--text-color);
+		opacity: 0.4;
+		padding: 0 var(--space-2);
+		text-align: right;
+		width: 30px !important;
+	}
+
 	.simc-editor :global(.cm-dark-theme .CodeMirror-gutters) {
-		background-color: #1e1e1e;
+		background-color: transparent;
 		border-right: 1px solid #333;
 	}
 
 	.simc-editor :global(.cm-dark-theme .CodeMirror-linenumber) {
 		color: #858585;
+		opacity: 0.4;
+	}
+
+	.simc-editor :global(.CodeMirror-cursor) {
+		border-left: 2px solid var(--primary);
+		margin-left: 0;
+	}
+
+	.simc-editor :global(.CodeMirror pre.CodeMirror-line) {
+		padding-left: 0;
 	}
 
 	/* Syntax highlighting colors */

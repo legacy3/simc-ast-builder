@@ -1,30 +1,100 @@
 // Theme variables for the SimC AST Formatter
 
-// Base colors
-$primary: #0d6efd;
-$info: #4075a6;
-$success: #198754;
-$warning: #ffc107;
-$danger: #dc3545;
+// ==============================
+// Color System
+// ==============================
 
-// Light theme variables
-$light-bg-color: #f8f9fa;
-$light-text-color: rgba(0, 0, 0, 0.87);
-$light-card-bg: #ffffff;
-$light-border-color: #dee2e6;
-$light-node-fill: #f0f8ff;
-$light-node-stroke: #0d6efd;
-$light-line-color: #999;
+// Brand colors - more muted for zen-like experience
+$primary: #6b8aaf;
+$info: #7a92a9;
+$success: #7ca889;
+$warning: #d6c178;
+$danger: #c27676;
 
-// Dark theme variables
-$dark-bg-color: #121212;
-$dark-text-color: rgba(255, 255, 255, 0.87);
-$dark-card-bg: #1e1e1e;
-$dark-border-color: #333;
-$dark-node-fill: #2c2c2c;
-$dark-node-stroke: #0d6efd;
-$dark-line-color: #666;
+// Neutral colors - softer palette
+$white: #ffffff;
+$gray-100: #f9fafb;
+$gray-200: #f0f2f5;
+$gray-300: #e4e7eb;
+$gray-400: #d2d6dc;
+$gray-500: #9fa6b2;
+$gray-600: #6b7280;
+$gray-700: #4b5563;
+$gray-800: #374151;
+$gray-900: #1f2937;
+$black: #111827;
 
-// Monaco editor themes
-$monaco-light-bg: #ffffff;
+// ==============================
+// Light Theme
+// ==============================
+
+// Base
+$light-bg-color: $gray-100;
+$light-text-color: rgba($black, 0.78);
+
+// Components
+$light-card-bg: $white;
+$light-border-color: $gray-200;
+$light-hover-bg: rgba($black, 0.03);
+$light-active-bg: rgba($black, 0.05);
+$light-disabled-color: rgba($black, 0.3);
+
+// AST Tree
+$light-node-fill: rgba($primary, 0.08);
+$light-node-stroke: $primary;
+$light-line-color: $gray-500;
+
+// ==============================
+// Dark Theme
+// ==============================
+
+// Base
+$dark-bg-color: #1a1a1a;
+$dark-text-color: rgba($white, 0.78);
+
+// Components
+$dark-card-bg: #242424;
+$dark-border-color: #383838;
+$dark-hover-bg: rgba($white, 0.05);
+$dark-active-bg: rgba($white, 0.08);
+$dark-disabled-color: rgba($white, 0.3);
+
+// AST Tree
+$dark-node-fill: #2a2a2a;
+$dark-node-stroke: $primary;
+$dark-line-color: $gray-600;
+
+// ==============================
+// Editor Themes
+// ==============================
+
+// Monaco editor
+$monaco-light-bg: $white;
 $monaco-dark-bg: #1e1e1e;
+
+// ==============================
+// Spacing System
+// ==============================
+
+$spacing-base: 0.25rem;
+$spacing-scale: (
+	1: $spacing-base,
+	2: $spacing-base * 2,
+	3: $spacing-base * 4,
+	4: $spacing-base * 6,
+	5: $spacing-base * 8,
+	6: $spacing-base * 12
+);
+
+// ==============================
+// Breakpoints
+// ==============================
+
+$breakpoints: (
+	xs: 0,
+	sm: 576px,
+	md: 768px,
+	lg: 992px,
+	xl: 1200px,
+	xxl: 1400px
+);

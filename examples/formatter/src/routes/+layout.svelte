@@ -1,27 +1,14 @@
 <script lang="ts">
 	import Header from './Header.svelte';
 	import '../app.scss';
-	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
+	import { theme, initializeTheme } from '$lib/stores/theme';
 
 	let { children } = $props();
 
-	// Theme management with Svelte 5 runes
-	const storedTheme = browser ? localStorage.getItem('theme') : null;
-	let isDarkTheme = $state(storedTheme === 'light' ? false : true); // Default to dark theme
-
-	// Toggle theme function
-	function toggleTheme() {
-		isDarkTheme = !isDarkTheme;
-		if (browser) {
-			localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
-		}
-	}
-
-	// Apply theme class to document root
-	$effect(() => {
-		if (browser) {
-			document.documentElement.classList.toggle('is-dark-theme', isDarkTheme);
-		}
+	// Initialize theme on mount
+	onMount(() => {
+		initializeTheme();
 	});
 </script>
 
@@ -32,12 +19,18 @@
 		{@render children()}
 	</main>
 
-	<footer class="footer">
-		<div class="content has-text-centered">
-			<p>
-				<strong>SimC AST Formatter</strong> - A tool for parsing and visualizing SimulationCraft code.
-			</p>
-		</div>
+	<footer class="zen-footer">
+		<span
+			>Proudly using
+			<a href="https://svelte.dev" target="_blank" rel="noopener noreferrer">Svelte</a>,
+			<a href="https://codemirror.net" target="_blank" rel="noopener noreferrer">CodeMirror</a>,
+			<a href="https://konvajs.org" target="_blank" rel="noopener noreferrer">Konva</a> &
+			<a
+				href="https://github.com/your-organization/simc-ast-builder"
+				target="_blank"
+				rel="noopener noreferrer">SimC AST</a
+			>
+		</span>
 	</footer>
 </div>
 
@@ -52,15 +45,29 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 1.5rem;
 		width: 100%;
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
 
-	.footer {
-		padding: 1.5rem;
-		margin-top: 2rem;
+	.zen-footer {
+		height: 2.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.75rem;
+		color: var(--text-color);
+		opacity: 0.5;
+		border-top: 1px solid var(--border-color);
+	}
+
+	.zen-footer a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.zen-footer a:hover {
+		text-decoration: underline;
 	}
 </style>

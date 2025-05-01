@@ -1,63 +1,122 @@
-/* Import theme files using @use */
+/* Import theme variables */
 @use './theme/_variables.scss' as vars;
-@use './theme/_light.scss';
-@use './theme/_dark.scss';
 
-/* Import Bulma */
+/* Import Bulma CSS */
 @import 'bulma/css/bulma.min.css';
 
 /* Import fonts */
 @import '@fontsource/fira-mono';
 
-/* Base styles */
+/* CSS Custom Properties (Variables) */
 :root {
+	/* Colors */
+	--primary: #{vars.$primary};
+	--primary-dark: #{darken(vars.$primary, 10%)};
+	--primary-light: #{lighten(vars.$primary, 10%)};
+	--info: #{vars.$info};
+	--success: #{vars.$success};
+	--warning: #{vars.$warning};
+	--danger: #{vars.$danger};
+
+	/* Typography */
 	--font-body:
-		Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-		'Open Sans', 'Helvetica Neue', sans-serif;
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+		'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
+	--font-weight-normal: 400;
+	--font-weight-medium: 500;
+	--font-weight-bold: 700;
+
+	/* Spacing */
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 1rem;
+	--space-4: 1.5rem;
+	--space-5: 2rem;
+	--space-6: 3rem;
+
+	/* Borders */
+	--border-radius-sm: 4px;
+	--border-radius-md: 8px;
+	--border-radius-lg: 12px;
+	--border-width: 1px;
+
+	/* Transitions */
+	--transition-fast: 0.2s ease;
+	--transition-normal: 0.3s ease;
+
+	/* Z-index layers */
+	--z-index-dropdown: 10;
+	--z-index-sticky: 20;
+	--z-index-fixed: 30;
+	--z-index-modal: 40;
+
+	/* Light theme (default) */
+	--bg-color: #{vars.$light-bg-color};
+	--text-color: #{vars.$light-text-color};
+	--card-bg: #{vars.$light-card-bg};
+	--border-color: #{vars.$light-border-color};
+	--node-fill: #{vars.$light-node-fill};
+	--node-stroke: #{vars.$light-node-stroke};
+	--line-color: #{vars.$light-line-color};
+
+	/* Apply font family */
 	font-family: var(--font-body);
 
-	/* Default to dark theme */
-	&.is-dark-theme {
-		background-color: #121212;
-		color: rgba(255, 255, 255, 0.87);
-	}
+	/* Light theme styles */
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	transition:
+		background-color var(--transition-normal),
+		color var(--transition-normal);
 }
 
+/* Dark theme */
+:root.is-dark-theme {
+	--bg-color: #{vars.$dark-bg-color};
+	--text-color: #{vars.$dark-text-color};
+	--card-bg: #{vars.$dark-card-bg};
+	--border-color: #{vars.$dark-border-color};
+	--node-fill: #{vars.$dark-node-fill};
+	--node-stroke: #{vars.$dark-node-stroke};
+	--line-color: #{vars.$dark-line-color};
+}
+
+/* Base styles */
 body {
 	min-height: 100vh;
 	margin: 0;
-	transition:
-		background-color 0.3s ease,
-		color 0.3s ease;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	line-height: 1.6;
+	letter-spacing: 0.01em;
 }
 
 /* Typography */
 h1,
 h2,
-p {
-	font-weight: 400;
+h3,
+h4,
+h5,
+h6 {
+	font-weight: var(--font-weight-normal);
+	line-height: 1.3;
+	margin-top: 0;
+	letter-spacing: 0.01em;
 }
 
 p {
-	line-height: 1.5;
-}
-
-h1 {
-	font-size: 2rem;
-	text-align: center;
-}
-
-h2 {
-	font-size: 1.5rem;
+	line-height: 1.7;
 }
 
 pre {
-	font-size: 16px;
+	font-size: 0.9rem;
 	font-family: var(--font-mono);
-	border-radius: 3px;
-	padding: 0.5em;
+	border-radius: var(--border-radius-md);
+	padding: var(--space-3);
 	overflow-x: auto;
+	background-color: var(--card-bg);
+	border: var(--border-width) solid var(--border-color);
 }
 
 /* Utility classes */
@@ -86,14 +145,124 @@ pre {
 .ast-tree {
 	max-height: 600px;
 	overflow: auto;
+	border: var(--border-width) solid var(--border-color);
+	border-radius: var(--border-radius-md);
+	padding: var(--space-3);
 }
 
 /* Monaco editor styles */
 .monaco-editor-container {
 	width: 100%;
-	height: 300px;
-	border: 1px solid var(--border-color);
+	height: 100%;
+	border: var(--border-width) solid var(--border-color);
+	border-radius: var(--border-radius-md);
+	overflow: hidden;
+}
+
+/* Card overrides - more subtle */
+.card {
+	background-color: var(--card-bg);
+	color: var(--text-color);
+	border-radius: var(--border-radius-md);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	transition: box-shadow var(--transition-fast);
+	overflow: hidden;
+	border: var(--border-width) solid var(--border-color);
+
+	&:hover {
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	}
+
+	.card-header {
+		border-bottom: var(--border-width) solid var(--border-color);
+		background-color: rgba(0, 0, 0, 0.01);
+	}
+
+	.card-content {
+		padding: var(--space-4);
+	}
+}
+
+/* Button overrides - more subtle */
+.button {
+	border-radius: var(--border-radius-md);
+	transition:
+		background-color var(--transition-fast),
+		transform var(--transition-fast),
+		box-shadow var(--transition-fast);
+	font-weight: normal;
+
+	&.is-primary {
+		background-color: var(--primary);
+
+		&:hover {
+			background-color: var(--primary-dark);
+			transform: translateY(-1px);
+		}
+	}
+}
+
+/* Zen-specific styles */
+.zen-container {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 0 var(--space-3);
+}
+
+/* Focus mode indicator */
+.editor-container {
+	position: relative;
+}
+
+.editor-container::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+	box-shadow: 0 0 0 2px rgba(107, 138, 175, 0.1);
+	border-radius: var(--border-radius-md);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.editor-container:focus-within::after {
+	opacity: 1;
+}
+
+/* Focus styles */
+*:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(107, 138, 175, 0.2);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, 0.1);
 	border-radius: 4px;
+}
+
+:root.is-dark-theme ::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+:root.is-dark-theme ::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Responsive styles */
@@ -101,21 +270,18 @@ pre {
 	h1 {
 		font-size: 2.4rem;
 	}
+
+	.container {
+		padding: 0 var(--space-4);
+	}
 }
 
-/* Theme toggle button */
-.theme-toggle {
-	cursor: pointer;
-	padding: 0.5rem;
-	border-radius: 50%;
-	transition: background-color 0.3s ease;
-
-	&:hover {
-		background-color: rgba(128, 128, 128, 0.1);
+@media (max-width: 719px) {
+	.container {
+		padding: 0 var(--space-3);
 	}
 
-	.icon {
-		width: 1.5rem;
-		height: 1.5rem;
+	h1 {
+		font-size: 1.8rem;
 	}
 }

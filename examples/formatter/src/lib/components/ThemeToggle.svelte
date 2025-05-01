@@ -1,30 +1,34 @@
 <script lang="ts">
-	// Props
-	const { isDarkTheme = true, toggleTheme } = $props<{
-		isDarkTheme: boolean;
-		toggleTheme: () => void;
-	}>();
+	import { theme, toggleTheme } from '$lib/stores/theme';
+
+	// Derive isDarkTheme from the theme store
+	$effect(() => {
+		isDarkTheme = $theme === 'dark';
+	});
+
+	let isDarkTheme = $state(true);
 </script>
 
 <button
 	class="theme-toggle button is-small is-rounded"
-	onclick={toggleTheme}
+	on:click={toggleTheme}
 	aria-label="Toggle theme"
 	title={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
 >
-	{#if isDarkTheme}
-		<!-- Sun icon for dark mode (clicking switches to light) -->
-		<span class="icon">
+	<span class="icon">
+		{#if isDarkTheme}
+			<!-- Sun icon for dark mode (clicking switches to light) -->
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
+				width="20"
+				height="20"
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"
 				stroke-width="2"
 				stroke-linecap="round"
 				stroke-linejoin="round"
+				aria-hidden="true"
 			>
 				<circle cx="12" cy="12" r="5"></circle>
 				<line x1="12" y1="1" x2="12" y2="3"></line>
@@ -36,25 +40,24 @@
 				<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
 				<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
 			</svg>
-		</span>
-	{:else}
-		<!-- Moon icon for light mode (clicking switches to dark) -->
-		<span class="icon">
+		{:else}
+			<!-- Moon icon for light mode (clicking switches to dark) -->
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
+				width="20"
+				height="20"
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"
 				stroke-width="2"
 				stroke-linecap="round"
 				stroke-linejoin="round"
+				aria-hidden="true"
 			>
 				<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
 			</svg>
-		</span>
-	{/if}
+		{/if}
+	</span>
 </button>
 
 <style>
@@ -63,10 +66,19 @@
 		background: transparent;
 		border: none;
 		color: inherit;
+		transition: all 0.2s ease;
+		padding: 0.5rem;
+		height: auto;
 	}
 
 	.theme-toggle:hover {
 		background-color: rgba(128, 128, 128, 0.1);
+		transform: scale(1.05);
+	}
+
+	.theme-toggle:focus {
+		outline: 2px solid var(--primary, #0d6efd);
+		outline-offset: 2px;
 	}
 
 	.icon {

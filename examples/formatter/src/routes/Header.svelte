@@ -1,106 +1,128 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { onMount } from 'svelte';
+	import { theme } from '$lib/stores/theme';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
-	// Access theme state from layout
-	let isDarkTheme = $state(false);
+	// Mobile menu state
+	let isMenuOpen = $state(false);
 
-	// Toggle theme function
-	function toggleTheme() {
-		const event = new CustomEvent('toggleTheme');
-		window.dispatchEvent(event);
+	// Toggle mobile menu
+	function toggleMenu() {
+		isMenuOpen = !isMenuOpen;
 	}
 
-	// Listen for theme changes
-	$effect(() => {
-		if (typeof document !== 'undefined') {
-			isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
-		}
-	});
-
-	onMount(() => {
-		// Handle navbar burger menu for mobile
-		// Get all "navbar-burger" elements
-		const navbarBurgers = Array.prototype.slice.call(
-			document.querySelectorAll('.navbar-burger'),
-			0
-		);
-
-		// Add a click event on each of them
-		navbarBurgers.forEach((el) => {
-			el.addEventListener('click', () => {
-				// Get the target from the "data-target" attribute
-				const target = el.dataset.target;
-				const targetElement = document.getElementById(target);
-
-				// Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-				el.classList.toggle('is-active');
-				targetElement?.classList.toggle('is-active');
-			});
-		});
-
-		// Listen for theme toggle events
-		window.addEventListener('toggleTheme', () => {
-			const isCurrentlyDark = document.documentElement.classList.contains('is-dark-theme');
-			document.documentElement.classList.toggle('is-dark-theme', !isCurrentlyDark);
-			localStorage.setItem('theme', isCurrentlyDark ? 'light' : 'dark');
-		});
-	});
+	// Close menu when navigating or clicking outside
+	function closeMenu() {
+		isMenuOpen = false;
+	}
 </script>
 
-<header class="navbar is-spaced" role="navigation" aria-label="main navigation">
-	<div class="navbar-brand">
-		<a class="navbar-item" href="/">
-			<h1 class="title is-4 has-text-primary">SimC AST Formatter</h1>
-		</a>
-
-		<button class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-		</button>
-	</div>
-
-	<div id="navMenu" class="navbar-menu">
-		<div class="navbar-start">
-			<a class="navbar-item" class:is-active={page.url.pathname === '/'} href="/"> Home </a>
+<header class="app-header" role="navigation" aria-label="main navigation">
+	<div class="header-container">
+		<div class="header-logo">
+			<a href="/" class="logo-link">
+				<h1 class="app-title">SimC AST Formatter</h1>
+			</a>
 		</div>
 
-		<div class="navbar-end">
-			<div class="navbar-item">
-				<ThemeToggle {isDarkTheme} {toggleTheme} />
-			</div>
+		<div class="nav-actions">
+			<ThemeToggle />
 
-			<div class="navbar-item">
-				<div class="buttons">
-					<a
-						class="button is-primary is-small"
-						href="https://github.com/your-username/simc-ast-builder"
-						target="_blank"
-						rel="noopener noreferrer"
+			<a
+				class="github-link"
+				href="https://github.com/simc-project/simc-ast-builder"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="View on GitHub"
+			>
+				<span class="icon">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="14"
+						height="14"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
 					>
-						<span class="icon">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<path
-									d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-								></path>
-							</svg>
-						</span>
-						<span>GitHub</span>
-					</a>
-				</div>
-			</div>
+						<path
+							d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+						></path>
+					</svg>
+				</span>
+			</a>
 		</div>
 	</div>
 </header>
+
+<style>
+	.app-header {
+		width: 100%;
+		background-color: var(--bg-color);
+		border-bottom: 1px solid var(--border-color);
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		transition: background-color 0.3s ease;
+	}
+
+	.header-container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 2.5rem;
+	}
+
+	.header-logo {
+		display: flex;
+		align-items: center;
+	}
+
+	.logo-link {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.app-title {
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--text-color);
+		opacity: 0.8;
+		margin: 0;
+	}
+
+	.nav-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.github-link {
+		display: flex;
+		align-items: center;
+		color: var(--text-color);
+		opacity: 0.6;
+		transition: opacity 0.2s ease;
+	}
+
+	.github-link:hover {
+		opacity: 1;
+	}
+
+	.github-link .icon {
+		display: flex;
+		align-items: center;
+	}
+
+	@media (max-width: 768px) {
+		.app-title {
+			font-size: 0.8rem;
+		}
+	}
+</style>
