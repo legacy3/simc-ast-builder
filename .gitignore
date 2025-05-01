@@ -19,7 +19,6 @@ jspm_packages/
 dist/
 build/
 out/
-lib/
 
 # Coverage directory used by tools like istanbul
 coverage/
