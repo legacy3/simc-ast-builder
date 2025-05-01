@@ -5,7 +5,6 @@
 	import { EditorState, Compartment } from '@codemirror/state';
 	import { basicSetup } from 'codemirror';
 
-	// Props
 	const {
 		value = '',
 		placeholder = '',
@@ -18,29 +17,22 @@
 		onChange?: (value: string) => void;
 	}>();
 
-	// References
 	let editorContainer: HTMLDivElement;
 	let editor: EditorView;
 
-	// State
 	let internalValue = $state(value);
 
-	// Theme compartment for dynamic theme switching
 	const themeCompartment = new Compartment();
 
-	// Initialize CodeMirror
 	function initializeCodeMirror() {
 		if (!browser || !editorContainer) return;
 
-		// Determine if dark theme is active
 		const isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
 
-		// Create the editor state
 		const state = EditorState.create({
 			doc: internalValue,
 			extensions: [
 				basicSetup,
-				// Custom line numbers extension with proper styling
 				lineNumbers({
 					formatNumber: (lineNo) => lineNo.toString()
 				}),
@@ -55,11 +47,11 @@
 				}),
 				EditorView.theme({
 					'&': {
-						height: '100%' /* Changed from fixed em-based height to 100% */,
+						height: '100%',
 						fontFamily: 'var(--font-mono, monospace)',
 						fontSize: '12px',
-						lineHeight: '1.6',
-						letterSpacing: '0.01em'
+						lineHeight: 'var(--line-height)',
+						letterSpacing: 'var(--letter-spacing)'
 					},
 					'.cm-content': {
 						padding: 'var(--space-3) 0'
@@ -89,7 +81,7 @@
 					},
 					'.cm-scroller': {
 						overflow: 'auto',
-						height: '100%' /* Ensure scroller takes full height */
+						height: '100%'
 					},
 					'&.cm-focused': {
 						outline: 'none'
@@ -98,18 +90,15 @@
 			]
 		});
 
-		// Create the editor view
 		editor = new EditorView({
 			state,
 			parent: editorContainer
 		});
 
-		// Apply dark theme styles if needed
 		if (isDarkTheme) {
 			editorContainer.classList.add('cm-dark-theme');
 		}
 
-		// Listen for theme changes
 		window.addEventListener('themeChanged', () => {
 			const isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
 			if (isDarkTheme) {
@@ -121,20 +110,17 @@
 	}
 
 	onMount(() => {
-		// Initialize CodeMirror in the browser environment
 		if (browser) {
 			initializeCodeMirror();
 		}
 
 		return () => {
-			// Clean up on component destruction
 			if (editor) {
 				editor.destroy();
 			}
 		};
 	});
 
-	// Update editor when value changes externally
 	$effect(() => {
 		if (browser && editor && editor.state.doc.toString() !== value) {
 			editor.dispatch({
@@ -143,7 +129,6 @@
 		}
 	});
 
-	// Update internal value when value changes externally
 	$effect(() => {
 		internalValue = value;
 	});
@@ -170,63 +155,69 @@
 		position: relative;
 		width: 100%;
 		height: 100%;
-		border: 1px solid var(--border-color, #ced4da);
+		border: var(--border-width) solid var(--border-color);
 		border-radius: var(--border-radius-md);
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+		box-shadow: var(--shadow-sm);
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 		flex: 1;
+		transition:
+			border-color var(--transition-normal),
+			box-shadow var(--transition-normal);
 	}
 
 	.textarea {
 		width: 100%;
 		height: 100%;
-		font-family: var(--font-mono, monospace);
+		font-family: var(--font-mono);
 		resize: none;
 		padding: var(--space-4);
 		border: none;
 		outline: none;
+		background-color: var(--card-bg);
+		color: var(--text-color);
+		transition:
+			background-color var(--transition-normal),
+			color var(--transition-normal);
 	}
 
-	/* Dark theme styles */
 	:global(.cm-dark-theme) {
-		background-color: #1a1a1a;
-		color: #d4d4d4;
+		background-color: var(--card-bg);
+		color: var(--text-color);
 	}
 
 	:global(.cm-dark-theme .cm-gutters) {
-		border-right: 1px solid #333 !important;
+		border-right: 1px solid var(--border-color) !important;
 	}
 
 	:global(.cm-dark-theme .cm-lineNumbers .cm-gutterElement) {
-		color: #858585 !important;
+		color: var(--text-color) !important;
+		opacity: 0.5;
 	}
 
-	/* Responsive adjustments */
 	@media (max-width: 768px) {
 		:global(.cm-content) {
-			font-size: 14px;
+			font-size: var(--responsive-font-md);
 		}
 
 		.textarea {
 			padding: var(--space-3);
-			font-size: 14px;
+			font-size: var(--responsive-font-md);
 		}
 	}
 
 	@media (max-width: 480px) {
 		:global(.cm-content) {
-			font-size: 13px;
+			font-size: var(--responsive-font-sm);
 		}
 
 		.textarea {
 			padding: var(--space-2);
-			font-size: 13px;
+			font-size: var(--responsive-font-sm);
 		}
 	}
 
-	/* Touch-friendly adjustments */
 	@media (pointer: coarse) {
 		:global(.cm-content) {
 			padding: var(--space-4) 0;

@@ -5,7 +5,6 @@
 
 	let { children } = $props();
 
-	// Initialize theme on mount
 	onMount(() => {
 		initializeTheme();
 	});
@@ -23,10 +22,11 @@
 			<a href="https://codemirror.net" target="_blank" rel="noopener noreferrer">CodeMirror</a>,
 			<a href="https://konvajs.org" target="_blank" rel="noopener noreferrer">Konva</a> &
 			<a
-				href="https://github.com/your-organization/simc-ast-builder"
+				href="https://github.com/legacy3/simc-ast-builder"
 				target="_blank"
 				rel="noopener noreferrer">SimC AST</a
 			>
+			❤️
 		</span>
 	</footer>
 </div>

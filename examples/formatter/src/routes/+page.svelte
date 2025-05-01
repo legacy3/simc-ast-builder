@@ -5,26 +5,22 @@
 	import humanizeDuration from 'humanize-duration';
 	import copy from 'clipboard-copy';
 
-	// Check if we're in the browser environment
 	const isBrowser = typeof window !== 'undefined';
 
-	// Define the type for the data from page.ts
 	interface PageData {
 		title: string;
 		description: string;
 		defaultCode: string;
 	}
 
-	// Get data from page.ts
 	const { data } = $props<{ data: PageData }>();
 
-	// State variables using Svelte 5 runes
 	let simcCode = $state(data.defaultCode);
 	let activeTab = $state<'text' | 'visual'>('text'); // 'text' or 'visual'
 	let saveStatus = $state<'saved' | 'saving'>('saved');
 	let lastSaveTime = $state<number | null>(null);
 	let saveTimeout: ReturnType<typeof setTimeout> | null = null;
-	let sidebarVisible = $state(true);
+	let sidebarVisible = $state(false); // Always default to collapsed
 	let isMenuOpen = $state(false);
 	let isShareModalOpen = $state(false);
 	let timeDisplay = $state('Not saved yet');
@@ -33,7 +29,6 @@
 		`https://simc-ast-builder.example.com/share/${Math.random().toString(36).substring(2, 10)}`
 	);
 
-	// Handle editor changes
 	function handleEditorChange(newValue: string) {
 		simcCode = newValue;
 
@@ -55,7 +50,6 @@
 		}, 1000);
 	}
 
-	// Format the last save time
 	function updateTimeDisplay(): void {
 		if (!lastSaveTime) {
 			timeDisplay = 'Not saved yet';
@@ -72,7 +66,6 @@
 			}) + ' ago';
 	}
 
-	// Copy share link to clipboard
 	function copyShareLink() {
 		copy(shareLink)
 			.then(() => {
@@ -93,47 +86,38 @@
 			});
 	}
 
-	// Toggle sidebar visibility
 	function toggleSidebar() {
 		sidebarVisible = !sidebarVisible;
 	}
 
-	// Toggle mobile menu
 	function toggleMenu() {
 		isMenuOpen = !isMenuOpen;
 	}
 
-	// Close menu when navigating or clicking outside
 	function closeMenu() {
 		isMenuOpen = false;
 	}
 
-	// Switch between tabs
 	function setActiveTab(tab: 'text' | 'visual') {
 		activeTab = tab;
 	}
 
-	// Optimize code functionality (placeholder)
 	function optimizeCode() {
 		console.log('Optimizing code:', simcCode);
 	}
 
-	// Toggle share modal
 	function toggleShareModal() {
 		isShareModalOpen = !isShareModalOpen;
 	}
 
-	// Close share modal
 	function closeShareModal() {
 		isShareModalOpen = false;
 	}
 
-	// Sim code functionality (placeholder)
 	function simCode() {
 		console.log('Sending code to Raidbots:', simcCode);
 	}
 
-	// Handle keyboard shortcuts
 	function handleKeyboardShortcuts(event: KeyboardEvent) {
 		// Alt+1 for Text view
 		if (event.altKey && event.key === '1') {
@@ -160,6 +144,38 @@
 					updateTimeDisplay();
 				}
 			}, 1000);
+
+			// Function to check screen size and set sidebar visibility
+			const checkScreenSize = () => {
+				// Force a reflow to ensure we get the correct window dimensions
+				document.body.offsetHeight;
+
+				// Get the current window width
+				const windowWidth = window.innerWidth;
+
+				// Set sidebar visibility based on screen size
+				if (windowWidth >= 769) {
+					sidebarVisible = true;
+				} else {
+					sidebarVisible = false;
+				}
+			};
+
+			// Initial check with a slight delay to ensure DOM is fully loaded
+			setTimeout(() => {
+				checkScreenSize();
+			}, 50);
+
+			// Debounced resize handler
+			let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+			window.addEventListener('resize', () => {
+				if (resizeTimer) {
+					clearTimeout(resizeTimer);
+				}
+				resizeTimer = setTimeout(() => {
+					checkScreenSize();
+				}, 100);
+			});
 		}
 	});
 
@@ -275,7 +291,7 @@
 
 			<a
 				class="github-link"
-				href="https://github.com/simc-project/simc-ast-builder"
+				href="https://github.com/legacy3/simc-ast-builder/tree/main/examples/formatter"
 				target="_blank"
 				rel="noopener noreferrer"
 				aria-label="View on GitHub"

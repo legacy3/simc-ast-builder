@@ -1,14 +1,18 @@
-// Dark theme styles for the SimC AST Formatter
+// ==========================================================================
+// Dark Theme Styles
+// ==========================================================================
 @use './_variables.scss' as vars;
 @use 'sass:color';
 
 .is-dark-theme {
 	// Base styles
+	// --------------------------------------------------------------------------
 	background: vars.$dark-bg-color;
 	color: vars.$dark-text-color;
 	transition: all vars.$transition-speed vars.$transition-easing;
 
 	// Bulma overrides
+	// --------------------------------------------------------------------------
 	.navbar {
 		background-color: vars.$dark-card-bg;
 		color: vars.$dark-text-color;
@@ -53,10 +57,12 @@
 		}
 	}
 
+	// Buttons
+	// --------------------------------------------------------------------------
 	.button {
 		transition:
 			all vars.$transition-speed vars.$transition-easing,
-			transform 0.15s ease;
+			transform vars.$transition-fast vars.$transition-easing;
 
 		&:active {
 			transform: translateY(1px);
@@ -83,6 +89,8 @@
 		}
 	}
 
+	// Form elements
+	// --------------------------------------------------------------------------
 	.input,
 	.textarea,
 	.select select {
@@ -104,6 +112,7 @@
 	}
 
 	// Custom component styles
+	// --------------------------------------------------------------------------
 	.tree-node {
 		background-color: vars.$dark-card-bg;
 		border-color: vars.$dark-border-color;
@@ -132,6 +141,7 @@
 	}
 
 	// Visual tree view styles
+	// --------------------------------------------------------------------------
 	.visual-tree-container {
 		background-color: vars.$dark-card-bg;
 		border-color: vars.$dark-border-color;
@@ -139,6 +149,7 @@
 	}
 
 	// Editor styles
+	// --------------------------------------------------------------------------
 	.monaco-editor-container {
 		border: 1px solid vars.$dark-border-color;
 		border-radius: 6px;
@@ -147,6 +158,7 @@
 	}
 
 	// Header styles
+	// --------------------------------------------------------------------------
 	.app-header {
 		border-bottom: 1px solid vars.$dark-border-color;
 		background-color: vars.$dark-card-bg;
@@ -154,6 +166,7 @@
 	}
 
 	// Scrollbar customization
+	// --------------------------------------------------------------------------
 	::-webkit-scrollbar-thumb {
 		background-color: rgba(vars.$white, 0.1);
 		border-radius: 4px;

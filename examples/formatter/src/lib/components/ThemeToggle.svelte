@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { theme, toggleTheme } from '$lib/stores/theme';
 
-	// Derive isDarkTheme from the theme store
 	$effect(() => {
 		isDarkTheme = $theme === 'dark';
 	});
@@ -70,7 +69,7 @@
 		transition:
 			all var(--transition-normal),
 			transform var(--transition-fast);
-		padding: 0.5rem;
+		padding: var(--space-2);
 		height: auto;
 		width: 2.5rem;
 		height: 2.5rem;
@@ -92,7 +91,7 @@
 		background: var(--hover-bg);
 		border-radius: 50%;
 		transform: scale(0);
-		transition: transform 0.3s ease;
+		transition: transform var(--transition-normal);
 	}
 
 	.theme-toggle:hover {
@@ -122,7 +121,6 @@
 		z-index: 1;
 	}
 
-	/* Animation for theme toggle */
 	@keyframes spin {
 		0% {
 			transform: rotate(0deg);
@@ -143,11 +141,10 @@
 
 	.icon svg {
 		animation:
-			fade-in 0.3s ease forwards,
+			fade-in var(--transition-normal) ease forwards,
 			spin 0.5s ease;
 	}
 
-	/* Responsive adjustments */
 	@media (max-width: 768px) {
 		.theme-toggle {
 			width: 3rem;
@@ -167,11 +164,10 @@
 		}
 	}
 
-	/* Handle touch interactions better */
 	@media (pointer: coarse) {
 		.theme-toggle {
-			min-width: 44px;
-			min-height: 44px;
+			min-width: var(--touch-target-size);
+			min-height: var(--touch-target-size);
 		}
 
 		.theme-toggle:hover::before {
