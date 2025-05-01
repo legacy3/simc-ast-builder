@@ -61,22 +61,26 @@
 <style>
 	.app-header {
 		width: 100%;
-		background-color: var(--bg-color);
+		background-color: var(--card-bg);
 		border-bottom: 1px solid var(--border-color);
+		box-shadow: 0 1px 3px var(--shadow-color);
 		position: sticky;
 		top: 0;
-		z-index: 10;
-		transition: background-color 0.3s ease;
+		z-index: var(--z-index-sticky);
+		transition:
+			background-color var(--transition-normal),
+			border-color var(--transition-normal),
+			box-shadow var(--transition-normal);
 	}
 
 	.header-container {
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 0 1rem;
+		padding: 0 var(--space-3);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		height: 2.5rem;
+		height: 3rem;
 	}
 
 	.header-logo {
@@ -87,42 +91,95 @@
 	.logo-link {
 		text-decoration: none;
 		color: inherit;
+		position: relative;
+		padding: 0.25rem 0;
+		transition: transform var(--transition-fast);
+		
+		&:hover {
+			transform: translateY(-1px);
+			
+			.app-title {
+				opacity: 1;
+			}
+			
+			&::after {
+				transform: scaleX(1);
+				opacity: 0.5;
+			}
+		}
+		
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 1px;
+			background-color: var(--primary);
+			transform: scaleX(0);
+			opacity: 0;
+			transform-origin: center;
+			transition: transform 0.3s ease, opacity 0.3s ease;
+		}
 	}
 
 	.app-title {
-		font-size: 0.9rem;
+		font-size: 0.95rem;
 		font-weight: 500;
-		color: var(--text-color);
-		opacity: 0.8;
+		color: var(--primary);
+		opacity: 0.85;
 		margin: 0;
+		letter-spacing: 0.02em;
+		transition:
+			color var(--transition-normal),
+			opacity var(--transition-normal);
 	}
 
 	.nav-actions {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
+		gap: 1rem;
 	}
 
 	.github-link {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		color: var(--text-color);
 		opacity: 0.6;
-		transition: opacity 0.2s ease;
-	}
-
-	.github-link:hover {
-		opacity: 1;
+		transition:
+			opacity var(--transition-normal),
+			transform var(--transition-fast),
+			color var(--transition-normal);
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		
+		&:hover {
+			opacity: 1;
+			transform: translateY(-1px);
+			color: var(--primary);
+			background-color: var(--hover-bg);
+		}
+		
+		&:active {
+			transform: translateY(1px);
+		}
 	}
 
 	.github-link .icon {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 	}
 
 	@media (max-width: 768px) {
+		.header-container {
+			height: 2.75rem;
+		}
+		
 		.app-title {
-			font-size: 0.8rem;
+			font-size: 0.85rem;
 		}
 	}
 </style>

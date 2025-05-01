@@ -4,32 +4,47 @@
 
 .is-dark-theme {
 	// Base styles
-	background-color: vars.$dark-bg-color;
+	background: vars.$dark-bg-color;
 	color: vars.$dark-text-color;
+	transition: all vars.$transition-speed vars.$transition-easing;
 
 	// Bulma overrides
 	.navbar {
 		background-color: vars.$dark-card-bg;
 		color: vars.$dark-text-color;
+		box-shadow: 0 1px 4px vars.$dark-shadow-color;
+		border-bottom: 1px solid vars.$dark-border-color;
 	}
 
 	.card {
 		background-color: vars.$dark-card-bg;
 		color: vars.$dark-text-color;
 		border-color: vars.$dark-border-color;
+		box-shadow: 0 2px 8px vars.$dark-shadow-color;
+		transition:
+			box-shadow vars.$transition-speed vars.$transition-easing,
+			transform vars.$transition-speed vars.$transition-easing;
+		
+		&:hover {
+			box-shadow: 0 4px 12px vars.$dark-shadow-color;
+			transform: translateY(-1px);
+		}
 	}
 
 	.card-header {
-		background-color: rgba(0, 0, 0, 0.2);
+		background-color: rgba(vars.$primary, 0.08);
 		border-bottom-color: vars.$dark-border-color;
 	}
 
 	.tabs a {
-		color: rgba(255, 255, 255, 0.7);
+		color: rgba(vars.$white, 0.7);
+		transition:
+			color vars.$transition-speed vars.$transition-easing,
+			border-color vars.$transition-speed vars.$transition-easing;
 
 		&:hover {
-			color: vars.$dark-text-color;
-			border-bottom-color: vars.$primary;
+			color: vars.$primary;
+			border-bottom-color: rgba(vars.$primary, 0.5);
 		}
 
 		&.is-active {
@@ -39,13 +54,31 @@
 	}
 
 	.button {
+		transition:
+			all vars.$transition-speed vars.$transition-easing,
+			transform 0.15s ease;
+			
+		&:active {
+			transform: translateY(1px);
+		}
+		
 		&.is-light {
 			background-color: vars.$dark-card-bg;
 			color: vars.$dark-text-color;
 			border-color: vars.$dark-border-color;
+			box-shadow: 0 1px 3px vars.$dark-shadow-color;
 
 			&:hover {
 				background-color: color.scale(vars.$dark-card-bg, $lightness: 5%);
+				border-color: color.scale(vars.$dark-border-color, $lightness: 10%);
+			}
+		}
+		
+		&.is-primary {
+			background-color: vars.$primary;
+			
+			&:hover {
+				background-color: color.scale(vars.$primary, $lightness: 5%);
 			}
 		}
 	}
@@ -56,14 +89,17 @@
 		background-color: vars.$dark-card-bg;
 		color: vars.$dark-text-color;
 		border-color: vars.$dark-border-color;
+		transition:
+			border-color vars.$transition-speed vars.$transition-easing,
+			box-shadow vars.$transition-speed vars.$transition-easing;
 
 		&:focus {
 			border-color: vars.$primary;
-			box-shadow: 0 0 0 0.125em rgba(vars.$primary, 0.25);
+			box-shadow: 0 0 0 0.125em rgba(vars.$primary, 0.3);
 		}
 
 		&::placeholder {
-			color: rgba(255, 255, 255, 0.5);
+			color: rgba(vars.$white, 0.4);
 		}
 	}
 
@@ -71,14 +107,24 @@
 	.tree-node {
 		background-color: vars.$dark-card-bg;
 		border-color: vars.$dark-border-color;
+		box-shadow: 0 1px 3px vars.$dark-shadow-color;
+		transition:
+			box-shadow vars.$transition-speed vars.$transition-easing,
+			border-color vars.$transition-speed vars.$transition-easing;
+			
+		&:hover {
+			box-shadow: 0 2px 6px vars.$dark-shadow-color;
+			border-color: rgba(vars.$primary, 0.4);
+		}
 	}
 
 	.node-type {
 		color: vars.$primary;
+		font-weight: 500;
 	}
 
 	.property-key {
-		color: rgba(255, 255, 255, 0.6);
+		color: rgba(vars.$white, 0.7);
 	}
 
 	.property-value {
@@ -89,5 +135,31 @@
 	.visual-tree-container {
 		background-color: vars.$dark-card-bg;
 		border-color: vars.$dark-border-color;
+		box-shadow: inset 0 1px 3px vars.$dark-shadow-color;
+	}
+	
+	// Editor styles
+	.monaco-editor-container {
+		border: 1px solid vars.$dark-border-color;
+		border-radius: 6px;
+		overflow: hidden;
+		box-shadow: 0 1px 3px vars.$dark-shadow-color;
+	}
+	
+	// Header styles
+	.app-header {
+		border-bottom: 1px solid vars.$dark-border-color;
+		background-color: vars.$dark-card-bg;
+		box-shadow: 0 1px 3px vars.$dark-shadow-color;
+	}
+	
+	// Scrollbar customization
+	::-webkit-scrollbar-thumb {
+		background-color: rgba(vars.$white, 0.1);
+		border-radius: 4px;
+		
+		&:hover {
+			background-color: rgba(vars.$primary, 0.3);
+		}
 	}
 }

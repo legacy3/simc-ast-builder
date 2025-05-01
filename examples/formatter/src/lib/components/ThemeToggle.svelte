@@ -62,28 +62,78 @@
 
 <style>
 	.theme-toggle {
-		margin: 0 0.5rem;
+		margin: 0;
 		background: transparent;
 		border: none;
-		color: inherit;
-		transition: all 0.2s ease;
+		color: var(--text-color);
+		opacity: 0.7;
+		transition:
+			all var(--transition-normal),
+			transform var(--transition-fast);
 		padding: 0.5rem;
 		height: auto;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.theme-toggle::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: var(--hover-bg);
+		border-radius: 50%;
+		transform: scale(0);
+		transition: transform 0.3s ease;
 	}
 
 	.theme-toggle:hover {
-		background-color: rgba(128, 128, 128, 0.1);
-		transform: scale(1.05);
+		opacity: 1;
+		color: var(--primary);
+		transform: translateY(-1px);
+	}
+	
+	.theme-toggle:hover::before {
+		transform: scale(1);
+	}
+	
+	.theme-toggle:active {
+		transform: translateY(1px);
 	}
 
 	.theme-toggle:focus {
-		outline: 2px solid var(--primary, #0d6efd);
-		outline-offset: 2px;
+		outline: none;
+		box-shadow: 0 0 0 2px rgba(var(--primary), 0.25);
 	}
 
 	.icon {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		position: relative;
+		z-index: 1;
+	}
+	
+	/* Animation for theme toggle */
+	@keyframes spin {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+	
+	@keyframes fade-in {
+		0% { opacity: 0; }
+		100% { opacity: 1; }
+	}
+	
+	.icon svg {
+		animation: fade-in 0.3s ease forwards, spin 0.5s ease;
 	}
 </style>
