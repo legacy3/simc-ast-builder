@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 /* Import theme variables */
 @use './theme/_variables.scss' as vars;
 
@@ -8,8 +10,8 @@
 :root {
 	/* Colors */
 	--primary: #{vars.$primary};
-	--primary-dark: #{darken(vars.$primary, 10%)};
-	--primary-light: #{lighten(vars.$primary, 10%)};
+	--primary-dark: #{color.adjust(vars.$primary, $lightness: -10%)};
+	--primary-light: #{color.adjust(vars.$primary, $lightness: 10%)};
 	--info: #{vars.$info};
 	--success: #{vars.$success};
 	--warning: #{vars.$warning};

@@ -11,7 +11,7 @@
 
 <button
 	class="theme-toggle button is-small is-rounded"
-	on:click={toggleTheme}
+	onclick={toggleTheme}
 	aria-label="Toggle theme"
 	title={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
 >

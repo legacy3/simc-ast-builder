@@ -86,7 +86,7 @@
 
 <div class="app-container">
 	<!-- Mobile Menu Button (only visible on small screens) -->
-	<button class="mobile-menu-button" on:click={toggleSidebar} aria-label="Toggle sidebar">
+	<button class="mobile-menu-button" onclick={toggleSidebar} aria-label="Toggle sidebar">
 		<span class="icon">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +109,7 @@
 	<!-- Top Toolbar -->
 	<div class="toolbar">
 		<div class="toolbar-left">
-			<button class="toolbar-button" on:click={parseCode}>
+			<button class="toolbar-button" onclick={parseCode}>
 				<span class="icon">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +161,7 @@
 		<!-- Sidebar Toggle Button (hidden on mobile) -->
 		<button
 			class="sidebar-toggle desktop-only"
-			on:click={toggleSidebar}
+			onclick={toggleSidebar}
 			title="Toggle Sidebar (Alt+S)"
 		>
 			<svg
@@ -190,8 +190,7 @@
 				<button
 					class="sidebar-tab"
 					class:active={activeTab === 'text'}
-					on:click={() => setActiveTab('text')}
-					aria-selected={activeTab === 'text'}
+					onclick={() => setActiveTab('text')}
 				>
 					<span class="icon">
 						<svg
@@ -216,8 +215,7 @@
 				<button
 					class="sidebar-tab"
 					class:active={activeTab === 'visual'}
-					on:click={() => setActiveTab('visual')}
-					aria-selected={activeTab === 'visual'}
+					onclick={() => setActiveTab('visual')}
 				>
 					<span class="icon">
 						<svg
@@ -431,31 +429,6 @@
 		transition:
 			opacity var(--transition-normal),
 			box-shadow var(--transition-normal);
-	}
-
-	.editor-textarea {
-		width: 100%;
-		height: 100%;
-		padding: var(--space-4);
-		border: none;
-		resize: none;
-		font-family: var(--font-mono, monospace);
-		font-size: 0.95rem;
-		line-height: 1.6;
-		color: var(--text-color);
-		background-color: var(--bg-color);
-		outline: none;
-		box-shadow: inset 0 1px 3px var(--shadow-color);
-		transition:
-			color var(--transition-normal),
-			background-color var(--transition-normal),
-			box-shadow var(--transition-normal);
-	}
-
-	.editor-textarea:focus {
-		box-shadow:
-			inset 0 1px 3px var(--shadow-color),
-			0 0 0 1px rgba(var(--primary), 0.2);
 	}
 
 	/* Sidebar Toggle Button */
@@ -777,11 +750,6 @@
 
 		.sidebar {
 			width: 90%;
-		}
-
-		.editor-textarea {
-			padding: var(--space-2);
-			font-size: 0.85rem;
 		}
 	}
 

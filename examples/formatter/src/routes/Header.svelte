@@ -28,7 +28,7 @@
 		<!-- Mobile menu button -->
 		<button
 			class="mobile-menu-button"
-			on:click={toggleMenu}
+			onclick={toggleMenu}
 			aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
 			aria-expanded={isMenuOpen}
 		>
