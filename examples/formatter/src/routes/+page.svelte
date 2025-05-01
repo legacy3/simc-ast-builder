@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { TreeNodeData } from '$lib/types';
+	import SimCEditor from '$lib/components/SimCEditor.svelte';
 
 	// Define the type for the data from page.ts
 	interface PageData {
@@ -19,10 +20,9 @@
 	let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 	let sidebarVisible = $state(true);
 
-	// Handle textarea changes
-	function handleTextareaChange(event: Event) {
-		const target = event.target as HTMLTextAreaElement;
-		simcCode = target.value;
+	// Handle editor changes
+	function handleEditorChange(newValue: string) {
+		simcCode = newValue;
 
 		// Show saving indicator
 		saveStatus = 'saving';
@@ -150,13 +150,12 @@
 	<div class="content-area">
 		<!-- Editor Area -->
 		<div class="editor-area" class:full-width={!sidebarVisible}>
-			<textarea
-				class="editor-textarea"
+			<SimCEditor
 				value={simcCode}
 				placeholder="Enter SimC code here..."
-				on:input={handleTextareaChange}
-				spellcheck="false"
-			></textarea>
+				rows={20}
+				onChange={handleEditorChange}
+			/>
 		</div>
 
 		<!-- Sidebar Toggle Button (hidden on mobile) -->
