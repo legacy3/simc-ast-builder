@@ -4,6 +4,7 @@
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import humanizeDuration from 'humanize-duration';
 	import copy from 'clipboard-copy';
+	import { saveSnippet } from '$lib/supabase';
 
 	const isBrowser = typeof window !== 'undefined';
 
@@ -25,9 +26,9 @@
 	let isShareModalOpen = $state(false);
 	let timeDisplay = $state('Not saved yet');
 	let updateInterval: ReturnType<typeof setInterval> | null = null;
-	let shareLink = $state(
-		`https://simc-editor.com/share/${Math.random().toString(36).substring(2, 10)}`
-	);
+	let shareLink = $state('');
+	let isSharing = $state(false);
+	let shareError = $state<string | null>(null);
 
 	function handleEditorChange(newValue: string) {
 		simcCode = newValue;
@@ -45,8 +46,6 @@
 			saveStatus = 'saved';
 			lastSaveTime = Date.now();
 			updateTimeDisplay();
-			// Update share link with new content hash
-			shareLink = `https://simc-editor.com/share/${Math.random().toString(36).substring(2, 10)}`;
 		}, 1000);
 	}
 
@@ -102,10 +101,33 @@
 	}
 
 	function optimizeCode() {
-		console.log('Optimizing code:', simcCode);
+		// Optimization functionality will be implemented later
 	}
 
-	function toggleShareModal() {
+	async function toggleShareModal() {
+		if (!isShareModalOpen) {
+			// Only generate a new share link when opening the modal
+			try {
+				isSharing = true;
+				shareError = null;
+
+				// Save the snippet to Supabase and get the ID
+				const snippetId = await saveSnippet(simcCode);
+
+				// Update the share link with the new ID
+				shareLink = `${window.location.origin}/share/${snippetId}`;
+				isSharing = false;
+			} catch (error) {
+				// Provide more detailed error information
+				if (error instanceof Error) {
+					shareError = `Failed to generate share link: ${error.message}`;
+				} else {
+					shareError = 'Failed to generate share link. Please try again.';
+				}
+				isSharing = false;
+			}
+		}
+
 		isShareModalOpen = !isShareModalOpen;
 	}
 
@@ -114,7 +136,7 @@
 	}
 
 	function simCode() {
-		console.log('Sending code to Raidbots:', simcCode);
+		// Raidbots integration will be implemented later
 	}
 
 	function handleKeyboardShortcuts(event: KeyboardEvent) {
@@ -384,18 +406,36 @@
 			</button>
 			<div class="modal-content">
 				<div class="share-link-container">
-					<input
-						type="text"
-						value={shareLink}
-						readonly
-						class="share-link-input"
-						onclick={(e) => {
-							if (e.target instanceof HTMLInputElement) {
-								e.target.select();
-								copyShareLink();
-							}
-						}}
-					/>
+					{#if isSharing}
+						<div class="sharing-indicator">
+							<span class="icon is-large">
+								<i class="fas fa-spinner fa-pulse"></i>
+							</span>
+							<p>Generating share link...</p>
+						</div>
+					{:else if shareError}
+						<div class="share-error">
+							<span class="icon is-large">
+								<i class="fas fa-exclamation-triangle"></i>
+							</span>
+							<p>{shareError}</p>
+							<button class="retry-button" onclick={toggleShareModal}>Retry</button>
+						</div>
+					{:else}
+						<input
+							type="text"
+							value={shareLink}
+							readonly
+							class="share-link-input"
+							onclick={(e) => {
+								if (e.target instanceof HTMLInputElement) {
+									e.target.select();
+									copyShareLink();
+								}
+							}}
+						/>
+						<p class="share-info">This link contains your code and can be shared with others.</p>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -1168,5 +1208,55 @@
 	.share-link-input.copied {
 		animation: copy-pulse 1s ease-out;
 		border-color: var(--primary);
+	}
+
+	.sharing-indicator {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem;
+		gap: 0.5rem;
+	}
+
+	.sharing-indicator .icon {
+		color: var(--primary);
+		font-size: 2rem;
+	}
+
+	.share-error {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem;
+		gap: 0.5rem;
+		color: var(--danger);
+	}
+
+	.share-error .icon {
+		font-size: 2rem;
+	}
+
+	.retry-button {
+		margin-top: 0.5rem;
+		padding: 0.5rem 1rem;
+		background-color: var(--primary);
+		color: white;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+	}
+
+	.retry-button:hover {
+		background-color: var(--primary-dark);
+	}
+
+	.share-info {
+		margin-top: 0.5rem;
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		text-align: center;
 	}
 </style>

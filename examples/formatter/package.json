@@ -40,12 +40,15 @@
 		"@codemirror/view": "^6.36.6",
 		"@fortawesome/fontawesome-free": "^6.7.2",
 		"@lezer/highlight": "^1.2.1",
+		"@supabase/supabase-js": "^2.49.4",
 		"bulma": "^1.0.4",
 		"clipboard-copy": "^4.0.1",
 		"codemirror": "^6.0.1",
 		"humanize-duration": "^3.32.1",
 		"konva": "^9.3.20",
 		"lodash-es": "^4.17.21",
+		"lz-string": "^1.5.0",
+		"shorthash2": "^1.0.5",
 		"simc-ast-builder": "^0.3.3",
 		"util": "^0.12.5"
 	}
