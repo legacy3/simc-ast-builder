@@ -27,6 +27,13 @@ export function toggleTheme(): void {
 		if (browser) {
 			localStorage.setItem('theme', newTheme);
 			document.documentElement.classList.toggle('is-dark-theme', newTheme === 'dark');
+
+			// Dispatch a custom event to notify listeners of the theme change
+			window.dispatchEvent(
+				new CustomEvent('themeChanged', {
+					detail: { theme: newTheme }
+				})
+			);
 		}
 
 		return newTheme;
@@ -39,11 +46,25 @@ export function initializeTheme(): void {
 	const currentTheme = getInitialTheme();
 	document.documentElement.classList.toggle('is-dark-theme', currentTheme === 'dark');
 
+	// Dispatch initial theme event to ensure all components are in sync
+	window.dispatchEvent(
+		new CustomEvent('themeChanged', {
+			detail: { theme: currentTheme, source: 'initialization' }
+		})
+	);
+
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
 		if (!localStorage.getItem('theme')) {
 			const newTheme = event.matches ? 'dark' : 'light';
 			theme.set(newTheme);
 			document.documentElement.classList.toggle('is-dark-theme', newTheme === 'dark');
+
+			// Dispatch event when theme changes due to system preference
+			window.dispatchEvent(
+				new CustomEvent('themeChanged', {
+					detail: { theme: newTheme, source: 'system-preference' }
+				})
+			);
 		}
 	});
 }

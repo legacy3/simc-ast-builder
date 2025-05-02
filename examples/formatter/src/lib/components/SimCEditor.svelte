@@ -4,6 +4,7 @@
 	import { EditorView, lineNumbers } from '@codemirror/view';
 	import { EditorState, Compartment } from '@codemirror/state';
 	import { basicSetup } from 'codemirror';
+	import { simcExprLanguage } from '../simcExprLanguage';
 
 	const {
 		value = '',
@@ -36,6 +37,7 @@
 				lineNumbers({
 					formatNumber: (lineNo) => lineNo.toString()
 				}),
+				simcExprLanguage(),
 				EditorView.updateListener.of((update) => {
 					if (update.docChanged) {
 						const newValue = update.state.doc.toString();
@@ -99,14 +101,25 @@
 			editorContainer.classList.add('cm-dark-theme');
 		}
 
-		window.addEventListener('themeChanged', () => {
+		// Function to update editor theme
+		const updateEditorTheme = (event?: CustomEvent) => {
 			const isDarkTheme = document.documentElement.classList.contains('is-dark-theme');
+
 			if (isDarkTheme) {
 				editorContainer.classList.add('cm-dark-theme');
 			} else {
 				editorContainer.classList.remove('cm-dark-theme');
 			}
-		});
+
+			// Force CodeMirror to refresh to ensure theme changes are applied
+			if (editor) {
+				// This triggers a redraw of the editor
+				editor.requestMeasure();
+			}
+		};
+
+		// Listen for theme changes
+		window.addEventListener('themeChanged', updateEditorTheme as EventListener);
 	}
 
 	onMount(() => {
