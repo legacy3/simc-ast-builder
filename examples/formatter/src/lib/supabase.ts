@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as LZString from 'lz-string';
 import shorthash from 'shorthash2';
+import { browser } from '$app/environment';
 
 // Create a single supabase client for interacting with your database
 export const supabase = createClient(
@@ -16,39 +17,38 @@ export interface SharedSnippet {
 }
 
 /**
- * Compresses a string using LZ compression
+ * Client-side only: Compresses a string using LZ compression
  * @param data The string to compress
  * @returns The compressed string
  */
-function compressData(data: string): string {
+function clientCompressData(data: string): string {
+	if (!browser) return data;
+
 	try {
-		const compressed = LZString.compressToUTF16(data);
-		return compressed;
+		return LZString.compressToUTF16(data);
 	} catch (error) {
 		console.error('Error compressing data:', error);
-		throw new Error(
-			`Failed to compress data: ${error instanceof Error ? error.message : String(error)}`
-		);
+		return data;
 	}
 }
 
 /**
- * Decompresses a string that was compressed with LZ compression
+ * Client-side only: Decompresses a string that was compressed with LZ compression
  * @param data The compressed string
  * @returns The decompressed string
  */
-function decompressData(data: string): string {
+function clientDecompressData(data: string): string {
+	if (!browser) return data;
+
 	try {
 		const decompressed = LZString.decompressFromUTF16(data);
 		if (!decompressed) {
-			throw new Error('Decompression resulted in null or empty string');
+			return data;
 		}
 		return decompressed;
 	} catch (error) {
 		console.error('Error decompressing data:', error);
-		throw new Error(
-			`Failed to decompress data: ${error instanceof Error ? error.message : String(error)}`
-		);
+		return data;
 	}
 }
 
@@ -73,8 +73,8 @@ export async function saveSnippet(code: string): Promise<string> {
 	const id = generateCodeHash(code);
 
 	try {
-		// Compress the code before saving
-		const compressedCode = compressData(code);
+		// Compress the code before saving if in browser environment
+		const codeToSave = clientCompressData(code);
 
 		// Check if a snippet with this ID already exists
 		const { data: existingSnippet, error: fetchError } = await supabase
@@ -93,8 +93,8 @@ export async function saveSnippet(code: string): Promise<string> {
 			return id;
 		}
 
-		// Otherwise, insert the new snippet with compressed code
-		const { error } = await supabase.from('snippets').insert([{ id, code: compressedCode }]);
+		// Otherwise, insert the new snippet with the code (compressed if in browser)
+		const { error } = await supabase.from('snippets').insert([{ id, code: codeToSave }]);
 
 		if (error) {
 			console.error('Error saving snippet:', error);
@@ -126,20 +126,16 @@ export async function getSnippet(id: string): Promise<SharedSnippet | null> {
 			return null;
 		}
 
-		try {
-			// Try to decompress the code
-			const decompressedCode = decompressData(data.code);
-
-			// Return the snippet with decompressed code
+		// Try to decompress the code if in browser environment
+		if (browser && data.code) {
 			return {
 				...data,
-				code: decompressedCode
+				code: clientDecompressData(data.code)
 			} as SharedSnippet;
-		} catch (decompressError) {
-			// If decompression fails, log the error and return the original data
-			console.error('Error decompressing snippet:', decompressError);
-			return data as SharedSnippet;
 		}
+
+		// Return the raw data in server environment
+		return data as SharedSnippet;
 	} catch (error) {
 		console.error('Unexpected error in getSnippet:', error);
 		return null;

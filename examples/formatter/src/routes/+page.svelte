@@ -5,6 +5,7 @@
 	import humanizeDuration from 'humanize-duration';
 	import copy from 'clipboard-copy';
 	import { saveSnippet } from '$lib/supabase';
+	import { showSuccessToast } from '$lib/toast';
 
 	const isBrowser = typeof window !== 'undefined';
 
@@ -165,6 +166,19 @@
 					updateTimeDisplay();
 				}
 			}, 1000);
+
+			// Show toast notification if shared code was loaded
+			if (data.isShared) {
+				showSuccessToast();
+			}
+
+			// Remove the id parameter from the URL after loading shared code
+			// This ensures the URL is clean without triggering a page reload
+			const url = new URL(window.location.href);
+			if (url.searchParams.has('id')) {
+				url.searchParams.delete('id');
+				window.history.replaceState({}, '', url.toString());
+			}
 
 			// Function to check screen size and set sidebar visibility
 			const checkScreenSize = () => {

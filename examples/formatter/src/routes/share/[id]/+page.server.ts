@@ -16,7 +16,8 @@ export const load = async ({ params }: { params: { id: string } }) => {
 		return {
 			title: 'SimC Editor',
 			description: 'SimulationCraft expression editor and formatter',
-			defaultCode: snippet.code
+			defaultCode: snippet.code,
+			id: params.id
 		};
 	} catch (err) {
 		// Provide more detailed error information

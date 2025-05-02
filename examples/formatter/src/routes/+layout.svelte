@@ -2,6 +2,7 @@
 	import '../app.scss';
 	import { onMount } from 'svelte';
 	import { theme, initializeTheme } from '$lib/stores/theme';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	let { children } = $props();
 
@@ -9,6 +10,8 @@
 		initializeTheme();
 	});
 </script>
+
+<SvelteToast options={{ reversed: true, intro: { y: 192 } }} />
 
 <div class="app">
 	<main class="container">
@@ -38,6 +41,20 @@
 </div>
 
 <style>
+	:global(:root) {
+		--toastContainerTop: auto;
+		--toastContainerRight: auto;
+		--toastContainerBottom: 20px;
+		--toastContainerLeft: 50%;
+		--toastWidth: 400px;
+		--toastMinHeight: auto;
+		--toastPadding: 0;
+		--toastBorderRadius: var(--border-radius);
+		--toastBackground: transparent;
+		--toastBoxShadow: none;
+		--toastContainerTransform: translateX(-50%);
+	}
+
 	.app {
 		display: flex;
 		flex-direction: column;
