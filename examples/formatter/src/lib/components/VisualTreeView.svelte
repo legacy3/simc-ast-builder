@@ -75,29 +75,85 @@
 
 			newScale = Math.max(config.minScale, Math.min(newScale, config.maxScale));
 
-			treeGroup.scale({ x: newScale, y: newScale });
-
-			const newPos = {
-				x: pointer.x - mousePointTo.x * newScale,
-				y: pointer.y - mousePointTo.y * newScale
-			};
-
-			treeGroup.position(newPos);
-			layer.batchDraw();
+			// Animate the scale change for smoother zooming
+			const tween = new Konva.Tween({
+				node: treeGroup,
+				duration: 0.1,
+				easing: Konva.Easings.EaseOut,
+				scaleX: newScale,
+				scaleY: newScale,
+				onUpdate: () => {
+					const currentScale = treeGroup.scaleX();
+					const newPos = {
+						x: pointer.x - mousePointTo.x * currentScale,
+						y: pointer.y - mousePointTo.y * currentScale
+					};
+					treeGroup.position(newPos);
+					layer.batchDraw();
+				}
+			});
+			tween.play();
 		});
 
 		stage.on('dblclick', () => {
-			resetView();
+			resetView(true);
+		});
+
+		// Add touch support for pinch zoom
+		let lastDist = 0;
+		let startScale = 1;
+
+		stage.on('touchmove', (e) => {
+			e.evt.preventDefault();
+			const touch1 = e.evt.touches[0];
+			const touch2 = e.evt.touches[1];
+
+			if (touch1 && touch2) {
+				if (lastDist === 0) {
+					lastDist = getDistance(touch1, touch2);
+					startScale = treeGroup.scaleX();
+					return;
+				}
+
+				const dist = getDistance(touch1, touch2);
+				const scale = startScale * (dist / lastDist);
+
+				const newScale = Math.max(config.minScale, Math.min(scale, config.maxScale));
+				treeGroup.scale({ x: newScale, y: newScale });
+				layer.batchDraw();
+			}
+		});
+
+		stage.on('touchend', () => {
+			lastDist = 0;
 		});
 	}
 
-	function resetView() {
-		treeGroup.scale({ x: config.initialScale, y: config.initialScale });
-		treeGroup.position({
-			x: stage.width() / 2,
-			y: 50
-		});
-		layer.batchDraw();
+	function getDistance(p1: Touch, p2: Touch) {
+		return Math.sqrt(Math.pow(p2.clientX - p1.clientX, 2) + Math.pow(p2.clientY - p1.clientY, 2));
+	}
+
+	function resetView(animate = false) {
+		if (animate) {
+			const tween = new Konva.Tween({
+				node: treeGroup,
+				duration: 0.3,
+				easing: Konva.Easings.EaseInOut,
+				scaleX: config.initialScale,
+				scaleY: config.initialScale,
+				x: stage.width() / 2,
+				y: 50,
+				onFinish: () => layer.batchDraw()
+			});
+			tween.play();
+		} else {
+			treeGroup.scale({ x: config.initialScale, y: config.initialScale });
+			treeGroup.position({
+				x: stage.width() / 2,
+				y: 50
+			});
+			layer.batchDraw();
+		}
 	}
 
 	function calculateTreeLayout(
@@ -303,9 +359,16 @@
 
 <div class="visual-tree-container">
 	<div class="controls">
-		<button class="button is-small is-light" onclick={resetView}> Reset View </button>
+		<button class="button is-small is-light" onclick={() => resetView(true)}>
+			<span class="icon"><i class="fas fa-sync-alt"></i></span>
+			<span>Reset View</span>
+		</button>
 		<div class="instructions">
-			<small>Drag to move • Scroll to zoom • Double-click to reset</small>
+			<small>
+				<span class="instruction-item"><i class="fas fa-hand-paper"></i> Drag to move</span>
+				<span class="instruction-item"><i class="fas fa-mouse-pointer"></i> Scroll to zoom</span>
+				<span class="instruction-item"><i class="fas fa-mouse"></i> Double-click to reset</span>
+			</small>
 		</div>
 	</div>
 	<div class="canvas-container" bind:this={container}></div>
@@ -324,7 +387,15 @@
 		transition:
 			background-color var(--transition-normal),
 			border-color var(--transition-normal),
-			box-shadow var(--transition-normal);
+			box-shadow var(--transition-normal),
+			transform var(--transition-normal);
+		animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+
+	.visual-tree-container:hover {
+		box-shadow: var(--shadow-md);
+		transform: translateY(-2px);
+		border-color: rgba(var(--primary), 0.3);
 	}
 
 	.canvas-container {
@@ -340,6 +411,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-2);
+		animation: fade-in 0.5s ease-out forwards;
+		transition:
+			transform var(--transition-normal),
+			opacity var(--transition-normal);
+	}
+
+	.visual-tree-container:hover .controls {
+		transform: translateY(-2px);
 	}
 
 	.instructions {
@@ -348,17 +427,38 @@
 		border-radius: var(--border-radius-sm);
 		border: var(--border-width) solid var(--border-color);
 		color: var(--text-color);
-		opacity: 0.8;
-		transition: opacity var(--transition-normal);
+		opacity: 0.7;
+		transition: all var(--transition-normal);
+		box-shadow: var(--shadow-sm);
+		backdrop-filter: blur(4px);
 	}
 
 	.instructions:hover {
 		opacity: 1;
+		border-color: rgba(var(--primary), 0.3);
+		box-shadow: var(--shadow-md);
+		transform: translateY(-1px);
 	}
 
 	@media (max-width: 768px) {
 		.visual-tree-container {
 			height: 500px;
+		}
+
+		.instructions small {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.instruction-item {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.instruction-item i {
+			width: 16px;
 		}
 	}
 
@@ -371,5 +471,16 @@
 			top: var(--space-2);
 			left: var(--space-2);
 		}
+	}
+
+	.instruction-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		margin-right: 8px;
+	}
+
+	.instruction-item i {
+		opacity: 0.7;
 	}
 </style>

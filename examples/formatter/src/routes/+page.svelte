@@ -448,7 +448,7 @@
 								}
 							}}
 						/>
-						<p class="share-info">This link contains your code and can be shared with others.</p>
+						<p class="share-info">This link contains your code and can be shared with others</p>
 					{/if}
 				</div>
 			</div>
@@ -600,10 +600,12 @@
 		cursor: pointer;
 		transition:
 			all var(--transition-normal),
-			transform var(--transition-fast);
+			transform var(--transition-fast),
+			box-shadow var(--transition-normal);
 		position: relative;
 		overflow: hidden;
 		box-shadow: 0 1px 2px var(--shadow-color);
+		transform: translateZ(0); /* Force hardware acceleration */
 	}
 
 	.toolbar-button::before {
@@ -616,11 +618,13 @@
 		background: var(--hover-bg);
 		opacity: 0;
 		transition: opacity var(--transition-normal);
+		z-index: 0;
 	}
 
 	.toolbar-button:hover {
 		border-color: var(--primary);
-		box-shadow: 0 2px 4px var(--shadow-color);
+		box-shadow: 0 3px 6px var(--shadow-color);
+		transform: translateY(-2px);
 	}
 
 	.toolbar-button:hover::before {
@@ -628,7 +632,9 @@
 	}
 
 	.toolbar-button:active {
-		box-shadow: 0 0 1px var(--shadow-color);
+		box-shadow: 0 1px 2px var(--shadow-color);
+		transform: translateY(1px);
+		transition: all 0.1s ease;
 	}
 
 	.toolbar-button .icon,
@@ -647,16 +653,26 @@
 		background-color: var(--hover-bg);
 		transition:
 			opacity var(--transition-normal),
-			background-color var(--transition-normal);
+			background-color var(--transition-normal),
+			transform var(--transition-normal),
+			box-shadow var(--transition-normal);
+		border: 1px solid transparent;
 	}
 
 	.save-status.saving {
 		opacity: 0.9;
 		animation: pulse 1.5s infinite ease-in-out;
+		border-color: rgba(var(--primary), 0.2);
+		box-shadow: 0 0 0 2px rgba(var(--primary), 0.05);
 	}
 
 	.save-status.saved {
 		opacity: 0.6;
+	}
+
+	.save-status:hover {
+		opacity: 0.9;
+		transform: translateY(-1px);
 	}
 
 	@keyframes pulse {
@@ -737,7 +753,7 @@
 			background-color var(--transition-normal),
 			border-color var(--transition-normal),
 			box-shadow var(--transition-normal),
-			transform var(--transition-fast);
+			transform var(--transition-bounce);
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 		color: var(--text-color);
 		padding: 0;
@@ -748,10 +764,21 @@
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 		background-color: var(--hover-bg);
 		border-color: var(--primary);
+		transform: translateY(-50%) scale(1.1);
 	}
 
 	.sidebar-toggle:active {
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		transform: translateY(-50%) scale(0.95);
+		transition: all 0.1s ease;
+	}
+
+	.sidebar-toggle i {
+		transition: transform var(--transition-normal);
+	}
+
+	.sidebar-toggle:hover i {
+		transform: scale(1.1);
 	}
 
 	.editor-area.full-width + .sidebar-toggle {
@@ -771,9 +798,14 @@
 			transform var(--transition-normal),
 			width var(--transition-normal),
 			background-color var(--transition-normal),
-			border-color var(--transition-normal);
+			border-color var(--transition-normal),
+			box-shadow var(--transition-normal);
 		transform: translateX(0);
 		box-shadow: -1px 0 3px var(--shadow-color);
+	}
+
+	.sidebar.visible {
+		animation: slide-in-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
 	.sidebar:not(.visible) {
@@ -812,6 +844,7 @@
 		justify-content: center;
 		position: relative;
 		overflow: hidden;
+		transform: translateZ(0); /* Force hardware acceleration */
 	}
 
 	.sidebar-tab::before {
@@ -830,10 +863,15 @@
 	.sidebar-tab:hover {
 		opacity: 0.9;
 		background-color: var(--hover-bg);
+		transform: translateY(-1px);
 	}
 
 	.sidebar-tab:hover::before {
 		transform: scaleX(0.5);
+	}
+
+	.sidebar-tab:active {
+		transform: translateY(1px);
 	}
 
 	.sidebar-tab.active {
@@ -843,6 +881,12 @@
 
 	.sidebar-tab.active::before {
 		transform: scaleX(1);
+	}
+
+	.sidebar-tab.active .icon {
+		color: var(--primary);
+		transform: scale(1.1);
+		transition: all var(--transition-normal);
 	}
 
 	.shortcut {
@@ -1139,17 +1183,17 @@
 		max-width: 450px;
 		position: relative;
 		border: 1px solid var(--border-color);
-		animation: modal-appear 0.2s ease-out;
+		animation: modal-appear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
 	@keyframes modal-appear {
 		from {
 			opacity: 0;
-			transform: translateY(10px);
+			transform: translateY(20px) scale(0.95);
 		}
 		to {
 			opacity: 1;
-			transform: translateY(0);
+			transform: translateY(0) scale(1);
 		}
 	}
 
@@ -1220,8 +1264,9 @@
 	}
 
 	.share-link-input.copied {
-		animation: copy-pulse 1s ease-out;
+		animation: copy-pulse 1s cubic-bezier(0.4, 0, 0.2, 1);
 		border-color: var(--primary);
+		box-shadow: 0 0 0 3px rgba(var(--primary), 0.2);
 	}
 
 	.sharing-indicator {

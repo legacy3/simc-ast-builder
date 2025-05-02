@@ -55,9 +55,10 @@
 	--shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 
 	// Transitions
-	--transition-fast: 0.2s ease;
-	--transition-normal: 0.3s ease;
-	--transition-slow: 0.5s ease;
+	--transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 	--transition-property: background, color, border-color, box-shadow, transform, opacity;
 
 	// Z-index
@@ -297,6 +298,7 @@ button {
 	font-weight: normal;
 	position: relative;
 	overflow: hidden;
+	transform: translateZ(0); /* Force hardware acceleration */
 
 	&::after {
 		content: '';
@@ -311,12 +313,23 @@ button {
 		transition:
 			opacity 0.5s,
 			transform 0.5s;
+		pointer-events: none;
 	}
 
 	&:active::after {
 		opacity: 1;
 		transform: scale(0);
 		transition: 0s;
+	}
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px var(--shadow-color);
+	}
+
+	&:active {
+		transform: translateY(1px);
+		box-shadow: 0 1px 2px var(--shadow-color);
 	}
 
 	&.is-primary {
@@ -365,15 +378,21 @@ button {
 // --------------------------------------------------------------------------
 *:focus {
 	outline: none;
-	box-shadow: 0 0 0 2px rgba(var(--primary), 0.25);
+	box-shadow: 0 0 0 3px rgba(var(--primary), 0.25);
 	transition: box-shadow var(--transition-normal);
+}
+
+*:focus-visible {
+	box-shadow: 0 0 0 3px rgba(var(--primary), 0.4);
+	position: relative;
+	z-index: 1;
 }
 
 // Scrollbar Styles
 // --------------------------------------------------------------------------
 ::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
+	width: 10px;
+	height: 10px;
 	transition:
 		width var(--transition-normal),
 		height var(--transition-normal);
@@ -386,7 +405,9 @@ button {
 
 ::-webkit-scrollbar-thumb {
 	background-color: var(--hover-bg);
-	border-radius: 4px;
+	border-radius: 5px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
 	transition: background-color var(--transition-normal);
 
 	&:hover {
@@ -408,8 +429,66 @@ button {
 	}
 }
 
+@keyframes slide-in-right {
+	0% {
+		transform: translateX(20px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+@keyframes slide-in-left {
+	0% {
+		transform: translateX(-20px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes scale-in {
+	0% {
+		transform: scale(0.95);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
 .zen-pulse {
 	animation: gentle-fade 4s infinite ease-in-out;
+}
+
+.animate-fade-in {
+	animation: fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-scale-in {
+	animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-slide-in-right {
+	animation: slide-in-right 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-left {
+	animation: slide-in-left 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 // Responsive Styles

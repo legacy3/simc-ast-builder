@@ -51,21 +51,27 @@
 					'&': {
 						height: '100%',
 						fontFamily: 'var(--font-mono, monospace)',
-						fontSize: '12px',
+						fontSize: '13px',
 						lineHeight: 'var(--line-height)',
-						letterSpacing: 'var(--letter-spacing)'
+						letterSpacing: 'var(--letter-spacing)',
+						transition: 'background-color var(--transition-normal), color var(--transition-normal)'
 					},
 					'.cm-content': {
 						padding: 'var(--space-3) 0'
 					},
 					'.cm-line': {
-						padding: '0 var(--space-4)'
+						padding: '0 var(--space-4)',
+						transition: 'background-color var(--transition-normal)'
+					},
+					'.cm-activeLine': {
+						backgroundColor: 'var(--hover-bg)'
 					},
 					'.cm-gutters': {
 						backgroundColor: 'transparent',
 						borderRight: '1px solid var(--border-color)',
 						width: '50px',
-						minWidth: '50px'
+						minWidth: '50px',
+						transition: 'border-color var(--transition-normal)'
 					},
 					'.cm-lineNumbers': {
 						minWidth: '40px'
@@ -75,11 +81,22 @@
 						opacity: '0.4',
 						padding: '0 var(--space-2)',
 						textAlign: 'right',
-						minWidth: '30px'
+						minWidth: '30px',
+						transition: 'color var(--transition-normal), opacity var(--transition-normal)'
+					},
+					'.cm-activeLineGutter': {
+						backgroundColor: 'var(--hover-bg)',
+						color: 'var(--primary) !important',
+						opacity: '0.8 !important'
 					},
 					'.cm-cursor': {
 						borderLeft: '2px solid var(--primary)',
-						marginLeft: '0'
+						marginLeft: '0',
+						transition: 'border-color var(--transition-normal)'
+					},
+					'.cm-selectionBackground': {
+						backgroundColor: 'rgba(var(--primary), 0.15)',
+						transition: 'background-color var(--transition-normal)'
 					},
 					'.cm-scroller': {
 						overflow: 'auto',
@@ -87,6 +104,11 @@
 					},
 					'&.cm-focused': {
 						outline: 'none'
+					},
+					'.cm-matchingBracket': {
+						backgroundColor: 'rgba(var(--primary), 0.2)',
+						color: 'inherit',
+						borderRadius: '2px'
 					}
 				})
 			]
@@ -177,7 +199,16 @@
 		flex: 1;
 		transition:
 			border-color var(--transition-normal),
-			box-shadow var(--transition-normal);
+			box-shadow var(--transition-normal),
+			transform var(--transition-normal);
+	}
+
+	.simc-editor:focus-within {
+		border-color: var(--primary);
+		box-shadow:
+			0 0 0 1px rgba(var(--primary), 0.1),
+			var(--shadow-md);
+		transform: translateY(-1px);
 	}
 
 	.textarea {

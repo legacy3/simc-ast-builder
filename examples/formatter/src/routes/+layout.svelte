@@ -11,7 +11,7 @@
 	});
 </script>
 
-<SvelteToast options={{ reversed: true, intro: { y: 192 } }} />
+<SvelteToast options={{ reversed: true, intro: { y: 192, x: -20, opacity: 0 } }} />
 
 <div class="app">
 	<main class="container">
@@ -59,6 +59,7 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
+		animation: fade-in 0.5s ease-out;
 	}
 
 	main {
@@ -80,6 +81,13 @@
 		color: var(--text-color);
 		opacity: 0.6;
 		border-top: 1px solid var(--border-color);
+		transition:
+			opacity var(--transition-normal),
+			border-color var(--transition-normal);
+	}
+
+	.zen-footer:hover {
+		opacity: 0.8;
 	}
 
 	.footer-content {
@@ -102,13 +110,34 @@
 		color: inherit;
 		text-decoration: none;
 		transition:
-			opacity 0.2s ease,
-			color 0.2s ease;
+			opacity var(--transition-normal),
+			color var(--transition-normal),
+			transform var(--transition-fast);
+		position: relative;
+		padding: 0 2px;
 	}
 
 	.zen-footer a:hover {
 		color: var(--primary);
 		opacity: 0.9;
+		transform: translateY(-1px);
+	}
+
+	.zen-footer a::after {
+		content: '';
+		position: absolute;
+		bottom: -1px;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background-color: var(--primary);
+		transform: scaleX(0);
+		transition: transform var(--transition-normal);
+		transform-origin: center;
+	}
+
+	.zen-footer a:hover::after {
+		transform: scaleX(1);
 	}
 
 	@media (min-width: 768px) {

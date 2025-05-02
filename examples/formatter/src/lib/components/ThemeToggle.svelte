@@ -68,7 +68,8 @@
 		opacity: 0.7;
 		transition:
 			all var(--transition-normal),
-			transform var(--transition-fast);
+			transform var(--transition-fast),
+			box-shadow var(--transition-normal);
 		padding: var(--space-2);
 		height: auto;
 		width: 2.5rem;
@@ -79,6 +80,7 @@
 		justify-content: center;
 		position: relative;
 		overflow: hidden;
+		transform: translateZ(0); /* Force hardware acceleration */
 	}
 
 	.theme-toggle::before {
@@ -91,13 +93,15 @@
 		background: var(--hover-bg);
 		border-radius: 50%;
 		transform: scale(0);
-		transition: transform var(--transition-normal);
+		transition: transform var(--transition-bounce);
+		z-index: 0;
 	}
 
 	.theme-toggle:hover {
 		opacity: 1;
 		color: var(--primary);
-		transform: translateY(-1px);
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	}
 
 	.theme-toggle:hover::before {
@@ -106,11 +110,21 @@
 
 	.theme-toggle:active {
 		transform: translateY(1px);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		transition: all 0.1s ease;
 	}
 
 	.theme-toggle:focus {
 		outline: none;
-		box-shadow: 0 0 0 2px rgba(var(--primary), 0.25);
+		box-shadow: 0 0 0 3px rgba(var(--primary), 0.25);
+	}
+
+	.theme-toggle:focus:not(:focus-visible) {
+		box-shadow: none;
+	}
+
+	.theme-toggle:focus-visible {
+		box-shadow: 0 0 0 3px rgba(var(--primary), 0.4);
 	}
 
 	.icon {
@@ -140,9 +154,12 @@
 	}
 
 	.icon svg {
+		position: relative;
+		z-index: 1;
 		animation:
-			fade-in var(--transition-normal) ease forwards,
-			spin 0.5s ease;
+			fade-in var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1) forwards,
+			spin 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+		transform-origin: center;
 	}
 
 	@media (max-width: 768px) {

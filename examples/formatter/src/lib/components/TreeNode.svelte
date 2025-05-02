@@ -123,6 +123,7 @@
 <style>
 	.tree-node {
 		margin-bottom: var(--space-2);
+		animation: fade-in 0.3s ease-out forwards;
 	}
 
 	.tree-node-content {
@@ -134,7 +135,14 @@
 		transition:
 			background-color var(--transition-normal),
 			border-color var(--transition-normal),
-			box-shadow var(--transition-normal);
+			box-shadow var(--transition-normal),
+			transform var(--transition-normal);
+	}
+
+	.tree-node-content:hover {
+		box-shadow: var(--shadow-md);
+		transform: translateY(-1px);
+		border-color: rgba(var(--primary), 0.3);
 	}
 
 	.node-header {
@@ -153,18 +161,36 @@
 		min-width: 1.5rem;
 		color: var(--text-color);
 		opacity: 0.7;
-		transition: opacity var(--transition-fast);
+		transition: all var(--transition-fast);
+		border-radius: 50%;
+		width: 20px;
+		height: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.toggle-btn:hover {
 		opacity: 1;
+		background-color: var(--hover-bg);
+		color: var(--primary);
+		transform: scale(1.1);
+	}
+
+	.toggle-btn:active {
+		transform: scale(0.95);
 	}
 
 	.tree-node-children {
 		margin-left: var(--space-4);
 		padding-left: var(--space-3);
 		border-left: 2px solid var(--border-color);
-		transition: border-color var(--transition-normal);
+		transition: all var(--transition-normal);
+		animation: slide-in-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+	}
+
+	.tree-node:hover > .tree-node-children {
+		border-left: 2px solid rgba(var(--primary), 0.4);
 	}
 
 	.node-properties {
@@ -180,16 +206,37 @@
 	.node-type {
 		color: var(--primary);
 		font-weight: var(--font-weight-medium);
+		transition: color var(--transition-normal);
+		padding: 2px 6px;
+		border-radius: var(--border-radius-sm);
+		background-color: rgba(var(--primary), 0.05);
+		display: inline-block;
+	}
+
+	.tree-node-content:hover .node-type {
+		background-color: rgba(var(--primary), 0.1);
 	}
 
 	.property-key {
 		color: var(--text-color);
 		opacity: 0.7;
+		transition: opacity var(--transition-normal);
 	}
 
 	.property-value {
 		color: var(--success);
 		margin-left: var(--space-1);
+		transition: color var(--transition-normal);
+		font-family: var(--font-mono);
+		font-size: 0.85em;
+	}
+
+	.node-property:hover .property-key {
+		opacity: 0.9;
+	}
+
+	.node-property:hover .property-value {
+		color: color-mix(in srgb, var(--success), white 10%);
 	}
 
 	.box {
